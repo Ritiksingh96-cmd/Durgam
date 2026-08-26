@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Police Cyber Command & Tactical CAD Interception | DURGAM</title>
+  <meta name="description" content="National Cyber Command War Room (NC4), ATM Hotspot Geospatial Prediction & Beat Patrol CAD Dispatch" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230B2545' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2'/></svg>" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@500;600;700;800;900&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+
+  <!-- 1. Top Tricolor Ribbon -->
+  <div class="gov-tricolor-bar"></div>
+
+  <!-- 2. Utility Bar -->
+  <div class="gov-utility-bar">
+    <div class="gov-utility-content">
+      <div class="gov-utility-left">
+        <span style="color:#F59E0B; font-weight:800;">
+          <svg class="gov-icon gov-icon-sm" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          LAW ENFORCEMENT & TACTICAL DISPATCH WING
+        </span>
+        <span style="color:rgba(255,255,255,0.25);">|</span>
+        <span style="color:#E2E8F0;">National Cyber Command War Room (NC4)</span>
+        <span style="color:rgba(255,255,255,0.25);">|</span>
+        <span id="ist-clock-display" style="color:#F59E0B; font-family:var(--font-mono); font-weight:700;">
+          <svg class="gov-icon gov-icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Loading IST...
+        </span>
+      </div>
+      <div class="gov-utility-right">
+        <button onclick="openOfficerSettingsModal()" class="btn-utility" style="background:rgba(255,255,255,0.18); color:#FFFFFF; border:1px solid rgba(255,255,255,0.3);">
+          <svg class="gov-icon gov-icon-sm" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Officer Access & Rights
+        </button>
+        <a href="/static/index.html" class="btn-utility">
+          <svg class="gov-icon gov-icon-sm" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Public Matrix
+        </a>
+        <a href="/static/login.html" class="btn-utility">
+          <svg class="gov-icon gov-icon-sm" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Switch Role / SSO
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Header -->
+  <header class="gov-main-header">
+    <div class="gov-header-container">
+      <a href="/static/index.html" class="gov-brand">
+        <img src="/static/images/ashok_stambh.jpg" alt="Emblem" class="gov-emblem" />
+        <div class="gov-title-group">
+          <div class="gov-subtitle-dept">POLICE CYBER COMMAND (NC4) • MINISTRY OF HOME AFFAIRS</div>
+          <div class="gov-subtitle-desc">Tactical Computer-Aided Dispatch (CAD) & CCTNS e-FIR Cell</div>
+          <h1>
+            DURGAM POLICE COMMAND <span class="gov-badge-domain">GOV.IN</span>
+          </h1>
+        </div>
+      </a>
+
+      <div class="gov-header-actions">
+        <button onclick="handleCADDispatch()" class="btn-hero-submit" style="padding:9px 18px; font-size:12px; background:#DC2626;">
+          <svg class="gov-icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          🚨 1-Click CAD Dispatch (Falcon 1)
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 4. LOGGED-IN POLICE OFFICER PROFILE BANNER -->
+  <section style="background:linear-gradient(180deg, #FFFFFF 0%, var(--gov-surface) 100%); border-bottom:1px solid var(--gov-border); padding:20px 24px;">
+    <div style="max-width:1400px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+      
+      <!-- Officer Identity -->
+      <div style="display:flex; align-items:center; gap:14px;">
+        <div style="width:48px; height:48px; border-radius:50%; background:#1D4ED8; color:#FFFFFF; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:18px;">
+          VR
+        </div>
+        <div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <h2 style="font-family:var(--font-display); font-size:18px; font-weight:900; color:var(--gov-navy);">
+              Dr. Vikram Rao, IPS
+            </h2>
+            <span style="background:#DBEAFE; color:#1E40AF; font-size:10px; font-weight:900; padding:2px 7px; border-radius:4px; border:1px solid #BFDBFE;">
+              ★ SUPERINTENDENT OF POLICE • NC4
+            </span>
+          </div>
+          <div style="font-size:11.5px; color:var(--gov-text-muted); margin-top:2px;">
+            Badge: <strong style="font-family:var(--font-mono); color:var(--gov-navy);">PNO-DL-9481</strong> • Clearance: <strong>LEVEL 4 CAD COMMAND</strong> • Station: <strong>Delhi Police HQ War Room</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Metrics Pill -->
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+        <div style="background:#FFFFFF; border:1px solid var(--gov-border); border-radius:8px; padding:8px 14px; font-size:11.5px;">
+          <div style="font-size:10px; color:var(--gov-text-muted); font-weight:700;">ACTIVE FOCUS CASE</div>
+          <div style="font-family:var(--font-mono); font-weight:900; color:var(--gov-navy); font-size:13px;">DURGAM-DL-JK-001</div>
+        </div>
+
+        <div style="background:#FEF2F2; border:1px solid #FECACA; border-radius:8px; padding:8px 14px; font-size:11.5px;">
+          <div style="font-size:10px; color:#991B1B; font-weight:700;">BEAT PATROL STATUS</div>
+          <div style="font-weight:900; color:#DC2626; font-size:13px;">🚔 Falcon 1 En-Route (ETA 4 Mins)</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 5. MAIN POLICE DASHBOARD (3 ORGANIZED TABS) -->
+  <main class="gov-main-content">
+    
+    <!-- Segmented Tab Bar -->
+    <div style="display:flex; gap:10px; border-bottom:2px solid var(--gov-border); margin-bottom:24px; padding-bottom:2px; overflow-x:auto;">
+      <button class="police-nav-tab active" id="p-tab-btn-cad" onclick="switchPoliceTab('cad')" style="background:var(--gov-navy); color:#FFFFFF; border:none; padding:10px 18px; border-radius:8px; font-weight:800; font-size:12px; cursor:pointer; display:flex; align-items:center; gap:6px;">
+        <svg class="gov-icon gov-icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+        1. Tactical CAD Patrol Dispatch & GIS Radar
+      </button>
+
+      <button class="police-nav-tab" id="p-tab-btn-fir" onclick="switchPoliceTab('fir')" style="background:var(--gov-surface); color:var(--gov-navy); border:1px solid var(--gov-border); padding:10px 18px; border-radius:8px; font-weight:800; font-size:12px; cursor:pointer; display:flex; align-items:center; gap:6px;">
+        <svg class="gov-icon gov-icon-sm" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+        2. CCTNS Automated e-FIR & Sealing
+      </button>
+
+      <button class="police-nav-tab" id="p-tab-btn-gnn" onclick="switchPoliceTab('gnn')" style="background:var(--gov-surface); color:var(--gov-navy); border:1px solid var(--gov-border); padding:10px 18px; border-radius:8px; font-weight:800; font-size:12px; cursor:pointer; display:flex; align-items:center; gap:6px;">
+        <svg class="gov-icon gov-icon-sm" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/></svg>
+        3. GraphSAGE Multi-Hop Mule Forensics
+      </button>
+    </div>
+
+    <!-- TAB 1: CAD & GIS RADAR -->
+    <div id="police-tab-cad" class="police-tab-content">
+      
+      <!-- Interactive State Filter Bar -->
+      <div id="state-selector-bar" style="margin-bottom:18px;"></div>
+
+      <div class="gov-card">
+        <div class="gov-card-header">
+          <div class="gov-card-title">
+            <svg class="gov-icon gov-icon-lg" viewBox="0 0 24 24" style="stroke:var(--gov-navy);"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+            <span>Live Spatiotemporal ATM Cashout Radar & GIS Surveillance</span>
+          </div>
+          <div style="font-size:11.5px; color:var(--gov-navy); font-weight:800;">
+            Patrol Callsign: <span id="pcr-callsign-display" style="color:#DC2626;">Falcon 1</span> • Dist: <span id="pcr-live-dist" style="color:#059669;">1.40 km</span> • ETA: <span id="pcr-live-eta" style="color:#D97706;">4 Mins</span>
+          </div>
+        </div>
+
+        <div class="radar-container">
+          <div id="map-view" style="height:440px;"></div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-top:14px; font-size:12px;">
+          <div>Active Target: <strong id="active-state-atm" style="color:var(--gov-danger);">SBI ATM, Connaught Place</strong></div>
+          <button onclick="handleCADDispatch()" class="btn-hero-submit" style="padding:7px 16px; font-size:11.5px;">
+            🚔 Dispatch Nearest PCR Unit (Sub-4 Min Interception)
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- TAB 2: CCTNS e-FIR DRAFTING -->
+    <div id="police-tab-fir" class="police-tab-content" style="display:none;">
+      <div class="gov-card" style="max-width:900px; margin:0 auto;">
+        <div class="gov-card-header">
+          <div class="gov-card-title">
+            <svg class="gov-icon gov-icon-lg" viewBox="0 0 24 24" style="stroke:var(--gov-navy);"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+            <span>CCTNS Automated e-FIR Drafting & Digital Evidence Sealing</span>
+          </div>
+          <span style="font-size:10.5px; background:#ECFDF5; color:#047857; font-weight:800; padding:3px 8px; border-radius:4px;">
+            SECTION 66D IT ACT & SECTION 106 BNSS
+          </span>
+        </div>
+
+        <div style="background:var(--gov-surface); border:1px solid var(--gov-border); border-radius:8px; padding:18px; margin-bottom:18px; font-size:12.5px; line-height:1.7;">
+          <div style="font-weight:800; color:var(--gov-navy); font-size:14px; margin-bottom:8px;">
+            First Information Report (e-FIR) Docket Summary
+          </div>
+          <div>Complainant: <strong>Dr. Rajiv Malhotra</strong> (Aadhaar Verified)</div>
+          <div>Suspect Modus: <strong>Digital Arrest Extortion (CBI/Police Video Call Impersonation)</strong></div>
+          <div>Quarantined Funds: <strong style="color:var(--gov-danger);">₹2,50,000</strong> across 3 Multi-Hop Mule Nodes</div>
+          <div>Designated Police Station: <strong>Cyber Crime Police Station, Special Cell, Delhi Police</strong></div>
+        </div>
+
+        <div style="display:flex; gap:10px;">
+          <button class="btn-saffron" onclick="handleGenerateFIR()">
+            ✍️ Digitally Sign & Transmit e-FIR to CCTNS
+          </button>
+          <button class="btn-utility" onclick="alert('Evidence dossier exported under Section 63 BSA.')" style="padding:10px 16px;">
+            📥 Export Section 63 BSA Dossier
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: GNN MULE FORENSICS -->
+    <div id="police-tab-gnn" class="police-tab-content" style="display:none;">
+      <div class="gov-card">
+        <div class="gov-card-header">
+          <div class="gov-card-title">
+            <svg class="gov-icon gov-icon-lg" viewBox="0 0 24 24" style="stroke:var(--gov-navy);"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/></svg>
+            <span>GraphSAGE GNN Multi-Hop Mule Layering Forensics</span>
+          </div>
+          <button onclick="triggerAIMultiHopInference()" class="btn-primary" style="padding:6px 12px; font-size:11px;">
+            ⚡ Re-Run GNN Sub-70ms Model
+          </button>
+        </div>
+
+        <canvas id="money-trail-canvas" style="width:100%; height:380px; background:#FFFFFF; border:1px solid var(--gov-border); border-radius:6px;"></canvas>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="gov-footer">
+    <div class="gov-footer-bottom">
+      <div>© 2026 Government of India • Ministry of Home Affairs • All Rights Reserved.</div>
+      <div>DURGAM Police Cyber Command (NC4) • GIGW 3.0 Standard</div>
+    </div>
+  </footer>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

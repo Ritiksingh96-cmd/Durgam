@@ -1,0 +1,30 @@
+{
+  "training_timestamp": 1787716433.179831,
+  "total_synthetic_transactions": 5001,
+  "total_accounts": 5479,
+  "total_atms": 300,
+  "models": {
+    "gnn_mule": {
+      "model_name": "Multi-Hop Mule GraphSAGE GNN (PyTorch)",
+      "accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "num_nodes_trained": 5479,
+      "inference_latency_ms": 14.2
+    },
+    "st_kde_atm": {
+      "model_name": "Spatiotemporal ATM Hotspot Predictor (ST-KDE + XGBoost)",
+      "top3_accuracy": 0.892,
+      "top5_accuracy": 0.965,
+      "total_atms_indexed": 300,
+      "inference_latency_ms": 22.8
+    },
+    "time_regressor": {
+      "model_name": "Time-to-Cashout Regressor (LightGBM)",
+      "rmse_minutes": 1.76,
+      "mae_minutes": 1.38,
+      "inference_latency_ms": 4.5
+    }
+  }
+}
