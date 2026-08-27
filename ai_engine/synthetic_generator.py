@@ -41,8 +41,9 @@ class SyntheticFinancialGraphGenerator:
     Massive Multi-Hop Financial Graph Dataset Generator for DURGAM GNN Engine.
     Simulates 12 distinct Indian financial cybercrime archetypes and legitimate baseline patterns.
     """
-    def __init__(self, random_seed: int = 42):
+    def __init__(self, random_seed: int = 42, num_accounts: int = 5000):
         random.seed(random_seed)
+        self.num_accounts = num_accounts
         np.random.seed(random_seed)
         self.graph = nx.DiGraph()
         self.nodes_data: Dict[str, Dict[str, Any]] = {}

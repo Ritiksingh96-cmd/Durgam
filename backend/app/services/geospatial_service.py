@@ -48,9 +48,12 @@ class GeospatialHotspotService:
         best_unit = None
         min_dist = 999.0
         
+        atm_lat = float(target_atm.get("lat") or target_atm.get("latitude") or 28.6315)
+        atm_lon = float(target_atm.get("lon") or target_atm.get("longitude") or 77.2167)
+        
         for u in self.active_patrol_units:
             # Simple distance approximation
-            dist = ((u["lat"] - target_atm["lat"])**2 + (u["lon"] - target_atm["lon"])**2)**0.5 * 111.0
+            dist = ((u["lat"] - atm_lat)**2 + (u["lon"] - atm_lon)**2)**0.5 * 111.0
             if dist < min_dist:
                 min_dist = dist
                 best_unit = u

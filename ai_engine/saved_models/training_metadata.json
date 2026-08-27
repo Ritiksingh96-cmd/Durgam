@@ -1,30 +1,29 @@
 {
-  "training_timestamp": 1787716433.179831,
-  "total_synthetic_transactions": 5001,
-  "total_accounts": 5479,
+  "training_timestamp": 1787804504.6115868,
+  "retrain_iteration": 11,
+  "dataset_stream_count": 55,
+  "total_synthetic_transactions": 6100,
+  "total_accounts": 2215,
   "total_atms": 300,
+  "training_duration_seconds": 1.68,
   "models": {
     "gnn_mule": {
       "model_name": "Multi-Hop Mule GraphSAGE GNN (PyTorch)",
       "accuracy": 1.0,
-      "precision": 1.0,
-      "recall": 1.0,
-      "f1": 1.0,
-      "num_nodes_trained": 5479,
-      "inference_latency_ms": 14.2
+      "f1_score": 1.0,
+      "num_nodes_trained": 2215,
+      "status": "ONLINE_ACTIVE"
     },
     "st_kde_atm": {
       "model_name": "Spatiotemporal ATM Hotspot Predictor (ST-KDE + XGBoost)",
-      "top3_accuracy": 0.892,
-      "top5_accuracy": 0.965,
-      "total_atms_indexed": 300,
-      "inference_latency_ms": 22.8
+      "top3_accuracy": 0.895,
+      "top5_accuracy": 0.968,
+      "status": "ONLINE_ACTIVE"
     },
     "time_regressor": {
       "model_name": "Time-to-Cashout Regressor (LightGBM)",
-      "rmse_minutes": 1.76,
-      "mae_minutes": 1.38,
-      "inference_latency_ms": 4.5
+      "rmse_minutes": 1.72,
+      "status": "ONLINE_ACTIVE"
     }
   }
 }

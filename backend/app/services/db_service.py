@@ -250,10 +250,15 @@ PAN_INDIA_EMPIRICAL_CASES = [
         }
     }
 ]
-
 def init_db():
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
+
+    # Enable High-Throughput Million-Load SQLite WAL Mode & Performance Pragmas
+    cursor.execute("PRAGMA journal_mode = WAL;")
+    cursor.execute("PRAGMA synchronous = NORMAL;")
+    cursor.execute("PRAGMA cache_size = 10000;")
+    cursor.execute("PRAGMA temp_store = MEMORY;")
 
     # Drop old schema table if missing nodes_json
     cursor.execute("DROP TABLE IF EXISTS incidents")
@@ -277,6 +282,45 @@ def init_db():
         nodes_json TEXT,
         terminal_node_json TEXT,
         created_at REAL
+    )
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS audit_logs (
+        log_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        actor TEXT,
+        role TEXT,
+        action TEXT,
+        target_id TEXT,
+        details_json TEXT,
+        prev_hash TEXT,
+        current_hash TEXT,
+        timestamp REAL
+    )
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS api_keys (
+        key_id TEXT PRIMARY KEY,
+        key_hash TEXT UNIQUE,
+        owner_name TEXT,
+        role TEXT,
+        scope_csv TEXT,
+        is_active INTEGER DEFAULT 1,
+        created_at REAL,
+        last_used_at REAL
+    )
+    """)
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS auto_trigger_logs (
+        trigger_id TEXT PRIMARY KEY,
+        case_id TEXT,
+        rule_name TEXT,
+        action_executed TEXT,
+        latency_ms REAL,
+        status TEXT,
+        timestamp REAL
     )
     """)
     conn.commit()
@@ -314,7 +358,14 @@ def init_db():
 # Auto-initialize DB
 init_db()
 
+# High-Speed In-Memory Cache for Sub-Millisecond Public Telemetry
+_INCIDENTS_CACHE = {"data": None, "timestamp": 0.0, "ttl": 2.0}
+
 def get_all_incidents(limit: int = 20) -> List[Dict[str, Any]]:
+    now = time.time()
+    if _INCIDENTS_CACHE["data"] and (now - _INCIDENTS_CACHE["timestamp"]) < _INCIDENTS_CACHE["ttl"]:
+        return _INCIDENTS_CACHE["data"][:limit]
+
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
@@ -330,6 +381,9 @@ def get_all_incidents(limit: int = 20) -> List[Dict[str, Any]]:
         if d.get("terminal_node_json"):
             d["terminal_node"] = json.loads(d["terminal_node_json"])
         results.append(d)
+
+    _INCIDENTS_CACHE["data"] = results
+    _INCIDENTS_CACHE["timestamp"] = now
     return results
 
 def get_incident_by_identifier(identifier: str) -> Optional[Dict[str, Any]]:
@@ -391,6 +445,133 @@ def insert_incident(incident_data: Dict[str, Any]) -> Dict[str, Any]:
     conn.commit()
     conn.close()
 
+def update_incident_status(case_id: str, new_status: str) -> bool:
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("UPDATE incidents SET status = ? WHERE case_id = ? OR ack_number = ?", (new_status, case_id, case_id))
+    affected = cursor.rowcount
+    conn.commit()
+    conn.close()
+    return affected > 0
+
+# --- Cryptographic Audit Trail ---
+def append_audit_log(actor: str, role: str, action: str, target_id: str, details: Dict[str, Any]) -> Dict[str, Any]:
+    import hashlib
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    
+    # Get last hash
+    cursor.execute("SELECT current_hash FROM audit_logs ORDER BY log_id DESC LIMIT 1")
+    last_row = cursor.fetchone()
+    prev_hash = last_row[0] if last_row else "GENESIS_SOVEREIGN_AUDIT_BLOCK_0000000000"
+    
+    now = time.time()
+    details_str = json.dumps(details, sort_keys=True)
+    raw_payload = f"{actor}:{role}:{action}:{target_id}:{details_str}:{prev_hash}:{now}"
+    current_hash = hashlib.sha256(raw_payload.encode('utf-8')).hexdigest()
+    
+    cursor.execute("""
+    INSERT INTO audit_logs (actor, role, action, target_id, details_json, prev_hash, current_hash, timestamp)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    """, (actor, role, action, target_id, details_str, prev_hash, current_hash, now))
+    log_id = cursor.lastrowid
+    conn.commit()
+    conn.close()
+    
+    return {
+        "log_id": log_id,
+        "actor": actor,
+        "role": role,
+        "action": action,
+        "target_id": target_id,
+        "details": details,
+        "prev_hash": prev_hash,
+        "current_hash": current_hash,
+        "timestamp": now
+    }
+
+def get_recent_audit_logs(limit: int = 50) -> List[Dict[str, Any]]:
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM audit_logs ORDER BY log_id DESC LIMIT ?", (limit,))
+    rows = cursor.fetchall()
+    conn.close()
+    
+    logs = []
+    for r in rows:
+        d = dict(r)
+        if d.get("details_json"):
+            try:
+                d["details"] = json.loads(d["details_json"])
+            except Exception:
+                d["details"] = {}
+        logs.append(d)
+    return logs
+
+# --- Auto-Trigger Logs ---
+def log_auto_trigger(case_id: str, rule_name: str, action_executed: str, latency_ms: float, status: str = "EXECUTED") -> Dict[str, Any]:
+    import uuid
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    trigger_id = f"TRIG-{uuid.uuid4().hex[:8].upper()}"
+    now = time.time()
+    cursor.execute("""
+    INSERT INTO auto_trigger_logs (trigger_id, case_id, rule_name, action_executed, latency_ms, status, timestamp)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+    """, (trigger_id, case_id, rule_name, action_executed, latency_ms, status, now))
+    conn.commit()
+    conn.close()
+    return {
+        "trigger_id": trigger_id,
+        "case_id": case_id,
+        "rule_name": rule_name,
+        "action_executed": action_executed,
+        "latency_ms": latency_ms,
+        "status": status,
+        "timestamp": now
+    }
+
+def get_auto_trigger_logs(limit: int = 50) -> List[Dict[str, Any]]:
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM auto_trigger_logs ORDER BY timestamp DESC LIMIT ?", (limit,))
+    rows = cursor.fetchall()
+    conn.close()
+    return [dict(r) for r in rows]
+
+# --- API Keys Management ---
+def store_api_key(key_id: str, key_hash: str, owner_name: str, role: str, scope_csv: str) -> bool:
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    now = time.time()
+    cursor.execute("""
+    INSERT OR REPLACE INTO api_keys (key_id, key_hash, owner_name, role, scope_csv, is_active, created_at, last_used_at)
+    VALUES (?, ?, ?, ?, ?, 1, ?, ?)
+    """, (key_id, key_hash, owner_name, role, scope_csv, now, now))
+    conn.commit()
+    conn.close()
+    return True
+
+def get_all_api_keys() -> List[Dict[str, Any]]:
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute("SELECT key_id, owner_name, role, scope_csv, is_active, created_at, last_used_at FROM api_keys ORDER BY created_at DESC")
+    rows = cursor.fetchall()
+    conn.close()
+    return [dict(r) for r in rows]
+
+def revoke_api_key(key_id: str) -> bool:
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("UPDATE api_keys SET is_active = 0 WHERE key_id = ?", (key_id,))
+    affected = cursor.rowcount
+    conn.commit()
+    conn.close()
+    return affected > 0
+
 class DatabaseService:
     @staticmethod
     def get_all_incidents(limit: int = 20) -> List[Dict[str, Any]]:
@@ -415,6 +596,34 @@ class DatabaseService:
     @staticmethod
     def update_hold_status(case_id: str, new_status: str) -> bool:
         return update_incident_status(case_id, new_status)
+
+    @staticmethod
+    def append_audit_log(actor: str, role: str, action: str, target_id: str, details: Dict[str, Any]) -> Dict[str, Any]:
+        return append_audit_log(actor, role, action, target_id, details)
+
+    @staticmethod
+    def get_recent_audit_logs(limit: int = 50) -> List[Dict[str, Any]]:
+        return get_recent_audit_logs(limit)
+
+    @staticmethod
+    def log_auto_trigger(case_id: str, rule_name: str, action_executed: str, latency_ms: float, status: str = "EXECUTED") -> Dict[str, Any]:
+        return log_auto_trigger(case_id, rule_name, action_executed, latency_ms, status)
+
+    @staticmethod
+    def get_auto_trigger_logs(limit: int = 50) -> List[Dict[str, Any]]:
+        return get_auto_trigger_logs(limit)
+
+    @staticmethod
+    def store_api_key(key_id: str, key_hash: str, owner_name: str, role: str, scope_csv: str) -> bool:
+        return store_api_key(key_id, key_hash, owner_name, role, scope_csv)
+
+    @staticmethod
+    def get_all_api_keys() -> List[Dict[str, Any]]:
+        return get_all_api_keys()
+
+    @staticmethod
+    def revoke_api_key(key_id: str) -> bool:
+        return revoke_api_key(key_id)
 
 db_service = DatabaseService()
 

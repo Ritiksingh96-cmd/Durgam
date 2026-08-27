@@ -21,14 +21,21 @@ class ISO20022BankingSwitch:
 
     def place_micro_hold(
         self,
-        account_id: str,
-        masked_account: str,
-        bank_name: str,
-        ifsc: str,
-        amount: float,
-        case_id: str,
-        gstin: Optional[str] = None
+        account_id: Optional[str] = None,
+        masked_account: Optional[str] = None,
+        bank_name: str = "State Bank of India",
+        ifsc: Optional[str] = "SBIN0001024",
+        amount: float = 250000.0,
+        case_id: str = "DURGAM-DL-001",
+        gstin: Optional[str] = None,
+        account_number: Optional[str] = None,
+        mule_probability: float = 0.94,
+        **kwargs
     ) -> Dict[str, Any]:
+        acc_num = masked_account or account_number or "XXXX-XXXX-4821"
+        acc_id = account_id or f"ACC_{acc_num[-4:]}"
+        ifsc_code = ifsc or "SBIN0001024"
+        
         # Check merchant whitelist
         if gstin and gstin in self.whitelisted_merchants:
             merchant = self.whitelisted_merchants[gstin]
@@ -46,10 +53,10 @@ class ISO20022BankingSwitch:
         
         record = MicroHoldRecord(
             hold_id=hold_id,
-            account_id=account_id,
-            masked_account=masked_account,
+            account_id=acc_id,
+            masked_account=acc_num,
             bank_name=bank_name,
-            ifsc=ifsc,
+            ifsc=ifsc_code,
             amount_held=amount,
             case_id=case_id,
             created_at=now,
@@ -98,5 +105,13 @@ class ISO20022BankingSwitch:
     def get_all_holds(self) -> List[MicroHoldRecord]:
         self.check_and_auto_decay()
         return list(self.active_holds.values())
+
+    def execute_pre_settlement_hold(self, account_number: str, bank_ifsc: str, amount: float, mule_score: float = 0.94) -> Dict[str, Any]:
+        return self.place_micro_hold(
+            account_number=account_number,
+            ifsc=bank_ifsc,
+            amount=amount,
+            mule_probability=mule_score
+        )
 
 banking_switch = ISO20022BankingSwitch()

@@ -14,6 +14,8 @@ from backend.app.api.v1.admin import router as admin_router
 from backend.app.api.v1.websockets import router as ws_router
 from backend.app.api.v1.ai import router as ai_router
 from backend.app.api.v1.verify import router as verify_router
+from backend.app.api.v1.telecom import router as telecom_router
+from backend.app.api.v1.fiu import router as fiu_router
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -56,7 +58,14 @@ async def add_security_headers(request: Request, call_next):
     
     return response
 
+@app.on_event("startup")
+async def startup_event():
+    import asyncio
+    from backend.app.services.bank_network_daemon import bank_network_daemon
+    asyncio.create_task(bank_network_daemon.start_simulation_loop())
+
 # Register API Sub-Routers
+
 app.include_router(auth_router, prefix=settings.API_V1_STR)
 app.include_router(citizen_router, prefix=settings.API_V1_STR)
 app.include_router(police_router, prefix=settings.API_V1_STR)
@@ -66,6 +75,8 @@ app.include_router(admin_router, prefix=settings.API_V1_STR)
 app.include_router(ws_router, prefix=settings.API_V1_STR)
 app.include_router(ai_router, prefix=settings.API_V1_STR)
 app.include_router(verify_router, prefix=settings.API_V1_STR)
+app.include_router(telecom_router, prefix=settings.API_V1_STR)
+app.include_router(fiu_router, prefix=settings.API_V1_STR)
 
 # Static Files Directory
 static_dir = os.path.join(os.path.dirname(__file__), "static")

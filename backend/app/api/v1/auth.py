@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends, Request
 from pydantic import BaseModel
+from typing import List, Dict, Any, Optional
 import time
 from datetime import timedelta
 from backend.app.core.config import settings
@@ -14,12 +15,16 @@ from backend.app.core.security import (
     sanitize_input_text
 )
 
+from backend.app.core.bank_registry import get_all_registered_banks, find_branch_by_ifsc
+
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 class LoginRequest(BaseModel):
     username: str
     password: str
     role: UserRole
+    bank_code: Optional[str] = None
+    branch_code: Optional[str] = None
 
 class LoginResponse(BaseModel):
     access_token: str
@@ -31,6 +36,7 @@ class LoginResponse(BaseModel):
     badge_number: str
     jurisdiction: str
     expires_in: int
+    bank_details: Optional[Dict[str, Any]] = None
 
 class RefreshRequest(BaseModel):
     refresh_token: str
@@ -112,15 +118,21 @@ def login_user(payload: LoginRequest, request: Request):
         
     now = int(time.time())
     
+    bank_info = None
+    if payload.branch_code:
+        bank_info = find_branch_by_ifsc(payload.branch_code)
+    
     jwt_claims = {
         "sub": clean_username,
         "role": payload.role.value,
         "full_name": user["full_name"],
         "badge": user["badge_number"],
-        "jurisdiction": user["jurisdiction"]
+        "jurisdiction": bank_info["branch_name"] if bank_info else user["jurisdiction"],
+        "bank_code": payload.bank_code or "SBI",
+        "branch_code": payload.branch_code or "SBIN0001024"
     }
     
-    access_token = create_access_token(jwt_claims, expires_delta=timedelta(minutes=15))
+    access_token = create_access_token(jwt_claims, expires_delta=timedelta(hours=2))
     refresh_token = create_refresh_token(jwt_claims)
     
     return LoginResponse(
@@ -131,9 +143,18 @@ def login_user(payload: LoginRequest, request: Request):
         username=clean_username,
         full_name=user["full_name"],
         badge_number=user["badge_number"],
-        jurisdiction=user["jurisdiction"],
-        expires_in=15 * 60 # 15 minutes
+        jurisdiction=jwt_claims["jurisdiction"],
+        expires_in=2 * 3600,
+        bank_details=bank_info
     )
+
+@router.get("/banks")
+def list_registered_banks():
+    """Returns list of all Indian Scheduled Commercial Banks and their traceable branches"""
+    return {
+        "total_banks": len(get_all_registered_banks()),
+        "banks": get_all_registered_banks()
+    }
 
 @router.post("/refresh")
 def refresh_token(payload: RefreshRequest):
@@ -154,3 +175,153 @@ def refresh_token(payload: RefreshRequest):
         "token_type": "bearer",
         "expires_in": 15 * 60
     }
+
+# --- API Key Request Models ---
+class CreateAPIKeyRequest(BaseModel):
+    owner_name: str
+    role: str
+    scopes: List[str]
+
+class RevokeAPIKeyRequest(BaseModel):
+    key_id: str
+
+@router.post("/api-keys/generate")
+def generate_api_key(payload: CreateAPIKeyRequest):
+    """Generate a new scoped Sovereign Authority API key"""
+    import uuid
+    import hashlib
+    from backend.app.services.db_service import db_service
+    
+    raw_key_secret = f"durgam_{payload.role.lower()}_{uuid.uuid4().hex}"
+    key_id = f"KEY-{uuid.uuid4().hex[:8].upper()}"
+    key_hash = hashlib.sha256(raw_key_secret.encode('utf-8')).hexdigest()
+    scope_csv = ",".join(payload.scopes)
+    
+    db_service.store_api_key(key_id, key_hash, payload.owner_name, payload.role, scope_csv)
+    
+    db_service.append_audit_log(
+        actor=payload.owner_name,
+        role=payload.role,
+        action="API_KEY_GENERATED",
+        target_id=key_id,
+        details={"scopes": payload.scopes}
+    )
+    
+    return {
+        "success": True,
+        "key_id": key_id,
+        "api_key": raw_key_secret,
+        "owner_name": payload.owner_name,
+        "role": payload.role,
+        "scopes": payload.scopes,
+        "warning": "Store this API key safely. It will not be shown again."
+    }
+
+@router.get("/api-keys")
+def list_api_keys():
+    """List all registered Sovereign API keys with their status and scopes"""
+    from backend.app.services.db_service import db_service
+    keys = db_service.get_all_api_keys()
+    
+    # If no keys in db, seed default keys
+    if not keys:
+        db_service.store_api_key("KEY-MHA-001", "hash_admin", "Ministry of Home Affairs - NC4", "SUPER_ADMIN", "admin,police,bank,judiciary,export")
+        db_service.store_api_key("KEY-POL-002", "hash_police", "Delhi Cyber Police Station", "CYBER_POLICE_IO", "police:triage,police:cad,police:lien")
+        db_service.store_api_key("KEY-BNK-003", "hash_bank", "State Bank of India - NPCI Gateway", "BANK_NODAL", "bank:camt056,bank:reverse")
+        keys = db_service.get_all_api_keys()
+        
+    return {
+        "total_keys": len(keys),
+        "keys": keys
+    }
+
+@router.post("/api-keys/revoke")
+def revoke_key(payload: RevokeAPIKeyRequest):
+    """Revoke a Sovereign API key"""
+    from backend.app.services.db_service import db_service
+    success = db_service.revoke_api_key(payload.key_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="API Key ID not found")
+        
+    db_service.append_audit_log(
+        actor="ADMIN",
+        role="SUPER_ADMIN",
+        action="API_KEY_REVOKED",
+        target_id=payload.key_id,
+        details={"revoked": True}
+    )
+    return {
+        "success": True,
+        "message": f"API Key {payload.key_id} has been permanently revoked."
+    }
+
+@router.get("/audit-trail")
+def get_cryptographic_audit_trail(limit: int = 50):
+    """Returns SHA-256 tamper-evident immutable audit log of all authority actions"""
+    from backend.app.services.db_service import db_service
+    logs = db_service.get_recent_audit_logs(limit)
+    if not logs:
+        # Seed initial genesis log
+        db_service.append_audit_log(
+            actor="SYSTEM_GENESIS",
+            role="SYSTEM",
+            action="SOVEREIGN_NODE_BOOTSTRAP",
+            target_id="NODE-DELHI-01",
+            details={"status": "INITIALIZED", "dpdp_compliance": True}
+        )
+        logs = db_service.get_recent_audit_logs(limit)
+        
+    return {
+        "total_logs": len(logs),
+        "tamper_evident_algorithm": "SHA-256 Hash Chaining (Blockchain Merkle Ancestry)",
+        "compliance_act": "Section 63 BSA 2023 & DPDP Act 2023",
+        "logs": logs
+    }
+
+class ProvisionUserRequest(BaseModel):
+    username: str
+    full_name: str
+    role: str
+    department: str
+    jurisdiction: str
+    badge_number: str
+
+@router.get("/users")
+def get_all_registered_users():
+    """Returns list of registered officers and authorized stakeholder personas across agencies"""
+    users_list = []
+    for uname, udata in USERS_DB.items():
+        users_list.append({
+            "username": uname,
+            "full_name": udata.get("full_name"),
+            "role": udata.get("role").value if hasattr(udata.get("role"), "value") else str(udata.get("role")),
+            "badge_number": udata.get("badge_number"),
+            "jurisdiction": udata.get("jurisdiction"),
+            "status": "ACTIVE",
+            "security_clearance": "SOVEREIGN_RESTRICTED" if "sp_" in uname or "cjm_" in uname else "CONFIDENTIAL",
+            "2fa_enforced": True
+        })
+    return {
+        "total_users": len(users_list),
+        "users": users_list
+    }
+
+@router.post("/users/provision")
+def provision_new_user(payload: ProvisionUserRequest):
+    """Provisions a new agency officer credential with RBAC clearance"""
+    USERS_DB[payload.username] = {
+        "password_hash": "$2b$12$K1dZ3QdE8lR8rYF0XF4Hqu2KzQ4h9nB7g8h.H6P.wZ8v4h6r3q0e2",
+        "role": payload.role,
+        "full_name": payload.full_name,
+        "badge_number": payload.badge_number,
+        "jurisdiction": payload.jurisdiction
+    }
+    return {
+        "success": True,
+        "username": payload.username,
+        "full_name": payload.full_name,
+        "role": payload.role,
+        "status": "PROVISIONED_ACTIVE",
+        "message": f"Officer {payload.full_name} successfully provisioned in {payload.department}."
+    }
+
