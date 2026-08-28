@@ -17,7 +17,8 @@ from backend.app.services.geospatial_service import geospatial_service
 
 class AutoTriggerService:
     def __init__(self):
-        self.rules_config = {
+        # Default rules configuration
+        default_config = {
             "RULE_01_AUTO_BANK_LIEN": {
                 "name": "Autonomous ISO 20022 camt.056 Bank Lien",
                 "description": "Automatically places 30-min micro-hold on terminal mule account when loss >= threshold and GNN risk >= 0.85",
@@ -52,6 +53,9 @@ class AutoTriggerService:
                 "triggers_count": 64
             }
         }
+        # Load persisted rule config from DB (survives restarts), fall back to defaults
+        saved = db_service.get_setting("auto_trigger_rules_config", None)
+        self.rules_config = saved if saved else default_config
 
     def evaluate_and_trigger(self, complaint: Dict[str, Any]) -> List[Dict[str, Any]]:
         """
@@ -188,12 +192,16 @@ class AutoTriggerService:
     def toggle_rule(self, rule_id: str, enable: bool) -> bool:
         if rule_id in self.rules_config:
             self.rules_config[rule_id]["enabled"] = enable
+            # Persist to SQLite so change survives server restart
+            db_service.set_setting("auto_trigger_rules_config", self.rules_config)
             return True
         return False
 
     def update_threshold(self, rule_id: str, field: str, value: float) -> bool:
         if rule_id in self.rules_config and field in self.rules_config[rule_id]:
             self.rules_config[rule_id][field] = value
+            # Persist to SQLite so change survives server restart
+            db_service.set_setting("auto_trigger_rules_config", self.rules_config)
             return True
         return False
 

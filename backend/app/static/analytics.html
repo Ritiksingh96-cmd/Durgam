@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>National Cyber Financial Fraud Analytics & Intelligence Hub | DURGAM</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="stylesheet" href="/static/ui-components.css" />
+</head>
+<body>
+
+  <!-- Top Tricolor Ribbon -->
+  <div class="gov-tricolor-bar"></div>
+
+  <!-- 1. Top Utility Strip -->
+  <div class="top-strip">
+    <div class="wrap">
+      <div class="emblem-row">
+        <img src="/static/images/official_state_emblem.png" alt="Emblem of India" style="width:16px; height:20px; object-fit:contain; " />
+        <span>भारत सरकार · Government of India • Ministry of Home Affairs / I4C National Analytics</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+        <span class="ist-date-clock" style="color:#E8C9A8;">Loading Official Clocks...</span>
+        <span style="opacity:0.3;">|</span>
+        <span class="badge badge-green">● AI FORECAST ENGINE LIVE</span>
+        <span style="opacity:0.3;">|</span>
+        <a href="/static/index.html" style="color:#CBD6E2; text-decoration:none; font-weight:600;">← Return to Main Matrix</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Master Institutional Header -->
+  <header class="site">
+    <div class="wrap">
+      <a href="/static/index.html" class="brand">
+        <div class="mark" style="background:#FFFFFF; overflow:hidden; padding:2px;">
+          <img src="/static/images/official_state_emblem.png" alt="Emblem" style="width:100%; height:100%; object-fit:contain;" />
+        </div>
+        <div>
+          <div class="name">DURGAM (दूर्गम)</div>
+          <div class="tag">National Cyber Financial Fraud Analytics & Intelligence Hub</div>
+        </div>
+      </a>
+      <nav class="site-nav">
+        <a href="/static/index.html">Main Matrix</a>
+        <a href="/static/dashboard.html">Executive Command</a>
+        <a href="/static/police.html">Police CAD</a>
+        <a href="/static/bank.html">Bank Switch</a>
+        <a href="/static/citizen.html">Citizen SOS</a>
+        <a href="/static/telecom.html">Telecom CEIR</a>
+        <a href="/static/fiu.html">FIU-IND</a>
+        <a href="/static/judiciary.html">Cyber Court</a>
+        <a href="/static/analytics.html" class="active">Analytics</a>
+        <a href="/static/academy.html">Academy</a>
+      </nav>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <a href="/static/login.html" class="btn btn-outline" style="font-size:12.5px; padding:8px 14px;">Officer Login</a>
+        <a href="tel:1930" class="btn btn-primary" style="font-size:12.5px; padding:8px 14px;">Dial 1930</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- 3. Main Analytics Content -->
+  <main class="wrap" style="padding-top:36px; padding-bottom:64px;">
+    
+    <div class="sec-head" style="margin-bottom:28px;">
+      <div>
+        <div class="sec-eyebrow">National Cybercrime Telemetry & Threat Intelligence</div>
+        <h2 class="sec-title">Pan-India Fraud Topology & Bank Compliance Radar</h2>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <button onclick="window.print()" class="btn btn-ghost-ink" style="font-size:12px;">🖨️ Export Intelligence Dossier</button>
+      </div>
+    </div>
+
+    <!-- Metric Strip -->
+    <div class="metric-strip" style="margin-bottom:32px;">
+      <div class="metric">
+        <div class="num" style="color:var(--rust);">₹1,840 Cr</div>
+        <div class="lbl">Reported pan-India loss velocity (YTD)</div>
+        <div class="sub">● NCRP national ingest</div>
+      </div>
+      <div class="metric">
+        <div class="num" style="color:var(--green);">₹642 Cr</div>
+        <div class="lbl">Pre-settlement holds recovered</div>
+        <div class="sub">● 34.8% Interception Rate</div>
+      </div>
+      <div class="metric">
+        <div class="num">82.4%</div>
+        <div class="lbl">Golden-Hour resolution rate</div>
+        <div class="sub">● Sub-30 minute filings</div>
+      </div>
+      <div class="metric">
+        <div class="num" style="color:var(--navy);">36 States/UTs</div>
+        <div class="lbl">Synchronized state police commands</div>
+        <div class="sub">● 100% CCTNS Integration</div>
+      </div>
+    </div>
+
+    <!-- 2-Column Analytics Charts -->
+    <div style="display:grid; grid-template-columns:1.1fr 0.9fr; gap:28px; margin-bottom:32px;">
+      
+      <!-- Top State-Wise Loss Volume Chart -->
+      <div class="paper-card">
+        <div class="paper-card-header">
+          <div class="paper-card-title">
+            State-Wise Financial Cybercrime Ingestion (Top 6 Jurisdictions)
+          </div>
+          <span class="badge badge-rust">● MONTHLY VOLUME</span>
+        </div>
+        <div style="height:300px; position:relative;">
+          <canvas id="stateChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Fraud Syndicate Vector Distribution -->
+      <div class="paper-card">
+        <div class="paper-card-header">
+          <div class="paper-card-title">
+            Fraud Syndicate Vector Distribution
+          </div>
+          <span class="badge badge-saffron">● AI ATTRIBUTION</span>
+        </div>
+        <div style="height:300px; position:relative;">
+          <canvas id="vectorChart"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bank Compliance Leaderboard -->
+    <div class="paper-card">
+      <div class="paper-card-header">
+        <div class="paper-card-title">
+          Scheduled Commercial Bank ISO 20022 camt.056 SLA Leaderboard
+        </div>
+        <span class="badge badge-green">● RBI MASTER DIRECTIONS COMPLIANCE</span>
+      </div>
+
+      <div style="overflow-x:auto;">
+        <table class="ledger-table">
+          <thead>
+            <tr>
+              <th>Bank Entity</th>
+              <th>camt.056 Avg Latency</th>
+              <th>Pre-Settlement Hold Rate</th>
+              <th>Restitution Compliance</th>
+              <th>Mule Account Restriction SLA</th>
+              <th>Regulatory Rating</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>State Bank of India (SBI)</strong></td>
+              <td style="font-family:var(--mono); color:var(--green); font-weight:700;">84.2 ms</td>
+              <td style="font-family:var(--mono);">99.1%</td>
+              <td style="font-family:var(--mono);">98.4% (Sec 106 BNSS)</td>
+              <td style="font-family:var(--mono);">4.2 Mins</td>
+              <td><span class="badge badge-green">TIER-1 EXCELLENCE</span></td>
+            </tr>
+            <tr>
+              <td><strong>HDFC Bank</strong></td>
+              <td style="font-family:var(--mono); color:var(--green); font-weight:700;">91.6 ms</td>
+              <td style="font-family:var(--mono);">98.6%</td>
+              <td style="font-family:var(--mono);">97.9% (Sec 106 BNSS)</td>
+              <td style="font-family:var(--mono);">5.1 Mins</td>
+              <td><span class="badge badge-green">TIER-1 EXCELLENCE</span></td>
+            </tr>
+            <tr>
+              <td><strong>ICICI Bank</strong></td>
+              <td style="font-family:var(--mono); color:var(--green); font-weight:700;">102.4 ms</td>
+              <td style="font-family:var(--mono);">97.8%</td>
+              <td style="font-family:var(--mono);">96.5% (Sec 106 BNSS)</td>
+              <td style="font-family:var(--mono);">6.0 Mins</td>
+              <td><span class="badge badge-green">TIER-1 EXCELLENCE</span></td>
+            </tr>
+            <tr>
+              <td><strong>Punjab National Bank (PNB)</strong></td>
+              <td style="font-family:var(--mono); color:var(--saffron); font-weight:700;">142.1 ms</td>
+              <td style="font-family:var(--mono);">94.2%</td>
+              <td style="font-family:var(--mono);">92.1% (Sec 106 BNSS)</td>
+              <td style="font-family:var(--mono);">8.5 Mins</td>
+              <td><span class="badge badge-saffron">COMPLIANT</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- 4. Footer -->
+  <footer class="site">
+    <div class="wrap">
+      <div class="foot-bottom" style="border-top:none; padding-top:0;">
+        <span>© 2026 Government of India · Indian Cybercrime Coordination Centre (I4C)</span>
+        <span style="color:var(--saffron-dim);">DURGAM NATIONAL ANALYTICS & INTELLIGENCE RADAR</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/static/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 1. State-Wise Bar Chart
+      const stateCtx = document.getElementById('stateChart');
+      if (stateCtx) {
+        new Chart(stateCtx, {
+          type: 'bar',
+          data: {
+            labels: ['Delhi NCR', 'Maharashtra', 'Karnataka', 'Telangana', 'Uttar Pradesh', 'West Bengal'],
+            datasets: [{
+              label: 'Reported Inflow (₹ Cr)',
+              data: [142.5, 128.0, 94.2, 81.6, 76.4, 62.1],
+              backgroundColor: '#0E2340',
+              borderRadius: 2
+            }, {
+              label: 'Quarantined (₹ Cr)',
+              data: [58.2, 49.5, 38.4, 32.1, 28.0, 21.4],
+              backgroundColor: '#2F6B4F',
+              borderRadius: 2
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                labels: { font: { family: "'IBM Plex Mono', monospace", size: 11 }, color: '#1B2430' }
+              }
+            },
+            scales: {
+              x: { grid: { color: '#E5DFD3' }, ticks: { font: { family: "'Inter', sans-serif", size: 10 }, color: '#4B5563' } },
+              y: { grid: { color: '#E5DFD3' }, ticks: { font: { family: "'IBM Plex Mono', monospace", size: 10 }, color: '#4B5563' } }
+            }
+          }
+        });
+      }
+
+      // 2. Vector Doughnut Chart
+      const vectorCtx = document.getElementById('vectorChart');
+      if (vectorCtx) {
+        new Chart(vectorCtx, {
+          type: 'doughnut',
+          data: {
+            labels: ['Digital Arrest Video Call', 'Multi-Hop Mule Network', 'Malicious APK / SMS', 'Telegram Task & Crypto', 'UPI QR Spoof'],
+            datasets: [{
+              data: [38, 26, 18, 12, 6],
+              backgroundColor: ['#9A3324', '#C1652B', '#0E2340', '#2F6B4F', '#64748B'],
+              borderWidth: 2,
+              borderColor: '#FFFFFF'
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'right',
+                labels: { font: { family: "'Inter', sans-serif", size: 11 }, color: '#1B2430' }
+              }
+            }
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>

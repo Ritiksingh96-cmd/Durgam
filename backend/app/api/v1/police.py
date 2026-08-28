@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 from typing import Dict, Any, List, Optional
+from pydantic import BaseModel
 import time
 from backend.app.services.graph_service import graph_engine
 from backend.app.services.geospatial_service import geospatial_service
@@ -8,6 +9,27 @@ from backend.app.services.banking_switch import banking_switch
 from backend.app.services.db_service import db_service
 
 router = APIRouter(prefix="/police", tags=["Police Command War Room"])
+
+@router.get("/case/{case_id}")
+def get_case_detail(case_id: str):
+    """
+    Full incident detail for War Room — returns all AI model outputs, hold status,
+    candidate ATMs, dispatch details, and auto-trigger log for a specific case.
+    """
+    incident = db_service.get_incident_by_identifier(case_id)
+    if not incident:
+        raise HTTPException(status_code=404, detail=f"Case '{case_id}' not found in DURGAM sovereign database.")
+    return {
+        "success": True,
+        "case": incident,
+        "hold_details": incident.get("hold_details", {}),
+        "candidate_atms": incident.get("candidate_atms", []),
+        "dispatch_details": incident.get("dispatch_details"),
+        "mule_detection_matrix": incident.get("mule_detection_matrix", {}),
+        "golden_hour_countdown": incident.get("golden_hour_countdown", {}),
+        "auto_triggers_executed": incident.get("auto_triggers_executed", []),
+        "evidence_certificate": incident.get("evidence_certificate", {})
+    }
 
 @router.get("/dashboard-stats")
 def get_war_room_statistics():
@@ -491,4 +513,141 @@ def trigger_ai_scammer_apprehension(payload: AIScammerAlertRequest):
 def get_scammer_apprehension_dossier(case_id: str):
     """Retrieves AI tactical intelligence dossier for field police arrest execution"""
     return trigger_ai_scammer_apprehension(AIScammerAlertRequest(case_id=case_id))
+
+@router.get("/atm-prediction-radar")
+def get_police_atm_prediction_radar(city: str = "Delhi"):
+    """
+    Live ST-KDE Predictive ATM Cashout Interception Radar for Police CAD.
+    Ranks high-risk kiosks with distance, countdown timer, suspect probability, and 1-click dispatch.
+    """
+    from backend.app.services.inter_bank_mesh import inter_bank_mesh
+    atms = [a for a in inter_bank_mesh.federated_atm_kiosks if city.lower() in a.get("city", "").lower()]
+    if not atms:
+        atms = inter_bank_mesh.federated_atm_kiosks
+
+    radar_units = []
+    for idx, atm in enumerate(atms):
+        risk = atm.get("base_risk_score", 0.85)
+        eta_mins = round(max(2.0, (1.0 - risk) * 16.0), 1)
+        radar_units.append({
+            "target_id": f"RADAR-{idx+101}",
+            "atm_id": atm["atm_id"],
+            "atm_name": atm["location_name"],
+            "bank_name": atm["bank_name"],
+            "city": atm.get("city", "Delhi"),
+            "latitude": atm["latitude"],
+            "longitude": atm["longitude"],
+            "predicted_cashout_risk": risk,
+            "estimated_cashout_eta_minutes": eta_mins,
+            "active_cctv_ai_tracking": atm.get("cctv_facial_recognition_status", "ACTIVE_24x7"),
+            "nearest_pcr_callsign": f"PCR-EAGLE-{idx+1}",
+            "dispatch_status": "READY_FOR_INTERCEPTION"
+        })
+
+    radar_units.sort(key=lambda x: x["predicted_cashout_risk"], reverse=True)
+    return {
+        "status": "SUCCESS",
+        "jurisdiction": f"{city.title()} Police Cyber Command",
+        "total_targets_monitored": len(radar_units),
+        "interception_targets": radar_units,
+        "statutory_anchor": "Section 106 BNSS 2023 / Section 318(4) BNS 2023"
+    }
+
+@router.get("/zk-shared-hashes")
+def get_police_shared_zk_hashes(limit: int = 50):
+    """Accesses live federated ZK hash consortium feed to cross-reference suspect accounts across banks."""
+    from backend.app.services.zk_consortium import zk_consortium_engine
+    hashes = zk_consortium_engine.get_all_shared_hashes(limit=limit)
+    return {
+        "status": "SUCCESS",
+        "total_active_hashes": len(hashes),
+        "shared_hashes": hashes,
+        "dpdp_section": "Section 8 DPDP Act 2023 (Encrypted Hash Ledger)"
+    }
+
+@router.get("/mule-graph/{case_id}")
+def get_police_mule_layering_graph(case_id: str):
+    """Directed Multi-Hop Fund Dispersion Tree for Police Investigators."""
+    from backend.app.services.graph_service import MultiHopGraphEngine
+    engine = MultiHopGraphEngine()
+    incident = db_service.get_incident(case_id)
+    if incident:
+        amount = incident.get("loss_amount", 250000.0)
+        v_name = incident.get("victim_name", "Citizen Victim")
+        v_acc = incident.get("victim_account", "40291048291")
+        v_bank = incident.get("victim_bank", "State Bank of India")
+    else:
+        amount = 450000.0
+        v_name = "Complainant Victim (1930 Distress)"
+        v_acc = "59201948201"
+        v_bank = "State Bank of India"
+
+    trail = engine.trace_case_trail(
+        case_id=case_id,
+        victim_name=v_name,
+        victim_account=v_acc,
+        source_bank=v_bank,
+        amount=amount
+    )
+    return {
+        "status": "SUCCESS",
+        "case_id": case_id,
+        "nodes": trail["nodes"],
+        "edges": trail["edges"],
+        "layering_hops": len(trail["nodes"]) - 1,
+        "total_quarantined_inr": amount
+    }
+
+class AutoDetectPCRRequest(BaseModel):
+    case_id: Optional[str] = "DURGAM-2026-DL-8421"
+    city: Optional[str] = "Delhi"
+
+@router.post("/auto-detect-and-alert-pcr")
+def auto_detect_and_alert_pcr_van(payload: AutoDetectPCRRequest):
+    """
+    Autonomous Cybercrime Interception Engine:
+    Auto-detects high-risk ATM cashout hotspot and dispatches the nearest active PCR van.
+    """
+    from backend.app.services.inter_bank_mesh import inter_bank_mesh
+    
+    # 1. Fetch predicted high-risk ATMs
+    city = payload.city or "Delhi"
+    atms = [a for a in inter_bank_mesh.federated_atm_kiosks if city.lower() in a.get("city", "").lower()]
+    target_atm = atms[0] if atms else inter_bank_mesh.federated_atm_kiosks[0]
+    
+    # 2. Query and dispatch nearest PCR van
+    dispatch_record = geospatial_service.dispatch_nearest_patrol_unit(
+        case_id=payload.case_id or "DURGAM-2026-DL-8421",
+        target_atm={
+            "atm_id": target_atm["atm_id"],
+            "name": target_atm["location_name"],
+            "lat": target_atm["latitude"],
+            "lon": target_atm["longitude"],
+            "city": target_atm.get("city", "Delhi")
+        },
+        stolen_amount=350000.0
+    )
+    
+    # 3. Log to audit database
+    db_service.append_audit_log(
+        actor="AUTONOMOUS_AI_CAD_ENGINE",
+        role="POLICE_NATIONAL",
+        action="PCR_AUTO_DISPATCH_TRIGGERED",
+        target_id=payload.case_id or "DURGAM-2026-DL-8421",
+        details=dispatch_record
+    )
+    
+    return {
+        "status": "SUCCESS",
+        "alert_level": "RED_TACTICAL_AUTO_DISPATCH",
+        "case_id": payload.case_id,
+        "assigned_pcr_unit": dispatch_record["callsign"],
+        "driver_name": dispatch_record["driver_name"],
+        "target_atm": dispatch_record["target_atm_name"],
+        "eta_minutes": dispatch_record["eta_minutes"],
+        "distance_km": dispatch_record["distance_km"],
+        "navigation_url": dispatch_record["navigation_deeplink"],
+        "tactical_alert_message": dispatch_record["tactical_alert_message"],
+        "statutory_mandate": "Section 106 BNSS 2023 / Section 318(4) BNS 2023"
+    }
 

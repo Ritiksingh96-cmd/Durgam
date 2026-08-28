@@ -81,6 +81,47 @@ class GeospatialHotspotService:
             "tactical_alert_message": f"🚨 URGENT INTERCEPTION: Suspect mule cash-out forecasted at {target_atm['name']} ({min_dist:.1f} km away). Target: ₹{stolen_amount:,.0f}."
         }
         self.dispatch_logs.append(dispatch_record)
+        # Mark unit as dispatched so it cannot be double-assigned
+        self.mark_unit_dispatched(best_unit["unit_id"])
         return dispatch_record
+
+    def mark_unit_dispatched(self, unit_id: str) -> bool:
+        """Set patrol unit status to DISPATCHED to prevent double-assignment."""
+        for u in self.active_patrol_units:
+            if u["unit_id"] == unit_id:
+                u["status"] = "DISPATCHED"
+                u["dispatched_at"] = time.time()
+                return True
+        return False
+
+    def release_unit(self, unit_id: str) -> bool:
+        """Release a patrol unit back to AVAILABLE after interception or stand-down."""
+        for u in self.active_patrol_units:
+            if u["unit_id"] == unit_id:
+                u["status"] = "AVAILABLE"
+                u.pop("dispatched_at", None)
+                return True
+        return False
+
+    def auto_release_timed_out_units(self, timeout_minutes: int = 45) -> int:
+        """
+        Auto-release units that have been dispatched longer than timeout_minutes.
+        Called periodically by admin endpoints to prevent permanently locked units.
+        """
+        released = 0
+        now = time.time()
+        for u in self.active_patrol_units:
+            dispatched_at = u.get("dispatched_at")
+            if u["status"] == "DISPATCHED" and dispatched_at:
+                elapsed_mins = (now - dispatched_at) / 60
+                if elapsed_mins >= timeout_minutes:
+                    u["status"] = "AVAILABLE"
+                    u.pop("dispatched_at", None)
+                    released += 1
+        return released
+
+    def get_live_units(self) -> list:
+        """Return all patrol units with their current real-time status."""
+        return self.active_patrol_units
 
 geospatial_service = GeospatialHotspotService()

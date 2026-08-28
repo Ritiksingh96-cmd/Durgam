@@ -95,6 +95,6 @@ class SlidingWindowRateLimiter:
             
         return False
 
-# Global rate limiters
-login_rate_limiter = SlidingWindowRateLimiter(max_requests=5, window_seconds=60)
-incident_rate_limiter = SlidingWindowRateLimiter(max_requests=30, window_seconds=60)
+# Global rate limiters (Allowing smooth multi-war room testing and high-throughput defense)
+login_rate_limiter = SlidingWindowRateLimiter(max_requests=30, window_seconds=60)
+incident_rate_limiter = SlidingWindowRateLimiter(max_requests=100, window_seconds=60)

@@ -81,3 +81,13 @@ def get_judiciary_telemetry():
         "average_decree_tat_days": 2.4,
         "merkle_tree_batches_sealed": 1420
     }
+
+@router.get("/restitution-cases")
+def get_restitution_cases_alias():
+    """Alias for /cases"""
+    return get_judiciary_evidence_cases()
+
+@router.get("/evidence-certificates")
+def get_evidence_certificates_alias():
+    """Alias for /cases"""
+    return get_judiciary_evidence_cases()

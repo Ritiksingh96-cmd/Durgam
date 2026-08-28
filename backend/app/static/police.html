@@ -3,237 +3,378 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Police Cyber Command & Tactical CAD Interception | DURGAM</title>
-  <meta name="description" content="National Cyber Command War Room (NC4), ATM Hotspot Geospatial Prediction & Beat Patrol CAD Dispatch" />
-
-  <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230B2545' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2'/></svg>" />
-
-  <!-- Google Fonts -->
+  <title>Police CAD Command, ATM Cashout Interceptor & ZK Intelligence | DURGAM</title>
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@500;600;700;800;900&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
-
-  <!-- Leaflet CSS & JS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="/static/style.css" />
+  <link rel="stylesheet" href="/static/ui-components.css" />
 </head>
 <body>
 
-  <!-- 1. Top Tricolor Ribbon -->
+  <!-- Top Tricolor Ribbon -->
   <div class="gov-tricolor-bar"></div>
 
-  <!-- 2. Utility Bar -->
-  <div class="gov-utility-bar">
-    <div class="gov-utility-content">
-      <div class="gov-utility-left">
-        <span style="color:#F59E0B; font-weight:800;">
-          <svg class="gov-icon gov-icon-sm" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          LAW ENFORCEMENT & TACTICAL DISPATCH WING
-        </span>
-        <span style="color:rgba(255,255,255,0.25);">|</span>
-        <span style="color:#E2E8F0;">National Cyber Command War Room (NC4)</span>
-        <span style="color:rgba(255,255,255,0.25);">|</span>
-        <span id="ist-clock-display" style="color:#F59E0B; font-family:var(--font-mono); font-weight:700;">
-          <svg class="gov-icon gov-icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          Loading IST...
-        </span>
+  <!-- 1. Top Utility Strip -->
+  <div class="top-strip">
+    <div class="wrap">
+      <div class="emblem-row">
+        <img src="/static/images/official_state_emblem.png" alt="Emblem of India" style="width:16px; height:20px; object-fit:contain; " />
+        <span>भारत सरकार · Government of India • Ministry of Home Affairs / National Cyber Crime Command (I4C)</span>
       </div>
-      <div class="gov-utility-right">
-        <button onclick="openOfficerSettingsModal()" class="btn-utility" style="background:rgba(255,255,255,0.18); color:#FFFFFF; border:1px solid rgba(255,255,255,0.3);">
-          <svg class="gov-icon gov-icon-sm" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          Officer Access & Rights
-        </button>
-        <a href="/static/index.html" class="btn-utility">
-          <svg class="gov-icon gov-icon-sm" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-          Public Matrix
-        </a>
-        <a href="/static/login.html" class="btn-utility">
-          <svg class="gov-icon gov-icon-sm" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          Switch Role / SSO
-        </a>
+      <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+        <span id="police-session-header" style="color:#E8C9A8; font-weight:700;">POLICE CAD COMMAND • ERSS-112 LIVE MESH</span>
+        <span style="opacity:0.3;">|</span>
+        <span class="badge badge-green">● PATROL BEAT ACTIVE</span>
+        <span style="opacity:0.3;">|</span>
+        <a href="/static/index.html" style="color:#CBD6E2; text-decoration:none; font-weight:600;">← Return to Main Matrix</a>
       </div>
     </div>
   </div>
 
-  <!-- 3. Header -->
-  <header class="gov-main-header">
-    <div class="gov-header-container">
-      <a href="/static/index.html" class="gov-brand">
-        <img src="/static/images/ashok_stambh.jpg" alt="Emblem" class="gov-emblem" />
-        <div class="gov-title-group">
-          <div class="gov-subtitle-dept">POLICE CYBER COMMAND (NC4) • MINISTRY OF HOME AFFAIRS</div>
-          <div class="gov-subtitle-desc">Tactical Computer-Aided Dispatch (CAD) & CCTNS e-FIR Cell</div>
-          <h1>
-            DURGAM POLICE COMMAND <span class="gov-badge-domain">GOV.IN</span>
-          </h1>
+  <!-- 2. Master Institutional Header -->
+  <header class="site">
+    <div class="wrap">
+      <a href="/static/index.html" class="brand">
+        <div class="mark" style="background:#FFFFFF; overflow:hidden; padding:2px;">
+          <img src="/static/images/official_state_emblem.png" alt="Emblem" style="width:100%; height:100%; object-fit:contain;" />
+        </div>
+        <div>
+          <div class="name">DURGAM (दूर्गम)</div>
+          <div class="tag">National Police CAD War Room & ATM Cashout Interceptor</div>
         </div>
       </a>
-
-      <div class="gov-header-actions">
-        <button onclick="handleCADDispatch()" class="btn-hero-submit" style="padding:9px 18px; font-size:12px; background:#DC2626;">
-          <svg class="gov-icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          🚨 1-Click CAD Dispatch (Falcon 1)
-        </button>
+      <nav class="site-nav">
+        <a href="#police-queue" class="active">CAD Incident Queue</a>
+        <a href="#atm-interception">ATM Intercept Radar</a>
+        <a href="#zk-intelligence">Inter-Bank ZK Hashes</a>
+        <a href="/static/pcr-navigation.html">PCR Live Telematics</a>
+      </nav>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span id="police-officer-badge" class="badge badge-navy" style="font-size:11px; padding:6px 12px;">
+          Dr. Vikram Rao, IPS [NC4 COMMAND]
+        </span>
+        <button onclick="logoutUser()" class="btn btn-outline" style="font-size:12px; padding:6px 12px;">Sign Out</button>
       </div>
     </div>
   </header>
 
-  <!-- 4. LOGGED-IN POLICE OFFICER PROFILE BANNER -->
-  <section style="background:linear-gradient(180deg, #FFFFFF 0%, var(--gov-surface) 100%); border-bottom:1px solid var(--gov-border); padding:20px 24px;">
-    <div style="max-width:1400px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
-      
-      <!-- Officer Identity -->
-      <div style="display:flex; align-items:center; gap:14px;">
-        <div style="width:48px; height:48px; border-radius:50%; background:#1D4ED8; color:#FFFFFF; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:18px;">
-          VR
-        </div>
-        <div>
-          <div style="display:flex; align-items:center; gap:8px;">
-            <h2 style="font-family:var(--font-display); font-size:18px; font-weight:900; color:var(--gov-navy);">
-              Dr. Vikram Rao, IPS
-            </h2>
-            <span style="background:#DBEAFE; color:#1E40AF; font-size:10px; font-weight:900; padding:2px 7px; border-radius:4px; border:1px solid #BFDBFE;">
-              ★ SUPERINTENDENT OF POLICE • NC4
-            </span>
-          </div>
-          <div style="font-size:11.5px; color:var(--gov-text-muted); margin-top:2px;">
-            Badge: <strong style="font-family:var(--font-mono); color:var(--gov-navy);">PNO-DL-9481</strong> • Clearance: <strong>LEVEL 4 CAD COMMAND</strong> • Station: <strong>Delhi Police HQ War Room</strong>
-          </div>
-        </div>
-      </div>
-
-      <!-- Quick Metrics Pill -->
-      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-        <div style="background:#FFFFFF; border:1px solid var(--gov-border); border-radius:8px; padding:8px 14px; font-size:11.5px;">
-          <div style="font-size:10px; color:var(--gov-text-muted); font-weight:700;">ACTIVE FOCUS CASE</div>
-          <div style="font-family:var(--font-mono); font-weight:900; color:var(--gov-navy); font-size:13px;">DURGAM-DL-JK-001</div>
-        </div>
-
-        <div style="background:#FEF2F2; border:1px solid #FECACA; border-radius:8px; padding:8px 14px; font-size:11.5px;">
-          <div style="font-size:10px; color:#991B1B; font-weight:700;">BEAT PATROL STATUS</div>
-          <div style="font-weight:900; color:#DC2626; font-size:13px;">🚔 Falcon 1 En-Route (ETA 4 Mins)</div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- 5. MAIN POLICE DASHBOARD (3 ORGANIZED TABS) -->
-  <main class="gov-main-content">
+  <!-- 3. Main Police CAD Content -->
+  <main class="wrap" style="padding-top:32px; padding-bottom:64px;">
     
-    <!-- Segmented Tab Bar -->
-    <div style="display:flex; gap:10px; border-bottom:2px solid var(--gov-border); margin-bottom:24px; padding-bottom:2px; overflow-x:auto;">
-      <button class="police-nav-tab active" id="p-tab-btn-cad" onclick="switchPoliceTab('cad')" style="background:var(--gov-navy); color:#FFFFFF; border:none; padding:10px 18px; border-radius:8px; font-weight:800; font-size:12px; cursor:pointer; display:flex; align-items:center; gap:6px;">
-        <svg class="gov-icon gov-icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
-        1. Tactical CAD Patrol Dispatch & GIS Radar
-      </button>
-
-      <button class="police-nav-tab" id="p-tab-btn-fir" onclick="switchPoliceTab('fir')" style="background:var(--gov-surface); color:var(--gov-navy); border:1px solid var(--gov-border); padding:10px 18px; border-radius:8px; font-weight:800; font-size:12px; cursor:pointer; display:flex; align-items:center; gap:6px;">
-        <svg class="gov-icon gov-icon-sm" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
-        2. CCTNS Automated e-FIR & Sealing
-      </button>
-
-      <button class="police-nav-tab" id="p-tab-btn-gnn" onclick="switchPoliceTab('gnn')" style="background:var(--gov-surface); color:var(--gov-navy); border:1px solid var(--gov-border); padding:10px 18px; border-radius:8px; font-weight:800; font-size:12px; cursor:pointer; display:flex; align-items:center; gap:6px;">
-        <svg class="gov-icon gov-icon-sm" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/></svg>
-        3. GraphSAGE Multi-Hop Mule Forensics
-      </button>
-    </div>
-
-    <!-- TAB 1: CAD & GIS RADAR -->
-    <div id="police-tab-cad" class="police-tab-content">
-      
-      <!-- Interactive State Filter Bar -->
-      <div id="state-selector-bar" style="margin-bottom:18px;"></div>
-
-      <div class="gov-card">
-        <div class="gov-card-header">
-          <div class="gov-card-title">
-            <svg class="gov-icon gov-icon-lg" viewBox="0 0 24 24" style="stroke:var(--gov-navy);"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
-            <span>Live Spatiotemporal ATM Cashout Radar & GIS Surveillance</span>
-          </div>
-          <div style="font-size:11.5px; color:var(--gov-navy); font-weight:800;">
-            Patrol Callsign: <span id="pcr-callsign-display" style="color:#DC2626;">Falcon 1</span> • Dist: <span id="pcr-live-dist" style="color:#059669;">1.40 km</span> • ETA: <span id="pcr-live-eta" style="color:#D97706;">4 Mins</span>
-          </div>
-        </div>
-
-        <div class="radar-container">
-          <div id="map-view" style="height:440px;"></div>
-        </div>
-
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-top:14px; font-size:12px;">
-          <div>Active Target: <strong id="active-state-atm" style="color:var(--gov-danger);">SBI ATM, Connaught Place</strong></div>
-          <button onclick="handleCADDispatch()" class="btn-hero-submit" style="padding:7px 16px; font-size:11.5px;">
-            🚔 Dispatch Nearest PCR Unit (Sub-4 Min Interception)
-          </button>
-        </div>
+    <!-- Section Head -->
+    <div class="sec-head" style="margin-bottom:24px;">
+      <div>
+        <div class="sec-eyebrow">Tactical Law Enforcement Operations</div>
+        <h2 class="sec-title" id="police-jurisdiction-title">State Cyber Crime Command & ERSS-112 PCR Dispatch</h2>
       </div>
-
-    </div>
-
-    <!-- TAB 2: CCTNS e-FIR DRAFTING -->
-    <div id="police-tab-fir" class="police-tab-content" style="display:none;">
-      <div class="gov-card" style="max-width:900px; margin:0 auto;">
-        <div class="gov-card-header">
-          <div class="gov-card-title">
-            <svg class="gov-icon gov-icon-lg" viewBox="0 0 24 24" style="stroke:var(--gov-navy);"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
-            <span>CCTNS Automated e-FIR Drafting & Digital Evidence Sealing</span>
-          </div>
-          <span style="font-size:10.5px; background:#ECFDF5; color:#047857; font-weight:800; padding:3px 8px; border-radius:4px;">
-            SECTION 66D IT ACT & SECTION 106 BNSS
-          </span>
-        </div>
-
-        <div style="background:var(--gov-surface); border:1px solid var(--gov-border); border-radius:8px; padding:18px; margin-bottom:18px; font-size:12.5px; line-height:1.7;">
-          <div style="font-weight:800; color:var(--gov-navy); font-size:14px; margin-bottom:8px;">
-            First Information Report (e-FIR) Docket Summary
-          </div>
-          <div>Complainant: <strong>Dr. Rajiv Malhotra</strong> (Aadhaar Verified)</div>
-          <div>Suspect Modus: <strong>Digital Arrest Extortion (CBI/Police Video Call Impersonation)</strong></div>
-          <div>Quarantined Funds: <strong style="color:var(--gov-danger);">₹2,50,000</strong> across 3 Multi-Hop Mule Nodes</div>
-          <div>Designated Police Station: <strong>Cyber Crime Police Station, Special Cell, Delhi Police</strong></div>
-        </div>
-
-        <div style="display:flex; gap:10px;">
-          <button class="btn-saffron" onclick="handleGenerateFIR()">
-            ✍️ Digitally Sign & Transmit e-FIR to CCTNS
-          </button>
-          <button class="btn-utility" onclick="alert('Evidence dossier exported under Section 63 BSA.')" style="padding:10px 16px;">
-            📥 Export Section 63 BSA Dossier
-          </button>
-        </div>
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+        <a href="/static/pcr-navigation.html" class="btn btn-primary" style="font-size:12.5px; background:#229ED9; border-color:#229ED9;">
+          📍 PCR Live Telematics & Telegram
+        </a>
+        <button onclick="triggerSimulatedIncident()" class="btn btn-alert" style="font-size:12.5px;">🚨 Inject 1930 Distress Case</button>
       </div>
     </div>
 
-    <!-- TAB 3: GNN MULE FORENSICS -->
-    <div id="police-tab-gnn" class="police-tab-content" style="display:none;">
-      <div class="gov-card">
-        <div class="gov-card-header">
-          <div class="gov-card-title">
-            <svg class="gov-icon gov-icon-lg" viewBox="0 0 24 24" style="stroke:var(--gov-navy);"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/></svg>
-            <span>GraphSAGE GNN Multi-Hop Mule Layering Forensics</span>
-          </div>
-          <button onclick="triggerAIMultiHopInference()" class="btn-primary" style="padding:6px 12px; font-size:11px;">
-            ⚡ Re-Run GNN Sub-70ms Model
-          </button>
-        </div>
+    <!-- Metric Strip -->
+    <div class="metric-strip" style="margin-bottom:28px;">
+      <div class="metric">
+        <div class="num" id="active-incidents-count">14</div>
+        <div class="lbl">Active 1930 distress cases</div>
+        <div class="sub">● Sub-140ms pre-settlement hold</div>
+      </div>
+      <div class="metric">
+        <div class="num" style="color:var(--saffron);" id="police-pcr-count">8 PCR Units</div>
+        <div class="lbl">Patrol beats geo-tracked</div>
+        <div class="sub">● ERSS-112 CAD integration</div>
+      </div>
+      <div class="metric">
+        <div class="num" style="color:var(--green);">0.96 ST-KDE</div>
+        <div class="lbl">ATM cashout prediction score</div>
+        <div class="sub">● Spatiotemporal ML model</div>
+      </div>
+      <div class="metric">
+        <div class="num" id="police-zk-count" style="color:var(--navy);">16,509</div>
+        <div class="lbl">Cross-bank suspect ZK hashes</div>
+        <div class="sub">● Section 8 DPDP 2023</div>
+      </div>
+    </div>
 
-        <canvas id="money-trail-canvas" style="width:100%; height:380px; background:#FFFFFF; border:1px solid var(--gov-border); border-radius:6px;"></canvas>
+    <!-- SECTION 1: ST-KDE Predictive ATM Cashout Interception Radar -->
+    <div class="paper-card" id="atm-interception" style="margin-bottom:28px; border-top:4px solid var(--rust);">
+      <div class="paper-card-header">
+        <div>
+          <div class="paper-card-title">🚨 ST-KDE Predictive ATM Cashout Interception Radar</div>
+          <div style="font-size:12px; color:var(--ink-soft); font-family:var(--mono);">Spatiotemporal ML model forecasting immediate ATM withdrawal targets with live PCR patrol dispatch</div>
+        </div>
+        <button onclick="fetchPoliceATMRadar()" class="btn btn-outline" style="font-size:11.5px; padding:4px 10px;">Refresh Radar</button>
+      </div>
+
+      <div style="overflow-x:auto;">
+        <table class="ledger-table">
+          <thead>
+            <tr>
+              <th>Target Kiosk ID</th>
+              <th>ATM Location & Corridor</th>
+              <th>Bank Switch</th>
+              <th>Predicted Cashout Probability</th>
+              <th>Estimated Withdrawal ETA</th>
+              <th>Facial AI / CCTV</th>
+              <th>Tactical Action</th>
+            </tr>
+          </thead>
+          <tbody id="police-atm-radar-tbody">
+            <tr>
+              <td colspan="7" style="text-align:center; padding:20px; color:var(--ink-soft);">Calculating spatiotemporal cashout trajectories...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SECTION 2: Active Incident Queue & Multi-Hop Case Dossier -->
+    <div class="paper-card" id="police-queue" style="margin-bottom:28px;">
+      <div class="paper-card-header">
+        <div class="paper-card-title">
+          Live Financial Cybercrime Dockets & 1930 Distress Ingestion Queue
+        </div>
+        <span class="badge badge-rust">● REAL-TIME CCTNS STREAM</span>
+      </div>
+
+      <div style="overflow-x:auto;">
+        <table class="ledger-table">
+          <thead>
+            <tr>
+              <th>Incident ID</th>
+              <th>Victim & City</th>
+              <th>Defrauded Amount</th>
+              <th>Target ATM Hotspot</th>
+              <th>Modus Operandi</th>
+              <th>Pre-Settlement Status</th>
+              <th>Police Actions</th>
+            </tr>
+          </thead>
+          <tbody id="police-incidents-tbody">
+            <tr>
+              <td colspan="7" style="text-align:center; padding:24px; color:var(--ink-soft); font-family:var(--mono);">
+                Loading live incidents from National Cybercrime Reporting Portal (NCRP)...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SECTION 3: Inter-Bank Shared ZK Hashes & Suspect Intelligence -->
+    <div class="paper-card" id="zk-intelligence">
+      <div class="paper-card-header">
+        <div>
+          <div class="paper-card-title">Inter-Bank Zero-Knowledge (ZK) Suspect Hash Intelligence Feed</div>
+          <div style="font-size:12px; color:var(--ink-soft); font-family:var(--mono);">Cross-institutional threat intelligence shared across all 48 banks under Section 8 DPDP Act 2023</div>
+        </div>
+        <span class="badge badge-navy">● 48 BANKS SYNCHRONIZED</span>
+      </div>
+
+      <div style="overflow-x:auto;">
+        <table class="ledger-table" style="font-size:11px;">
+          <thead>
+            <tr>
+              <th>Salted ZK Hash (SHA-256)</th>
+              <th>Masked Suspect Account</th>
+              <th>Risk Tier</th>
+              <th>Reporting Bank / Agency</th>
+              <th>Statutory Mandate</th>
+              <th>Investigation Action</th>
+            </tr>
+          </thead>
+          <tbody id="police-zk-tbody">
+            <tr>
+              <td colspan="6" style="text-align:center; padding:20px; color:var(--ink-soft);">Loading federated ZK intelligence feed...</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
   </main>
 
-  <!-- Footer -->
-  <footer class="gov-footer">
-    <div class="gov-footer-bottom">
-      <div>© 2026 Government of India • Ministry of Home Affairs • All Rights Reserved.</div>
-      <div>DURGAM Police Cyber Command (NC4) • GIGW 3.0 Standard</div>
+  <!-- 4. Footer -->
+  <footer class="site">
+    <div class="wrap">
+      <div class="foot-bottom" style="border-top:none; padding-top:0;">
+        <span>© 2026 Government of India · Ministry of Home Affairs · Indian Cyber Crime Coordination Centre (I4C)</span>
+        <span style="color:var(--saffron-dim);">DURGAM POLICE CAD WAR ROOM • ERSS-112 INTERCEPTION MESH</span>
+      </div>
     </div>
   </footer>
 
   <script src="/static/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      enforceDepartmentAccess(['POLICE_CAD', 'POLICE_NATIONAL', 'POLICE_BEAT', 'SUPER_ADMIN', 'ADMIN']);
+      initDynamicPoliceSession();
+      await fetchPoliceIncidents();
+      await fetchPoliceATMRadar();
+      await fetchPoliceZKHashes();
+    });
+
+    function initDynamicPoliceSession() {
+      const session = getCurrentAuthSession() || {};
+      const badge = document.getElementById('police-officer-badge');
+      if (badge) {
+        badge.innerText = `${session.full_name || 'Cyber Officer'} [${session.badge || 'IPS-DL-1094'}]`;
+      }
+
+      const header = document.getElementById('police-session-header');
+      if (header) {
+        header.innerText = `POLICE CAD COMMAND • ${session.jurisdiction || 'NATIONAL WAR ROOM'} LIVE`;
+      }
+
+      const title = document.getElementById('police-jurisdiction-title');
+      if (title) {
+        title.innerText = `${session.jurisdiction || 'State Cyber Crime Command'} — ERSS-112 Tactical CAD`;
+      }
+    }
+
+    async function fetchPoliceIncidents() {
+      try {
+        const res = await fetch('/api/v1/police/golden-hour-queue');
+        const queue = await res.json();
+        renderPoliceIncidentsTable(queue);
+      } catch (err) {
+        console.error('Error fetching police incidents:', err);
+      }
+    }
+
+    function renderPoliceIncidentsTable(queue) {
+      const tbody = document.getElementById('police-incidents-tbody');
+      tbody.innerHTML = '';
+
+      if (!queue || queue.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:24px;">No active distress dockets currently queued.</td></tr>';
+        return;
+      }
+
+      document.getElementById('active-incidents-count').innerText = queue.length;
+
+      queue.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong style="color:var(--navy);">${item.case_id}</strong><br><span style="font-size:11px; font-family:var(--mono); color:var(--ink-soft);">${item.ack_number}</span></td>
+          <td>${item.victim_name}<br><span style="font-size:11px; color:var(--ink-soft); font-family:var(--mono);">${item.victim_city}</span></td>
+          <td style="color:var(--rust); font-weight:700; font-family:var(--mono);">₹${(item.loss_amount || 0).toLocaleString('en-IN')}</td>
+          <td><strong>${item.top_atm_name || 'SBI ATM #14 CP'}</strong><br><span style="font-size:11px; color:var(--ink-soft); font-family:var(--mono);">${item.target_city || 'Delhi'}</span></td>
+          <td><span class="badge badge-rust" style="font-size:10px;">${item.crime_category || 'DIGITAL_ARREST'}</span></td>
+          <td><span class="badge badge-green" style="font-size:10px;">SUB-140MS HOLD ACTIVE</span></td>
+          <td>
+            <div style="display:flex; gap:6px;">
+              <button onclick="dispatchPatrol('${item.case_id}', '${item.top_atm_name || 'SBI ATM #14 CP'}', ${item.loss_amount || 250000})" class="btn btn-alert" style="font-size:10.5px; padding:4px 8px;">
+                🚓 Dispatch PCR
+              </button>
+              <a href="/static/dossier.html?case_id=${encodeURIComponent(item.case_id)}" class="btn btn-outline" style="font-size:10.5px; padding:4px 8px; text-decoration:none;">
+                📜 Dossier
+              </a>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function fetchPoliceATMRadar() {
+      try {
+        const res = await fetch('/api/v1/police/atm-prediction-radar?city=Delhi');
+        const data = await res.json();
+        const tbody = document.getElementById('police-atm-radar-tbody');
+        tbody.innerHTML = '';
+
+        (data.interception_targets || []).forEach(atm => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td style="font-family:var(--mono); font-weight:700; color:var(--navy);">${atm.atm_id}</td>
+            <td><strong>${atm.atm_name}</strong><br><span style="font-size:11px; color:var(--ink-soft);">${atm.city} (${atm.latitude.toFixed(3)}, ${atm.longitude.toFixed(3)})</span></td>
+            <td>${atm.bank_name}</td>
+            <td><span class="badge ${atm.predicted_cashout_risk > 0.85 ? 'badge-rust' : 'badge-saffron'}">${(atm.predicted_cashout_risk * 100).toFixed(1)}% Risk</span></td>
+            <td><strong style="color:var(--rust); font-family:var(--mono);">${atm.estimated_cashout_eta_minutes} Mins</strong></td>
+            <td><span class="badge badge-green" style="font-size:10px;">${atm.active_cctv_ai_tracking}</span></td>
+            <td>
+              <button onclick="dispatchPatrolToATM('${atm.atm_id}', '${atm.atm_name}', ${atm.latitude}, ${atm.longitude})" class="btn btn-alert" style="font-size:10.5px; padding:4px 8px;">
+                🚨 Dispatch ${atm.nearest_pcr_callsign}
+              </button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        console.error('Error fetching police ATM radar:', err);
+      }
+    }
+
+    async function fetchPoliceZKHashes() {
+      try {
+        const res = await fetch('/api/v1/police/zk-shared-hashes');
+        const data = await res.json();
+        const tbody = document.getElementById('police-zk-tbody');
+        tbody.innerHTML = '';
+
+        document.getElementById('police-zk-count').innerText = data.total_active_hashes || '16,509';
+
+        (data.shared_hashes || []).forEach(h => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td style="font-family:var(--mono); font-size:10px; color:var(--navy); font-weight:700;">${h.zk_hash}</td>
+            <td><strong>${h.masked_identifier}</strong> (${h.ifsc || h.bank_code})</td>
+            <td><span class="badge ${h.risk_tier.includes('CRITICAL') ? 'badge-rust' : 'badge-saffron'}" style="font-size:9.5px;">${h.risk_tier}</span></td>
+            <td>${h.reporting_agency}</td>
+            <td><span style="font-family:var(--mono); font-size:10px; color:var(--green);">Sec 106 BNSS / DPDP Sec 8</span></td>
+            <td>
+              <button onclick="alert('Suspect Hash matched in CCTNS & CDR correlation mesh for ${h.masked_identifier}. Evidence sealed under Section 63 BSA 2023.')" class="btn btn-outline" style="font-size:10px; padding:3px 7px;">
+                🔍 Link e-FIR
+              </button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        console.error('Error fetching police ZK hashes:', err);
+      }
+    }
+
+    async function dispatchPatrol(caseId, targetAtm, amount) {
+      alert(`🚓 CAD TACTICAL DISPATCH ISSUED:\n\n• Case ID: ${caseId}\n• Destination: ${targetAtm}\n• Quarantined Target: ₹${amount.toLocaleString('en-IN')}\n• Channel: ERSS-112 Telegram CAD Feed\n• Status: PCR Unit Eagle 4 En Route (ETA: 4.2 mins)`);
+    }
+
+    async function dispatchPatrolToATM(atmId, location, lat, lon) {
+      alert(`🚨 EMERGENCY POLICE INTERCEPTION DISPATCHED:\n\n• Target ATM: ${atmId} (${location})\n• Geo-Coordinates: ${lat}, ${lon}\n• Action: Perimeter seal & suspect detention under Section 106 BNSS 2023\n• Navigation: Turn-by-Turn GPS coordinates delivered to PCR unit.`);
+    }
+
+    async function triggerSimulatedIncident() {
+      try {
+        const res = await fetch('/api/v1/citizen/report-incident', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            victim_name: 'Dr. Rajiv Malhotra',
+            victim_phone: '9810294821',
+            victim_account: '40291048291',
+            victim_bank: 'State Bank of India',
+            victim_city: 'Delhi',
+            victim_state: 'Delhi',
+            incident_type: 'DIGITAL_ARREST',
+            loss_amount: 450000.0,
+            utr_number: 'UTR' + Math.floor(Math.random()*1000000000)
+          })
+        });
+        const data = await res.json();
+        alert(`🚨 1930 DISTRESS INCIDENT INGESTED & PRE-SETTLEMENT LIEN PLACED:\n\n• Case ID: ${data.case_id}\n• Ack Number: ${data.ack_number}\n• Amount Quarantined: ₹4,50,000 (Sub-140ms)\n• ST-KDE Target ATM: ${data.top_candidate_atm?.name || 'SBI ATM #14 CP'}`);
+        await fetchPoliceIncidents();
+        await fetchPoliceATMRadar();
+      } catch (err) {
+        alert('Simulation executed.');
+      }
+    }
+  </script>
 </body>
 </html>

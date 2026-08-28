@@ -3,193 +3,189 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>JanParichay / MeriPehchaan SSO Login | DURGAM</title>
-  <meta name="description" content="National Unified Single Sign-On (SSO) Portal for Citizens, Police Cyber Command, Banks, and Judiciary" />
-
-  <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230B2545' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='11' width='18' height='11' rx='2' ry='2'/><path d='M7 11V7a5 5 0 0 1 10 0v4'/></svg>" />
-
-  <!-- Google Fonts -->
+  <title>JanParichay Sovereign SSO Gateway | DURGAM</title>
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@500;600;700;800;900&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="/static/style.css" />
+  <link rel="stylesheet" href="/static/ui-components.css" />
 </head>
-<body style="background-color:#F8FAFC;">
+<body style="min-height:100vh; display:flex; flex-direction:column;">
 
   <!-- Top Tricolor Ribbon -->
   <div class="gov-tricolor-bar"></div>
 
-  <!-- Utility Bar -->
-  <div class="gov-utility-bar">
-    <div class="gov-utility-content">
-      <div class="gov-utility-left">
-        <span style="color:var(--gov-gold); font-weight:800;">
-          <svg class="gov-icon gov-icon-sm" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          NATIONAL SINGLE SIGN-ON GATEWAY
-        </span>
-        <span style="color:rgba(255,255,255,0.2);">|</span>
-        <span style="color:#CBD5E1;">JanParichay / MeriPehchaan (NIC / MeitY)</span>
-        <span style="color:rgba(255,255,255,0.2);">|</span>
-        <span id="ist-clock-display" style="color:var(--gov-gold); font-family:var(--font-mono); font-weight:700;">
-          <svg class="gov-icon gov-icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          Loading IST...
-        </span>
+  <!-- 1. Top Utility Strip -->
+  <div class="top-strip">
+    <div class="wrap">
+      <div class="emblem-row">
+        <img src="/static/images/official_state_emblem.png" alt="Emblem of India" style="width:16px; height:20px; object-fit:contain; " />
+        <span>भारत सरकार · Government of India • JanParichay Single Sign-On (SSO)</span>
       </div>
-      <div class="gov-utility-right">
-        <a href="/static/index.html" class="btn-utility">
-          <svg class="gov-icon gov-icon-sm" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-          Back to Public Matrix
-        </a>
+      <div>
+        <a href="/static/index.html" style="color:#CBD6E2; text-decoration:none; font-weight:600;">← Return to Main Matrix</a>
       </div>
     </div>
   </div>
 
-  <!-- Main Login Container -->
-  <main class="gov-main-content" style="max-width:580px; margin:36px auto 60px;">
-    
-    <div class="gov-card" style="padding:32px; border-radius:20px; box-shadow:0 10px 30px rgba(0,0,0,0.06);">
+  <!-- 2. Master Institutional Header -->
+  <header class="site">
+    <div class="wrap">
+      <a href="/static/index.html" class="brand">
+        <div class="mark" style="background:#FFFFFF; overflow:hidden; padding:2px;">
+          <img src="/static/images/official_state_emblem.png" alt="Emblem" style="width:100%; height:100%; object-fit:contain;" />
+        </div>
+        <div>
+          <div class="name">DURGAM (दूर्गम)</div>
+          <div class="tag">JanParichay Sovereign Multi-Agency SSO Gateway</div>
+        </div>
+      </a>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span class="badge badge-green" style="font-size:11px;">ECDSA SHA-256 SECURED</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- 3. Main SSO Content -->
+  <main class="wrap" style="flex:1; display:flex; align-items:center; justify-content:center; padding-top:48px; padding-bottom:64px;">
+    <div class="paper-card" style="max-width:960px; width:100%; padding:0; display:grid; grid-template-columns:1fr 1.15fr; overflow:hidden;">
       
-      <!-- Brand Center Header -->
-      <div style="text-align:center; margin-bottom:24px;">
-        <img src="/static/images/ashok_stambh.jpg" alt="Emblem" style="width:56px; height:68px; object-fit:contain; margin-bottom:12px;" />
-        <div style="font-size:10.5px; font-weight:800; color:var(--gov-gold); text-transform:uppercase; letter-spacing:0.8px;">
-          GOVERNMENT OF INDIA • MERIPEHCHAAN SSO
+      <!-- Left Sovereign Mandate Pane -->
+      <div style="background:var(--navy); color:#FFFFFF; padding:36px; display:flex; flex-direction:column; justify-content:space-between;">
+        <div>
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
+            <img src="/static/images/official_state_emblem.png" alt="Emblem" style="width:36px; height:44px; object-fit:contain; " />
+            <div>
+              <div style="font-family:var(--serif); font-size:18px; font-weight:600;">DURGAM (दूर्गम)</div>
+              <div style="font-size:10px; color:#9FB0C4; text-transform:uppercase;">National Sovereign Defense</div>
+            </div>
+          </div>
+
+          <h3 style="font-family:var(--serif); font-size:1.35rem; font-weight:600; line-height:1.3; margin-bottom:14px; color:#FFFFFF;">
+            Unified National Multi-Agency Authorization Grid
+          </h3>
+          <p style="font-size:13px; color:#CBD6E2; line-height:1.65; margin-bottom:24px;">
+            Access restricted operational war rooms for Police Command (CAD), Scheduled Commercial Banks (FRM), DoT Telecom (CEIR), FIU-IND FinNet 2.0, and Special Cyber Courts.
+          </p>
+
+          <div style="display:flex; flex-direction:column; gap:10px; font-size:12px; font-family:var(--mono); color:#E8C9A8;">
+            <div>✓ ECDSA SHA-256 Signed JWT Sessions</div>
+            <div>✓ Section 106 BNSS 2023 Statutory Enforcement</div>
+            <div>✓ DPDP Act 2023 Zero-Knowledge Proofs</div>
+          </div>
         </div>
-        <h2 style="font-family:var(--font-display); font-size:24px; font-weight:900; color:var(--gov-navy); margin-top:4px;">
-          JanParichay Sovereign SSO Gateway
-        </h2>
-        <p style="font-size:12.5px; color:var(--gov-text-muted); margin-top:4px;">
-          Select your authorized government role to authenticate and enter your isolated portal
+
+        <div style="font-size:11px; color:#7E90A6; margin-top:24px;">
+          National Informatics Centre (NIC) • Single Sign-On (JanParichay v3.2)
+        </div>
+      </div>
+
+      <!-- Right Login Form -->
+      <div style="padding:36px; background:#FFFFFF;">
+        <h3 style="font-family:var(--serif); font-size:1.35rem; font-weight:600; color:var(--navy); margin-bottom:6px;">
+          Sign In with JanParichay
+        </h3>
+        <p style="font-size:13px; color:var(--ink-soft); margin-bottom:24px;">
+          Select your authorized department or agency to authenticate via official credentials.
         </p>
-      </div>
 
-      <!-- Role Tabs -->
-      <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:6px; margin-bottom:24px; font-size:11.5px; font-weight:800;">
-        <button class="sso-role-tab active" data-sso-role="CITIZEN" onclick="selectSSORole('CITIZEN')" style="padding:10px 4px; border:1px solid var(--gov-border-strong); border-radius:10px; background:var(--gov-navy); color:#FFFFFF; cursor:pointer;">
-          <svg class="gov-icon gov-icon-sm" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><br>Citizen
-        </button>
-        <button class="sso-role-tab" data-sso-role="POLICE" onclick="selectSSORole('POLICE')" style="padding:10px 4px; border:1px solid var(--gov-border-strong); border-radius:10px; background:#FFFFFF; color:var(--gov-text); cursor:pointer;">
-          <svg class="gov-icon gov-icon-sm" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><br>Police (NC4)
-        </button>
-        <button class="sso-role-tab" data-sso-role="BANK" onclick="selectSSORole('BANK')" style="padding:10px 4px; border:1px solid var(--gov-border-strong); border-radius:10px; background:#FFFFFF; color:var(--gov-text); cursor:pointer;">
-          <svg class="gov-icon gov-icon-sm" viewBox="0 0 24 24"><line x1="3" y1="21" x2="21" y2="21"/><line x1="3" y1="10" x2="21" y2="10"/><polyline points="5 6 12 3 19 6"/></svg><br>Bank FRM
-        </button>
-        <button class="sso-role-tab" data-sso-role="JUDICIARY" onclick="selectSSORole('JUDICIARY')" style="padding:10px 4px; border:1px solid var(--gov-border-strong); border-radius:10px; background:#FFFFFF; color:var(--gov-text); cursor:pointer;">
-          <svg class="gov-icon gov-icon-sm" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg><br>e-Courts
-        </button>
-      </div>
-
-      <!-- CITIZEN LOGIN FORM -->
-      <div id="sso-form-citizen" class="sso-form-block">
-        <form id="form-sso-citizen">
-          <div class="gov-form-group">
-            <label class="gov-label">Aadhaar Number (12 Digits) / Mobile *</label>
-            <input type="text" class="gov-input" placeholder="XXXX-XXXX-4921" value="XXXX-XXXX-4921" style="font-family:var(--font-mono); font-weight:800;" required />
+        <!-- Quick Demo Presets -->
+        <div style="margin-bottom:20px;">
+          <div style="font-size:11px; font-family:var(--mono); color:var(--ink-soft); text-transform:uppercase; margin-bottom:8px;">
+            Select Operational Persona Preset:
           </div>
-          <div class="gov-form-group">
-            <label class="gov-label">Aadhaar OTP (Demo: 193026) *</label>
-            <input type="password" class="gov-input" placeholder="Enter 6-digit OTP" value="193026" style="font-family:var(--font-mono); font-weight:900;" required />
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <button type="button" onclick="selectPersona('POLICE_CAD')" class="btn btn-ghost-ink" style="font-size:11px; padding:6px 10px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:4px;"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.5 2.8C2.1 10.7 2 10.8 2 11v5c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><circle cx="17" cy="17" r="2"></circle></svg> Police Command</button>
+            <button type="button" onclick="selectPersona('BANK_NODAL')" class="btn btn-ghost-ink" style="font-size:11px; padding:6px 10px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:4px;"><path d="M3 21h18M4 18h16M6 18v-7M10 18v-7M14 18v-7M18 18v-7M12 3 2 9h20l-10-6z"></path></svg> Bank Nodal Desk</button>
+            <button type="button" onclick="selectPersona('TELECOM_CEIR')" class="btn btn-ghost-ink" style="font-size:11px; padding:6px 10px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:4px;"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg> Telecom CEIR</button>
+            <button type="button" onclick="selectPersona('FIU_AML')" class="btn btn-ghost-ink" style="font-size:11px; padding:6px 10px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:4px;"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg> FIU-IND AML</button>
+            <button type="button" onclick="selectPersona('JUDICIAL_MAGISTRATE')" class="btn btn-ghost-ink" style="font-size:11px; padding:6px 10px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:3px;"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg> Cyber Court</button>
+            <button type="button" onclick="selectPersona('ADMIN')" class="btn btn-ghost-ink" style="font-size:11px; padding:6px 10px;">⚙️ Central Admin</button>
           </div>
-          <button type="submit" class="btn-saffron" style="width:100%; margin-top:8px;">
-            <svg class="gov-icon" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-            LOGIN TO CITIZEN DASHBOARD →
-          </button>
-        </form>
-      </div>
-
-      <!-- POLICE LOGIN FORM -->
-      <div id="sso-form-police" class="sso-form-block" style="display:none;">
-        <form id="form-sso-police">
-          <div class="gov-form-group">
-            <label class="gov-label">Police Officer PNO / IPS Badge ID *</label>
-            <input type="text" class="gov-input" placeholder="e.g. sp_delhi_cyber" value="sp_delhi_cyber" style="font-family:var(--font-mono); font-weight:800;" required />
-          </div>
-          <div class="gov-form-group">
-            <label class="gov-label">Department Token / CCTNS Password *</label>
-            <input type="password" class="gov-input" value="password123" required />
-          </div>
-          <button type="submit" class="btn-primary" style="width:100%; margin-top:8px; background:#1D4ED8;">
-            <svg class="gov-icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            AUTHENTICATE & ENTER POLICE WAR ROOM →
-          </button>
-        </form>
-      </div>
-
-      <!-- BANK LOGIN FORM -->
-      <div id="sso-form-bank" class="sso-form-block" style="display:none;">
-        <form id="form-sso-bank">
-          <div class="gov-form-group">
-            <label class="gov-label">Bank FRM Officer Username / IFSC *</label>
-            <input type="text" class="gov-input" placeholder="e.g. sbi_nodal_officer" value="sbi_nodal_officer" style="font-family:var(--font-mono); font-weight:800;" required />
-          </div>
-          <div class="gov-form-group">
-            <label class="gov-label">Nodal FRM Officer Token / Password *</label>
-            <input type="password" class="gov-input" value="password123" required />
-          </div>
-          <button type="submit" class="btn-primary" style="width:100%; margin-top:8px; background:#B45309;">
-            <svg class="gov-icon" viewBox="0 0 24 24"><line x1="3" y1="21" x2="21" y2="21"/><line x1="3" y1="10" x2="21" y2="10"/><polyline points="5 6 12 3 19 6"/></svg>
-            AUTHENTICATE & ENTER BANK NODAL GATEWAY →
-          </button>
-        </form>
-      </div>
-
-      <!-- JUDICIARY LOGIN FORM -->
-      <div id="sso-form-judiciary" class="sso-form-block" style="display:none;">
-        <form id="form-sso-judiciary">
-          <div class="gov-form-group">
-            <label class="gov-label">e-Courts Judicial Authority ID *</label>
-            <input type="text" class="gov-input" placeholder="e.g. cjm_delhi_cyber" value="cjm_delhi_cyber" style="font-family:var(--font-mono); font-weight:800;" required />
-          </div>
-          <div class="gov-form-group">
-            <label class="gov-label">Digital Judicial Signature PIN / Password *</label>
-            <input type="password" class="gov-input" value="password123" required />
-          </div>
-          <button type="submit" class="btn-primary" style="width:100%; margin-top:8px; background:#7C3AED;">
-            <svg class="gov-icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
-            AUTHENTICATE & ENTER JUDICIARY VAULT →
-          </button>
-        </form>
-      </div>
-
-      <!-- 1-Click Quick Demo Sovereign Switcher -->
-      <div style="margin-top:24px; border-top:1px solid var(--gov-border); padding-top:16px;">
-        <div style="font-size:11px; font-weight:800; color:var(--gov-navy); margin-bottom:8px;">
-          ⚡ 1-CLICK INSTANT DEMO AUTHENTICATION:
         </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
-          <button onclick="quickDemoLogin('CITIZEN')" class="btn-utility" style="justify-content:center; padding:8px; font-size:11px; color:var(--gov-navy);">
-            👤 Citizen (Dr. Malhotra)
-          </button>
-          <button onclick="quickDemoLogin('POLICE')" class="btn-utility" style="justify-content:center; padding:8px; font-size:11px; color:#1D4ED8;">
-            👮‍♂️ Police (Dr. Rao, IPS)
-          </button>
-          <button onclick="quickDemoLogin('BANK')" class="btn-utility" style="justify-content:center; padding:8px; font-size:11px; color:#B45309;">
-            🏦 Bank (Pooja Verma, FRM)
-          </button>
-          <button onclick="quickDemoLogin('JUDICIARY')" class="btn-utility" style="justify-content:center; padding:8px; font-size:11px; color:#7C3AED;">
-            ⚖️ Court (Justice Mahajan)
-          </button>
-        </div>
-      </div>
 
-      <div style="margin-top:16px; text-align:center; font-size:11px; color:var(--gov-text-muted);">
-        Secured by NIC MeghRaj Sovereign Cloud & MeriPehchaan (GIGW 3.0 Standard)
+        <form id="sso-login-form" onsubmit="handleSSOLogin(event)">
+          <div class="gov-form-group">
+            <label class="gov-label">Official Govt Email ID / Username *</label>
+            <input type="text" id="sso-username" class="gov-input" required value="vikram.rao@police.gov.in" />
+          </div>
+
+          <div class="gov-form-group">
+            <label class="gov-label">Password / Digital Token PIN *</label>
+            <input type="password" id="sso-password" class="gov-input" required value="••••••••••••" />
+          </div>
+
+          <div class="gov-form-group">
+            <label class="gov-label">Assigned Department / War Room *</label>
+            <select id="sso-department" class="gov-select">
+              <option value="POLICE_CAD">National Police CAD War Room</option>
+              <option value="BANK_NODAL">Core Banking Switch (SBI FRM Desk)</option>
+              <option value="TELECOM_CEIR">DoT Telecom CEIR Desk</option>
+              <option value="FIU_AML">Financial Intelligence Unit (FIU-IND)</option>
+              <option value="JUDICIAL_MAGISTRATE">Special Cyber Court Magistrate</option>
+              <option value="ADMIN">I4C Central Sovereign Admin Console</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; padding:12px; font-size:13.5px; margin-top:8px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:4px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> Authenticate & Enter War Room
+          </button>
+        </form>
       </div>
 
     </div>
-
   </main>
 
-  <!-- Footer -->
-  <footer class="gov-footer">
-    <div class="gov-footer-bottom">
-      <div>© 2026 Government of India • Ministry of Electronics & IT (MeitY) • NIC</div>
-      <div>JanParichay / MeriPehchaan Sovereign SSO Standard</div>
+  <!-- 4. Footer -->
+  <footer class="site">
+    <div class="wrap">
+      <div class="foot-bottom" style="border-top:none; padding-top:0;">
+        <span>© 2026 Government of India · National Informatics Centre (NIC)</span>
+        <span style="color:var(--saffron-dim);">JANPARICHAY SOVEREIGN SSO • DURGAM DEFENSE MATRIX</span>
+      </div>
     </div>
   </footer>
 
   <script src="/static/app.js"></script>
+  <script>
+    const personas = {
+      'POLICE_CAD': { user: 'vikram.rao@police.gov.in', dept: 'POLICE_CAD', redirect: '/static/police.html', name: 'Dr. Vikram Rao, IPS (SP Cyber)' },
+      'BANK_NODAL': { user: 'pooja.verma@sbi.co.in', dept: 'BANK_NODAL', redirect: '/static/bank.html', name: 'Pooja Verma (Chief FRM Nodal Manager)', bank: { bank_name: 'State Bank of India', branch_name: 'Main Branch', branch_code: 'SBIN0001024', city: 'New Delhi' } },
+      'TELECOM_CEIR': { user: 'anand.mehta@dot.gov.in', dept: 'TELECOM_CEIR', redirect: '/static/telecom.html', name: 'Anand Mehta (DoT Telecom Nodal)' },
+      'FIU_AML': { user: 'sanjay.sharma@fiuindia.gov.in', dept: 'FIU_AML', redirect: '/static/fiu.html', name: 'Sanjay Sharma (FIU Nodal Analyst)' },
+      'JUDICIAL_MAGISTRATE': { user: 'justice.mahajan@delhicourts.nic.in', dept: 'JUDICIAL_MAGISTRATE', redirect: '/static/judiciary.html', name: 'Hon\'ble Justice S. K. Mahajan (CJM Cyber Court)' },
+      'ADMIN': { user: 'admin.i4c@mha.gov.in', dept: 'ADMIN', redirect: '/static/admin.html', name: 'Director Central Telemetry (I4C / MHA)' }
+    };
+
+    function selectPersona(type) {
+      const p = personas[type];
+      if (p) {
+        document.getElementById('sso-username').value = p.user;
+        document.getElementById('sso-department').value = p.dept;
+      }
+    }
+
+    function handleSSOLogin(e) {
+      e.preventDefault();
+      const dept = document.getElementById('sso-department').value;
+      const p = personas[dept] || { redirect: '/static/dashboard.html', name: 'Authorized Officer' };
+
+      const session = {
+        authenticated: true,
+        token: 'jwt_sovereign_' + Date.now(),
+        department: dept,
+        role: dept,
+        full_name: p.name || 'Officer',
+        bank_details: p.bank || null,
+        timestamp: new Date().toISOString()
+      };
+
+      sessionStorage.setItem('durgam_auth_session', JSON.stringify(session));
+      alert(`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:4px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> JANPARICHAY SSO AUTHENTICATION SUCCESSFUL:\n\n• Officer: ${session.full_name}\n• War Room: ${dept}\n• Routing to operational workspace...`);
+      window.location.href = p.redirect;
+    }
+  </script>
 </body>
 </html>

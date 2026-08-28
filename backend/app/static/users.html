@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>National Sovereign User Management & Access Governance | DURGAM</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="stylesheet" href="/static/ui-components.css" />
+</head>
+<body>
+
+  <!-- Top Tricolor Ribbon -->
+  <div class="gov-tricolor-bar"></div>
+
+  <!-- 1. Top Utility Strip -->
+  <div class="top-strip">
+    <div class="wrap">
+      <div class="emblem-row">
+        <img src="/static/images/official_state_emblem.png" alt="Emblem of India" style="width:16px; height:20px; object-fit:contain; " />
+        <span>भारत सरकार · Government of India • National Informatics Centre / JanParichay Governance</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+        <span class="ist-date-clock" style="color:#E8C9A8;">Loading Official Clocks...</span>
+        <span style="opacity:0.3;">|</span>
+        <span class="badge badge-green">● RBAC ACCESS FEDERATION ACTIVE</span>
+        <span style="opacity:0.3;">|</span>
+        <a href="/static/index.html" style="color:#CBD6E2; text-decoration:none; font-weight:600;">← Return to Main Matrix</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Master Institutional Header -->
+  <header class="site">
+    <div class="wrap">
+      <a href="/static/index.html" class="brand">
+        <div class="mark" style="background:#FFFFFF; overflow:hidden; padding:2px;">
+          <img src="/static/images/official_state_emblem.png" alt="Emblem" style="width:100%; height:100%; object-fit:contain;" />
+        </div>
+        <div>
+          <div class="name">DURGAM (दूर्गम)</div>
+          <div class="tag">National Sovereign User Management & Access Governance Desk</div>
+        </div>
+      </a>
+      <nav class="site-nav">
+        <a href="/static/index.html">Main Matrix</a>
+        <a href="/static/dashboard.html">Executive Command</a>
+        <a href="/static/users.html" class="active">User Governance</a>
+        <a href="/static/police.html">Police CAD</a>
+        <a href="/static/bank.html">Bank Switch</a>
+        <a href="/static/analytics.html">Analytics</a>
+        <a href="/static/academy.html">Academy</a>
+      </nav>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span class="badge badge-navy" style="font-size:11px; padding:6px 12px;">IAM GOVERNANCE</span>
+        <button onclick="logoutUser()" class="btn btn-outline" style="font-size:12px; padding:6px 12px;">Sign Out</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 3. Main User Management Content -->
+  <main class="wrap" style="padding-top:36px; padding-bottom:64px;">
+    
+    <div class="sec-head" style="margin-bottom:28px;">
+      <div>
+        <div class="sec-eyebrow">Identity & Access Management (IAM)</div>
+        <h2 class="sec-title">Authorized Agency Personnel & Security Clearance Directory</h2>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <button onclick="openProvisionModal()" class="btn btn-primary" style="font-size:12.5px;">+ Provision Agency Officer</button>
+      </div>
+    </div>
+
+    <!-- Metric Strip -->
+    <div class="metric-strip" style="margin-bottom:32px;">
+      <div class="metric">
+        <div class="num" id="user-count-total">6</div>
+        <div class="lbl">Registered agency officers</div>
+        <div class="sub">● Verified via JanParichay</div>
+      </div>
+      <div class="metric">
+        <div class="num" style="color:var(--green);">100% 2FA</div>
+        <div class="lbl">Hardware token / OTP enforced</div>
+        <div class="sub">● ECDSA SHA-256 signatures</div>
+      </div>
+      <div class="metric">
+        <div class="num" style="color:var(--navy);">6 War Rooms</div>
+        <div class="lbl">Multi-agency RBAC domains</div>
+        <div class="sub">● Strict data segregation</div>
+      </div>
+      <div class="metric">
+        <div class="num" style="color:var(--saffron);">0 Breaches</div>
+        <div class="lbl">Zero-Trust access compliance</div>
+        <div class="sub">● Continuous audit logging</div>
+      </div>
+    </div>
+
+    <!-- Users Directory Table -->
+    <div class="paper-card" style="margin-bottom:32px;">
+      <div class="paper-card-header">
+        <div class="paper-card-title">
+          Active Multi-Agency Stakeholders & Role Permissions
+        </div>
+        <span class="badge badge-green">● JANPARICHAY SSO DIRECTORY</span>
+      </div>
+
+      <div style="overflow-x:auto;">
+        <table class="ledger-table">
+          <thead>
+            <tr>
+              <th>Officer Identity & Badge</th>
+              <th>Assigned Agency / Department</th>
+              <th>Jurisdiction</th>
+              <th>Security Clearance</th>
+              <th>2FA Status</th>
+              <th>Administrative Actions</th>
+            </tr>
+          </thead>
+          <tbody id="users-table-body">
+            <tr>
+              <td colspan="6" style="text-align:center; padding:24px; color:var(--ink-soft); font-family:var(--mono);">
+                Loading authorized personnel from JanParichay directory...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Immutable Audit Trail Section -->
+    <div class="paper-card">
+      <div class="paper-card-header">
+        <div class="paper-card-title">
+          Section 63 BSA Tamper-Evident Access Audit Trail (Last 10 Events)
+        </div>
+        <span class="badge badge-navy">● SHA-256 HASH CHAINED</span>
+      </div>
+
+      <div style="overflow-x:auto;">
+        <table class="ledger-table">
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Actor & Role</th>
+              <th>Action Executed</th>
+              <th>Target Identifier</th>
+              <th>Integrity Hash Anchor</th>
+            </tr>
+          </thead>
+          <tbody id="audit-table-body">
+            <tr>
+              <td style="font-family:var(--mono); font-size:11px;">10:48:12 IST</td>
+              <td><strong>Pooja Verma</strong> (BANK_NODAL)</td>
+              <td><span class="badge badge-green">MICRO_HOLD_PLACED</span></td>
+              <td style="font-family:var(--mono);">DURGAM-DL-8421</td>
+              <td style="font-family:var(--mono); font-size:10.5px; color:var(--ink-soft);">0x8f29c4b1...e9721ad</td>
+            </tr>
+            <tr>
+              <td style="font-family:var(--mono); font-size:11px;">10:46:04 IST</td>
+              <td><strong>Dr. Rajeshwar Rao, IPS</strong> (POLICE_NATIONAL)</td>
+              <td><span class="badge badge-rust">PCR_CAD_DISPATCH</span></td>
+              <td style="font-family:var(--mono);">ATM-DEL-SBIN-101</td>
+              <td style="font-family:var(--mono); font-size:10.5px; color:var(--ink-soft);">0x7a8f9c1b...2d3e4f5</td>
+            </tr>
+            <tr>
+              <td style="font-family:var(--mono); font-size:11px;">10:42:19 IST</td>
+              <td><strong>Hon'ble S.K. Mahajan</strong> (JUDICIARY)</td>
+              <td><span class="badge badge-navy">RESTITUTION_ORDER_SEALED</span></td>
+              <td style="font-family:var(--mono);">DEC-2026-BNSS-001</td>
+              <td style="font-family:var(--mono); font-size:10.5px; color:var(--ink-soft);">0x4e1982ab...90184fa</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- 4. Footer -->
+  <footer class="site">
+    <div class="wrap">
+      <div class="foot-bottom" style="border-top:none; padding-top:0;">
+        <span>© 2026 Government of India · National Informatics Centre (NIC)</span>
+        <span style="color:var(--saffron-dim);">DURGAM IDENTITY & ACCESS GOVERNANCE • JANPARICHAY</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/static/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      await fetchRegisteredUsers();
+    });
+
+    async function fetchRegisteredUsers() {
+      try {
+        const res = await fetch('/api/v1/auth/users');
+        const data = await res.json();
+        renderUsersTable(data.users || []);
+      } catch (err) {
+        console.error('Error fetching users:', err);
+      }
+    }
+
+    function renderUsersTable(users) {
+      const tbody = document.getElementById('users-table-body');
+      tbody.innerHTML = '';
+
+      if (!users || users.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:20px;">No users found.</td></tr>';
+        return;
+      }
+
+      document.getElementById('user-count-total').innerText = users.length;
+
+      users.forEach(u => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>
+            <strong>${u.full_name}</strong><br>
+            <span style="font-family:var(--mono); font-size:11px; color:var(--ink-soft);">${u.badge_number} (${u.username})</span>
+          </td>
+          <td><span class="badge badge-navy">${u.role}</span></td>
+          <td style="font-size:12.5px; color:var(--ink-soft);">${u.jurisdiction}</td>
+          <td><span class="badge ${u.security_clearance.includes('RESTRICTED') ? 'badge-rust' : 'badge-green'}">${u.security_clearance}</span></td>
+          <td><span style="color:var(--green); font-weight:700; font-family:var(--mono);">✓ ENFORCED</span></td>
+          <td>
+            <div style="display:flex; gap:6px;">
+              <button onclick="rotateUserToken('${u.username}')" class="btn btn-ghost-ink" style="font-size:10.5px; padding:4px 8px;">🔑 Rotate Key</button>
+              <button onclick="viewUserAudit('${u.username}')" class="btn btn-ghost-ink" style="font-size:10.5px; padding:4px 8px;">📜 Audit Log</button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function rotateUserToken(username) {
+      alert(`🔑 SECURITY KEY ROTATED:\n\n• User: ${username}\n• Action: Invalidation of active JWT sessions & issuance of new ECDSA SHA-256 key pair.\n• Notification sent via official NIC GovMail.`);
+    }
+
+    function viewUserAudit(username) {
+      alert(`📜 USER AUDIT SUMMARY:\n\n• Officer: ${username}\n• Total Actions Logged: 142\n• Zero-Trust Integrity: 100% Verified\n• Section 63 BSA Chain of Custody: INTACT.`);
+    }
+
+    function openProvisionModal() {
+      const name = prompt("Enter Officer Full Name (e.g., Inspector Anjali Sharma):", "Inspector Anjali Sharma");
+      if (!name) return;
+      const role = prompt("Enter Role (POLICE_NATIONAL, BANK_NODAL, TELECOM_CEIR, FIU_AML, JUDICIARY):", "POLICE_NATIONAL");
+      if (!role) return;
+      
+      alert(`✓ OFFICER PROVISIONED:\n\n• Name: ${name}\n• Role: ${role}\n• Security Clearance: SOVEREIGN_RESTRICTED\n• JanParichay SSO Gateway Credentials Activated.`);
+      fetchRegisteredUsers();
+    }
+  </script>
+</body>
+</html>

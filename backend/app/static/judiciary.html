@@ -3,242 +3,160 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Judiciary & Section 63 BSA Digital Evidence Vault | DURGAM</title>
-  <meta name="description" content="Court-Admissible Evidence Dossiers under Section 63 BSA 2023 & Section 106 BNSS Asset Forfeiture Orders" />
-
-  <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230B2545' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/></svg>" />
-
-  <!-- Google Fonts -->
+  <title>Special Cyber Court & Sec 106 BNSS Restitution Desk | DURGAM</title>
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@500;600;700;800;900&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="/static/style.css" />
+  <link rel="stylesheet" href="/static/ui-components.css" />
 </head>
 <body>
 
-  <!-- 1. Top Tricolor Ribbon -->
+  <!-- Top Tricolor Ribbon -->
   <div class="gov-tricolor-bar"></div>
 
-  <!-- 2. Utility Bar -->
-  <div class="gov-utility-bar">
-    <div class="gov-utility-content">
-      <div class="gov-utility-left">
-        <span style="color:#F59E0B; font-weight:800;">
-          <svg class="gov-icon gov-icon-sm" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
-          JUDICIAL EVIDENCE BENCH & RESTITUTION CELL
-        </span>
-        <span style="color:rgba(255,255,255,0.25);">|</span>
-        <span style="color:#E2E8F0;">Special Cyber Courts (Section 63 BSA / Section 106 BNSS)</span>
-        <span style="color:rgba(255,255,255,0.25);">|</span>
-        <span id="ist-clock-display" style="color:#F59E0B; font-family:var(--font-mono); font-weight:700;">
-          <svg class="gov-icon gov-icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          Loading IST...
-        </span>
+  <!-- 1. Top Utility Strip -->
+  <div class="top-strip">
+    <div class="wrap">
+      <div class="emblem-row">
+        <img src="/static/images/official_state_emblem.png" alt="Emblem of India" style="width:16px; height:20px; object-fit:contain; " />
+        <span>भारत सरकार · Government of India • Ministry of Law & Justice / e-Courts Project</span>
       </div>
-      <div class="gov-utility-right">
-        <button onclick="openOfficerSettingsModal()" class="btn-utility" style="background:rgba(255,255,255,0.18); color:#FFFFFF; border:1px solid rgba(255,255,255,0.3);">
-          <svg class="gov-icon gov-icon-sm" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          Officer Access & Rights
-        </button>
-        <a href="/static/index.html" class="btn-utility">
-          <svg class="gov-icon gov-icon-sm" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-          Public Matrix
-        </a>
-        <a href="/static/login.html" class="btn-utility">
-          <svg class="gov-icon gov-icon-sm" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          Switch Role / SSO
-        </a>
+      <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+        <span style="color:#E8C9A8;">SPECIAL CYBER COURT • SEC 106 BNSS ACTIVE</span>
+        <span style="opacity:0.3;">|</span>
+        <a href="/static/index.html" style="color:#CBD6E2; text-decoration:none; font-weight:600;">← Return to Main Matrix</a>
       </div>
     </div>
   </div>
 
-  <!-- 3. Header -->
-  <header class="gov-main-header">
-    <div class="gov-header-container">
-      <a href="/static/index.html" class="gov-brand">
-        <img src="/static/images/ashok_stambh.jpg" alt="Emblem" class="gov-emblem" />
-        <div class="gov-title-group">
-          <div class="gov-subtitle-dept">SPECIAL CYBER COURTS • MINISTRY OF LAW & JUSTICE / e-COURTS</div>
-          <div class="gov-subtitle-desc">Section 63 BSA Electronic Evidence Vault & Judicial Restitution Bench</div>
-          <h1>
-            DURGAM JUDICIARY VAULT <span class="gov-badge-domain">GOV.IN</span>
-          </h1>
+  <!-- 2. Master Institutional Header -->
+  <header class="site">
+    <div class="wrap">
+      <a href="/static/index.html" class="brand">
+        <div class="mark" style="background:#FFFFFF; overflow:hidden; padding:2px;">
+          <img src="/static/images/official_state_emblem.png" alt="Emblem" style="width:100%; height:100%; object-fit:contain;" />
+        </div>
+        <div>
+          <div class="name">DURGAM (दूर्गम)</div>
+          <div class="tag">Special Cyber Court & Section 106 BNSS 2023 Restitution Desk</div>
         </div>
       </a>
-
-      <div class="gov-header-actions">
-        <span style="background:#F5F3FF; color:#6D28D9; font-weight:800; padding:6px 12px; border-radius:6px; font-size:12px; border:1px solid #DDD6FE;">
-          ⚖️ Digital Signature Class-3 Active
-        </span>
+      <nav class="site-nav">
+        <a href="/static/judiciary.html" class="active">BNSS 106 Restitution Decrees</a>
+        <a href="/static/restitution.html">Claim Docket Generator</a>
+        <a href="/static/verify.html">BSA 63 Evidence Proofs</a>
+      </nav>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span class="badge badge-navy" style="font-size:11px; padding:6px 12px;">Hon'ble Cyber Court</span>
+        <button onclick="logoutUser()" class="btn btn-outline" style="font-size:12px; padding:6px 12px;">Sign Out</button>
       </div>
     </div>
   </header>
 
-  <!-- 4. LOGGED-IN JUDICIAL MAGISTRATE PROFILE BANNER -->
-  <section style="background:linear-gradient(180deg, #FFFFFF 0%, var(--gov-surface) 100%); border-bottom:1px solid var(--gov-border); padding:20px 24px;">
-    <div style="max-width:1400px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
-      
-      <!-- Magistrate Identity -->
-      <div style="display:flex; align-items:center; gap:14px;">
-        <div style="width:48px; height:48px; border-radius:50%; background:#7C3AED; color:#FFFFFF; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:18px;">
-          AM
-        </div>
-        <div>
-          <div style="display:flex; align-items:center; gap:8px;">
-            <h2 style="font-family:var(--font-display); font-size:18px; font-weight:900; color:var(--gov-navy);">
-              Justice Ananya Mahajan
-            </h2>
-            <span style="background:#F5F3FF; color:#6D28D9; font-size:10px; font-weight:900; padding:2px 7px; border-radius:4px; border:1px solid #DDD6FE;">
-              CHIEF JUDICIAL MAGISTRATE • SPECIAL CYBER BENCH
-            </span>
-          </div>
-          <div style="font-size:11.5px; color:var(--gov-text-muted); margin-top:2px;">
-            Bench ID: <strong style="font-family:var(--font-mono); color:var(--gov-navy);">CJM-DELHI-CYBER-01</strong> • Jurisdiction: <strong>National Capital Region</strong> • Digital Signature: <strong>e-Sign Class 3 Verified</strong>
-          </div>
-        </div>
-      </div>
-
-      <!-- Quick Metrics Pill -->
-      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
-        <div style="background:#FFFFFF; border:1px solid var(--gov-border); border-radius:8px; padding:8px 14px; font-size:11.5px;">
-          <div style="font-size:10px; color:var(--gov-text-muted); font-weight:700;">RESTITUTION DECREES ISSUED</div>
-          <div style="font-family:var(--font-mono); font-weight:900; color:#7C3AED; font-size:13px;">₹9.78 Crores (24 Orders)</div>
-        </div>
-
-        <div style="background:#ECFDF5; border:1px solid #A7F3D0; border-radius:8px; padding:8px 14px; font-size:11.5px;">
-          <div style="font-size:10px; color:#065F46; font-weight:700;">ON-CHAIN NOTARY</div>
-          <div style="font-weight:900; color:#047857; font-size:13px;">⛓️ Polygon Amoy Sealed</div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- 5. MAIN JUDICIARY DASHBOARD (3 ORGANIZED TABS) -->
-  <main class="gov-main-content">
+  <!-- 3. Main Judiciary Content -->
+  <main class="wrap" style="padding-top:36px; padding-bottom:64px;">
     
-    <!-- Segmented Tab Bar -->
-    <div style="display:flex; gap:10px; border-bottom:2px solid var(--gov-border); margin-bottom:24px; padding-bottom:2px; overflow-x:auto;">
-      <button class="judiciary-nav-tab active" id="j-tab-btn-evidence" onclick="switchJudiciaryTab('evidence')" style="background:var(--gov-navy); color:#FFFFFF; border:none; padding:10px 18px; border-radius:8px; font-weight:800; font-size:12px; cursor:pointer; display:flex; align-items:center; gap:6px;">
-        <svg class="gov-icon gov-icon-sm" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
-        1. Section 63 BSA Blockchain Evidence Vault
-      </button>
-
-      <button class="judiciary-nav-tab" id="j-tab-btn-orders" onclick="switchJudiciaryTab('orders')" style="background:var(--gov-surface); color:var(--gov-navy); border:1px solid var(--gov-border); padding:10px 18px; border-radius:8px; font-weight:800; font-size:12px; cursor:pointer; display:flex; align-items:center; gap:6px;">
-        <svg class="gov-icon gov-icon-sm" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/></svg>
-        2. Section 106 BNSS Restitution Decrees
-      </button>
-
-      <button class="judiciary-nav-tab" id="j-tab-btn-ledger" onclick="switchJudiciaryTab('ledger')" style="background:var(--gov-surface); color:var(--gov-navy); border:1px solid var(--gov-border); padding:10px 18px; border-radius:8px; font-weight:800; font-size:12px; cursor:pointer; display:flex; align-items:center; gap:6px;">
-        <svg class="gov-icon gov-icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        3. Polygon Amoy Merkle Root Notary
-      </button>
-    </div>
-
-    <!-- TAB 1: EVIDENCE VAULT -->
-    <div id="judiciary-tab-evidence" class="judiciary-tab-content">
-      <div class="gov-card">
-        <div class="gov-card-header">
-          <div class="gov-card-title">
-            <svg class="gov-icon gov-icon-lg" viewBox="0 0 24 24" style="stroke:var(--gov-navy);"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
-            <span>Section 63 Bharatiya Sakshya Adhiniyam (BSA) 2023 Evidence Certificates</span>
-          </div>
-        </div>
-
-        <div style="overflow-x:auto;">
-          <table class="gov-table">
-            <thead>
-              <tr>
-                <th>Docket ID</th>
-                <th>Complainant</th>
-                <th>Loss Amount</th>
-                <th>Merkle Root Hash</th>
-                <th>On-Chain Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td style="font-family:var(--font-mono); font-weight:800;">DURGAM-DL-JK-001</td>
-                <td>Dr. Rajiv Malhotra</td>
-                <td style="color:var(--gov-danger); font-weight:900;">₹2,50,000</td>
-                <td style="font-family:var(--font-mono); font-size:11px;">0x7f83b1657ff1...a931</td>
-                <td><span style="color:#059669; font-weight:800;">✓ Sealed (Block #4920194)</span></td>
-                <td><button class="btn-utility" onclick="handleVerifyJudiciaryMerkle('DURGAM-DL-JK-001', '0x7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069')" style="font-size:11px; padding:4px 10px;">Verify Certificate</button></td>
-              </tr>
-              <tr>
-                <td style="font-family:var(--font-mono); font-weight:800;">DURGAM-MH-002</td>
-                <td>Priya Sharma</td>
-                <td style="color:var(--gov-danger); font-weight:900;">₹1,80,000</td>
-                <td style="font-family:var(--font-mono); font-size:11px;">0x3d91a2810f4c...9821</td>
-                <td><span style="color:#059669; font-weight:800;">✓ Sealed (Block #4920190)</span></td>
-                <td><button class="btn-utility" onclick="handleVerifyJudiciaryMerkle('DURGAM-MH-002', '0x3d91a2810f4c9a81e7d2b1f0c9e8a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0')" style="font-size:11px; padding:4px 10px;">Verify Certificate</button></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+    <div class="sec-head" style="margin-bottom:28px;">
+      <div>
+        <div class="sec-eyebrow">Judicial Restitution Mandate</div>
+        <h2 class="sec-title">Section 106 BNSS 2023 Digital Restitution Decrees</h2>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <button onclick="issueRestitutionDecree()" class="btn btn-primary" style="font-size:12.5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:3px;"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg> Issue Automated Restitution Decree</button>
       </div>
     </div>
 
-    <!-- TAB 2: RESTITUTION ORDERS -->
-    <div id="judiciary-tab-orders" class="judiciary-tab-content" style="display:none;">
-      <div class="gov-card" style="max-width:880px; margin:0 auto;">
-        <div class="gov-card-header">
-          <div class="gov-card-title">
-            <svg class="gov-icon gov-icon-lg" viewBox="0 0 24 24" style="stroke:var(--gov-navy);"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/></svg>
-            <span>Section 106 BNSS 2023 Fast-Track Victim Restitution Decree Bench</span>
-          </div>
-        </div>
-
-        <div style="background:var(--gov-surface); border:1px solid var(--gov-border); border-radius:8px; padding:18px; margin-bottom:18px; font-size:12.5px; line-height:1.7;">
-          <div style="font-weight:800; color:var(--gov-navy); font-size:14px; margin-bottom:8px;">
-            Order of Pre-Trial Restitution of Quarantined Property
-          </div>
-          <div>In the Court of <strong>Justice Ananya Mahajan, Chief Judicial Magistrate</strong>, Special Cyber Court, Delhi.</div>
-          <div>Case: <strong>DURGAM-DL-JK-001 (Complainant: Dr. Rajiv Malhotra)</strong></div>
-          <div>Decreed Amount: <strong style="color:#059669; font-size:14px;">₹2,50,000</strong> to be credited directly to complainant State Bank of India account.</div>
-        </div>
-
-        <button class="btn-saffron" onclick="handleIssueRestitutionDecree('DURGAM-DL-JK-001', 250000, 'SBIN0001024 / XXXX-2948')">
-          ⚖️ Issue Judicial Restitution Decree & Direct Bank Reversal
-        </button>
+    <!-- Metric Strip -->
+    <div class="metric-strip" style="margin-bottom:32px;">
+      <div class="metric">
+        <div class="num" style="color:var(--green);">₹14.20 Cr</div>
+        <div class="lbl">Restituted to verified victims</div>
+        <div class="sub">● Zero civil suit delay</div>
+      </div>
+      <div class="metric">
+        <div class="num">1,840 Decrees</div>
+        <div class="lbl">Digitally signed court orders</div>
+        <div class="sub">● Section 106 BNSS 2023</div>
+      </div>
+      <div class="metric">
+        <div class="num">100% Valid</div>
+        <div class="lbl">BSA Section 63 Evidence Chain</div>
+        <div class="sub">● Polygon hash sealed</div>
+      </div>
+      <div class="metric">
+        <div class="num">72 Hours</div>
+        <div class="lbl">Average restitution SLA</div>
+        <div class="sub">● Post pre-settlement hold</div>
       </div>
     </div>
 
-    <!-- TAB 3: MERKLE NOTARY LEDGER -->
-    <div id="judiciary-tab-ledger" class="judiciary-tab-content" style="display:none;">
-      <div class="gov-card">
-        <div class="gov-card-header">
-          <div class="gov-card-title">
-            <svg class="gov-icon gov-icon-lg" viewBox="0 0 24 24" style="stroke:var(--gov-navy);"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            <span>Polygon Amoy Testnet Cryptographic Merkle Notary Ledger</span>
-          </div>
+    <!-- Active Decrees Table -->
+    <div class="paper-card">
+      <div class="paper-card-header">
+        <div class="paper-card-title">
+          Live Section 106 BNSS 2023 Automated Restitution Decrees
         </div>
+        <span class="badge badge-green">● DIGITAL RECOVERY ORDERS</span>
+      </div>
 
-        <p style="font-size:12.5px; color:var(--gov-text-muted); line-height:1.6; margin-bottom:16px;">
-          Merkle tree batches are cryptographically sealed on the Polygon Amoy public blockchain ledger every 10 minutes. Any citizen or court can audit root authenticity independently.
-        </p>
-
-        <div style="background:#ECFDF5; border:1px solid #A7F3D0; border-radius:8px; padding:16px; font-family:var(--font-mono); font-size:12px; color:var(--gov-navy);">
-          <div>Contract Address: <strong>0x94A1F92B4810283719A948210381029481029481</strong></div>
-          <div>Latest Merkle Root: <strong>0x7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069</strong></div>
-          <div>Timestamp: <strong>26-AUG-2026 13:55:00 IST</strong> • Block: <strong>#4,920,194</strong></div>
-        </div>
+      <div style="overflow-x:auto;">
+        <table class="ledger-table">
+          <thead>
+            <tr>
+              <th>Decree Docket #</th>
+              <th>Victim Beneficiary</th>
+              <th>Source Quarantined Mule</th>
+              <th>Restitution Sum</th>
+              <th>Polygon Proof Anchor</th>
+              <th>Judicial Seal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-family:var(--mono); font-weight:700; color:var(--navy);">DEC-2026-BNSS-001</td>
+              <td>Ramesh Kumar (SBI ••••4821)</td>
+              <td>ICICI Bank (Mule #8491024)</td>
+              <td style="font-family:var(--mono); font-weight:700; color:var(--green);">INR 2,50,000.00</td>
+              <td style="font-family:var(--mono); font-size:11px; color:var(--ink-soft);">0x4a18...291b8a (Block #491028)</td>
+              <td><span class="badge badge-green">DECREE EXECUTED</span></td>
+            </tr>
+            <tr>
+              <td style="font-family:var(--mono); font-weight:700; color:var(--navy);">DEC-2026-BNSS-002</td>
+              <td>Sunita Sharma (HDFC ••••9102)</td>
+              <td>Axis Bank (Mule #3910281)</td>
+              <td style="font-family:var(--mono); font-weight:700; color:var(--green);">INR 5,00,000.00</td>
+              <td style="font-family:var(--mono); font-size:11px; color:var(--ink-soft);">0x8c21...3820fa (Block #491029)</td>
+              <td><span class="badge badge-saffron">PENDING MAGISTRATE SIGN</span></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
   </main>
 
-  <!-- Footer -->
-  <footer class="gov-footer">
-    <div class="gov-footer-bottom">
-      <div>© 2026 Government of India • Ministry of Law & Justice • e-Courts National Portal</div>
-      <div>DURGAM Section 63 BSA Digital Evidence Bench • GIGW 3.0 Standard</div>
+  <!-- 4. Footer -->
+  <footer class="site">
+    <div class="wrap">
+      <div class="foot-bottom" style="border-top:none; padding-top:0;">
+        <span>© 2026 Government of India · Ministry of Law & Justice / e-Courts</span>
+        <span style="color:var(--saffron-dim);">DURGAM RESTITUTION MATRIX • SECTION 106 BNSS 2023</span>
+      </div>
     </div>
   </footer>
 
   <script src="/static/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      enforceDepartmentAccess(['JUDICIAL_MAGISTRATE', 'JUDICIARY', 'SUPER_ADMIN']);
+    });
+
+    function issueRestitutionDecree() {
+      alert(`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:3px;"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg> STATUTORY RESTITUTION DECREE SEALED:\n\n• Legal Basis: Section 106 Bharatiya Nagarik Suraksha Sanhita (BNSS) 2023\n• Evidence Validity: Admitted under Section 63 BSA 2023\n• Action: Reverse credit transfer of INR 2,50,000.00 executed from beneficiary escrow directly into victim account.`);
+    }
+  </script>
 </body>
 </html>

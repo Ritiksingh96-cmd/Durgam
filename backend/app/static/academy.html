@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>National Cyber Shield Academy & Simulation | DURGAM</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="stylesheet" href="/static/ui-components.css" />
+</head>
+<body>
+
+  <!-- Top Tricolor Ribbon -->
+  <div class="gov-tricolor-bar"></div>
+
+  <!-- 1. Top Utility Strip -->
+  <div class="top-strip">
+    <div class="wrap">
+      <div class="emblem-row">
+        <img src="/static/images/official_state_emblem.png" alt="Emblem of India" style="width:16px; height:20px; object-fit:contain; " />
+        <span>भारत सरकार · Government of India • Ministry of Home Affairs / I4C National Cyber Shield</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+        <span style="color:#E8C9A8;">ACADEMY TRAINING PORTAL • I4C ACCREDITED</span>
+        <span style="opacity:0.3;">|</span>
+        <a href="/static/index.html" style="color:#CBD6E2; text-decoration:none; font-weight:600;">← Return to Main Matrix</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Master Institutional Header -->
+  <header class="site">
+    <div class="wrap">
+      <a href="/static/index.html" class="brand">
+        <div class="mark" style="background:#FFFFFF; overflow:hidden; padding:2px;">
+          <img src="/static/images/official_state_emblem.png" alt="Emblem" style="width:100%; height:100%; object-fit:contain;" />
+        </div>
+        <div>
+          <div class="name">DURGAM (दूर्गम)</div>
+          <div class="tag">National Cyber Shield Academy & Simulation</div>
+        </div>
+      </a>
+      <nav class="site-nav">
+        <a href="/static/index.html">Main Matrix</a>
+        <a href="/static/police.html">Police CAD</a>
+        <a href="/static/bank.html">Bank Switch</a>
+        <a href="/static/citizen.html">Citizen SOS</a>
+        <a href="/static/telecom.html">Telecom CEIR</a>
+        <a href="/static/fiu.html">FIU-IND</a>
+        <a href="/static/judiciary.html">Cyber Court</a>
+        <a href="/static/academy.html" class="active">Academy</a>
+      </nav>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <a href="/static/login.html" class="btn btn-outline" style="font-size:12.5px; padding:8px 14px;">Officer Login</a>
+        <a href="tel:1930" class="btn btn-primary" style="font-size:12.5px; padding:8px 14px;">Dial 1930</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- 3. Main Academy Content -->
+  <main class="wrap" style="padding-top:36px; padding-bottom:64px;">
+    
+    <div class="sec-head" style="margin-bottom:28px;">
+      <div>
+        <div class="sec-eyebrow">National Cybercrime Hygiene Certification</div>
+        <h2 class="sec-title">Interactive Scam-Spotting Simulator & Citizen Defense</h2>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <button onclick="startScamSimulation()" class="btn btn-primary" style="font-size:12.5px;">🎯 Start Interactive Simulator</button>
+      </div>
+    </div>
+
+    <!-- Metric Strip -->
+    <div class="metric-strip" style="margin-bottom:32px;">
+      <div class="metric">
+        <div class="num" style="color:var(--green);">4.8L+</div>
+        <div class="lbl">Citizens certified nationwide</div>
+        <div class="sub">● MHA Cyber Shield Certificate</div>
+      </div>
+      <div class="metric">
+        <div class="num">8 Modules</div>
+        <div class="lbl">Interactive fraud simulators</div>
+        <div class="sub">● Video Call, APK, Trading Scams</div>
+      </div>
+      <div class="metric">
+        <div class="num" style="color:var(--navy);">100% Free</div>
+        <div class="lbl">Public service initiative</div>
+        <div class="sub">● Available in 6 languages</div>
+      </div>
+      <div class="metric">
+        <div class="num">15 Mins</div>
+        <div class="lbl">Average certification duration</div>
+        <div class="sub">● Instant PDF verification</div>
+      </div>
+    </div>
+
+    <!-- Modules Grid -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:24px;">
+      
+      <div class="paper-card">
+        <div style="font-family:var(--mono); font-size:11px; color:var(--rust); font-weight:700; margin-bottom:8px;">MODULE 01</div>
+        <h3 style="font-family:var(--serif); font-size:1.2rem; color:var(--navy); margin-bottom:10px;">Spotting Fake Police & CBI Video Calls</h3>
+        <p style="font-size:13px; color:var(--ink-soft); line-height:1.6; margin-bottom:16px;">
+          Learn how to recognize synthetic badges, deepfake video streams, and fraudulent "digital arrest" extortion demands.
+        </p>
+        <button onclick="startScamSimulation()" class="btn btn-ghost-ink" style="font-size:12px; width:100%; justify-content:center;">Launch Module →</button>
+      </div>
+
+      <div class="paper-card">
+        <div style="font-family:var(--mono); font-size:11px; color:var(--saffron); font-weight:700; margin-bottom:8px;">MODULE 02</div>
+        <h3 style="font-family:var(--serif); font-size:1.2rem; color:var(--navy); margin-bottom:10px;">Dangerous APKs & Screen Mirroring</h3>
+        <p style="font-size:13px; color:var(--ink-soft); line-height:1.6; margin-bottom:16px;">
+          Understand why fake electricity bills send `.apk` downloads that steal SMS OTPs and how to safely inspect app permissions.
+        </p>
+        <button onclick="startScamSimulation()" class="btn btn-ghost-ink" style="font-size:12px; width:100%; justify-content:center;">Launch Module →</button>
+      </div>
+
+      <div class="paper-card">
+        <div style="font-family:var(--mono); font-size:11px; color:var(--green); font-weight:700; margin-bottom:8px;">MODULE 03</div>
+        <h3 style="font-family:var(--serif); font-size:1.2rem; color:var(--navy); margin-bottom:10px;">Telegram Investment & Crypto Off-Ramps</h3>
+        <p style="font-size:13px; color:var(--ink-soft); line-height:1.6; margin-bottom:16px;">
+          Identify fake rating tasks, manipulated stock trading dashboards, and high-yield fraudulent cryptocurrency schemes.
+        </p>
+        <button onclick="startScamSimulation()" class="btn btn-ghost-ink" style="font-size:12px; width:100%; justify-content:center;">Launch Module →</button>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- 4. Footer -->
+  <footer class="site">
+    <div class="wrap">
+      <div class="foot-bottom" style="border-top:none; padding-top:0;">
+        <span>© 2026 Government of India · Indian Cybercrime Coordination Centre (I4C)</span>
+        <span style="color:var(--saffron-dim);">NATIONAL CYBER SHIELD ACADEMY • CITIZEN HYGIENE</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/static/app.js"></script>
+  <script>
+    function startScamSimulation() {
+      alert(`🎯 ACADEMY SIMULATOR LAUNCHED:\n\n• Scenario: Fake Customs Officer demanding ₹1.5L transfer.\n• Your Task: Identify 3 red flags (unverified Skype ID, urgent payment demand, personal savings account IFSC).\n• Complete the test to generate your official MHA certificate.`);
+    }
+  </script>
+</body>
+</html>

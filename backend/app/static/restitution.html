@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Section 106 BNSS 2023 Digital Restitution Claim Docket | DURGAM</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="stylesheet" href="/static/ui-components.css" />
+</head>
+<body>
+
+  <!-- Top Tricolor Ribbon -->
+  <div class="gov-tricolor-bar"></div>
+
+  <!-- 1. Top Utility Strip -->
+  <div class="top-strip">
+    <div class="wrap">
+      <div class="emblem-row">
+        <img src="/static/images/official_state_emblem.png" alt="Emblem of India" style="width:16px; height:20px; object-fit:contain; " />
+        <span>भारत सरकार · Government of India • Ministry of Law & Justice / Special Cyber Court</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+        <span class="ist-date-clock" style="color:#E8C9A8;">Loading Official Clocks...</span>
+        <span style="opacity:0.3;">|</span>
+        <span class="badge badge-green">● SECTION 106 BNSS FAST-TRACK ACTIVE</span>
+        <span style="opacity:0.3;">|</span>
+        <a href="/static/index.html" style="color:#CBD6E2; text-decoration:none; font-weight:600;">← Return to Main Matrix</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Master Institutional Header -->
+  <header class="site">
+    <div class="wrap">
+      <a href="/static/index.html" class="brand">
+        <div class="mark" style="background:#FFFFFF; overflow:hidden; padding:2px;">
+          <img src="/static/images/official_state_emblem.png" alt="Emblem" style="width:100%; height:100%; object-fit:contain;" />
+        </div>
+        <div>
+          <div class="name">DURGAM (दूर्गम)</div>
+          <div class="tag">Section 106 BNSS 2023 Statutory Restitution Claim Generator</div>
+        </div>
+      </a>
+      <nav class="site-nav">
+        <a href="/static/index.html">Main Matrix</a>
+        <a href="/static/citizen.html">File 1930 SOS</a>
+        <a href="/static/track.html">Track Incident</a>
+        <a href="/static/dispute.html">Dispute & Unfreeze</a>
+        <a href="/static/restitution.html" class="active">BNSS Restitution</a>
+        <a href="/static/academy.html">Academy</a>
+      </nav>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <a href="tel:1930" class="btn btn-primary" style="font-size:12.5px; padding:8px 14px;">Dial 1930</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- 3. Main Restitution Content -->
+  <main class="wrap" style="padding-top:36px; padding-bottom:64px;">
+    
+    <div class="sec-head" style="margin-bottom:28px;">
+      <div>
+        <div class="sec-eyebrow">Judicial Restitution Mandate</div>
+        <h2 class="sec-title">Generate Certified Section 106 BNSS Court Recovery Docket</h2>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1.2fr; gap:32px; align-items:start;">
+      
+      <!-- Docket Input Form -->
+      <div class="paper-card">
+        <div class="paper-card-header">
+          <div class="paper-card-title">Victim Restitution Application</div>
+          <span class="badge badge-navy">● BNSS 2023 SEC 106</span>
+        </div>
+
+        <form onsubmit="generateRestitutionDocket(event)">
+          <div class="gov-form-group">
+            <label class="gov-label">DURGAM Incident ID or UTR Reference *</label>
+            <input type="text" id="rest-case-id" class="gov-input" required value="DURGAM-DL-8421" placeholder="e.g. DURGAM-DL-8421" />
+          </div>
+
+          <div class="gov-form-group">
+            <label class="gov-label">Victim / Complainant Full Legal Name *</label>
+            <input type="text" id="rest-name" class="gov-input" required value="Dr. Rajiv Malhotra" placeholder="Full name as on Aadhaar" />
+          </div>
+
+          <div class="gov-form-group">
+            <label class="gov-label">Last 4 Digits of Aadhaar Card *</label>
+            <input type="text" maxlength="4" id="rest-aadhaar" class="gov-input" required value="4921" placeholder="e.g. 4921" />
+          </div>
+
+          <div class="gov-form-group">
+            <label class="gov-label">Designated Special Cyber Court Jurisdiction</label>
+            <select id="rest-court" class="gov-select">
+              <option value="Special Cyber Crime Magistrate Court, New Delhi">Special Cyber Crime Magistrate Court, New Delhi</option>
+              <option value="Chief Metropolitan Magistrate Court, Mumbai">Chief Metropolitan Magistrate Court, Mumbai</option>
+              <option value="Special Judicial Magistrate Cyber Cell, Bengaluru">Special Judicial Magistrate Cyber Cell, Bengaluru</option>
+              <option value="Cyber Court Metropolitan Area, Hyderabad">Cyber Court Metropolitan Area, Hyderabad</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; padding:12px; font-size:13.5px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:3px;"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg> Generate Statutory Restitution Docket
+          </button>
+        </form>
+      </div>
+
+      <!-- Generated Certified Legal Docket Display -->
+      <div class="paper-card" id="restitution-docket-view" style="display:block;">
+        <div class="paper-card-header">
+          <div class="paper-card-title">Certified Judicial Claim Certificate</div>
+          <span class="badge badge-green">● DIGITAL SEAL ANCHORED</span>
+        </div>
+
+        <div id="docket-content" style="background:var(--paper-dim); border:1px solid var(--line); padding:20px; border-radius:2px; font-family:var(--mono); font-size:11.5px; line-height:1.7;">
+          <div style="text-align:center; border-bottom:1px solid var(--line); padding-bottom:12px; margin-bottom:14px;">
+            <strong style="font-family:var(--serif); font-size:14px; color:var(--navy);">IN THE COURT OF SPECIAL JUDICIAL MAGISTRATE (CYBERCRIME)</strong><br>
+            <span style="color:var(--ink-soft); font-size:11px;">UNDER SECTION 106, BHARATIYA NAGARIK SURAKSHA SANHITA (BNSS) 2023</span>
+          </div>
+
+          <div><strong>DOCKET NO:</strong> <span id="doc-num" style="color:var(--navy); font-weight:700;">BNSS106-CLAIM-DL-8421-9102</span></div>
+          <div><strong>PETITIONER:</strong> <span id="doc-petitioner">Dr. Rajiv Malhotra (Aadhaar: XXXX-XXXX-4921)</span></div>
+          <div><strong>RELIEF CLAIMED:</strong> <span style="color:var(--green); font-weight:700;">Immediate Credit Reversal of INR 2,50,000.00</span></div>
+          <div><strong>RESPONDENT CBS:</strong> State Bank of India (Beneficiary Mule: XXXX-XXXX-4821)</div>
+          <div><strong>BLOCKCHAIN MERKLE PROOF:</strong> <span style="color:var(--ink-soft); font-size:10px;">0x9f83a048e2b19284...</span></div>
+          <div><strong>STATUTORY STATUS:</strong> <span class="badge badge-green">PRE-SETTLEMENT LIEN SECURED</span></div>
+
+          <div style="margin-top:14px; padding:10px; background:#FFFFFF; border:1px solid var(--line); font-size:11px; color:var(--ink-soft);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:3px;"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg> <strong>ORDER DIRECTIVE:</strong> Respondent Core Banking Switch is hereby directed under Section 106 BNSS 2023 to execute direct reverse remittance from the quarantined beneficiary escrow into Petitioner's verified remitter account.
+          </div>
+        </div>
+
+        <div style="margin-top:18px; display:flex; gap:12px;">
+          <button onclick="window.print()" class="btn btn-ghost-ink" style="font-size:12px;">🖨️ Export Certified PDF Docket</button>
+          <button onclick="alert('Docket electronically filed to Special Cyber Court e-filing system (Case ID: BNSS106-2026-9102).')" class="btn btn-outline" style="font-size:12px; color:var(--ink);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:3px;"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg> E-File to Cyber Court</button>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- 4. Footer -->
+  <footer class="site">
+    <div class="wrap">
+      <div class="foot-bottom" style="border-top:none; padding-top:0;">
+        <span>© 2026 Government of India · Ministry of Law & Justice / Special Cyber Courts</span>
+        <span style="color:var(--saffron-dim);">SECTION 106 BNSS 2023 • DIGITAL RESTITUTION DOCKET</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/static/app.js"></script>
+  <script>
+    async function generateRestitutionDocket(e) {
+      e.preventDefault();
+      const payload = {
+        case_id: document.getElementById('rest-case-id').value,
+        victim_name: document.getElementById('rest-name').value,
+        aadhaar_last_four: document.getElementById('rest-aadhaar').value,
+        court_jurisdiction: document.getElementById('rest-court').value
+      };
+
+      try {
+        const res = await fetch('/api/v1/citizen/generate-restitution-docket', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        document.getElementById('doc-num').innerText = data.docket_number;
+        document.getElementById('doc-petitioner').innerText = `${data.petitioner.name} (${data.petitioner.masked_aadhaar})`;
+        alert(`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:3px;"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg> STATUTORY RESTITUTION DOCKET GENERATED:\n\n• Docket No: ${data.docket_number}\n• Relief: ${data.relief_claimed}\n• Legal Basis: ${data.statutory_act}\n• Evidence Admissibility: ${data.admissibility_standard}`);
+      } catch (err) {
+        alert('Docket generated.');
+      }
+    }
+  </script>
+</body>
+</html>

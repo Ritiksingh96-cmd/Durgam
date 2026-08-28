@@ -1,648 +1,1536 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DURGAM — National Cyber Financial Fraud Defense Matrix | Ministry of Home Affairs | Government of India</title>
-  <meta name="description" content="Dynamic Unified Risk-Grid & Geospatial Analytics Module (I4C / Ministry of Home Affairs / Government of India / SIH 2026)" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DURGAM (दूर्गम) — National Cyber Financial Fraud Defense Matrix | Government of India</title>
+<meta name="description" content="DURGAM — Indian Cybercrime Coordination Centre (I4C), Ministry of Home Affairs, Government of India. Real-time reporting, multi-hop mule tracing, and automated pre-settlement hold matrix." />
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230B2545' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Google Fonts: Inter, Outfit & Roboto Mono -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@600;700;800;900&family=Roboto+Mono:wght@500;700&display=swap" rel="stylesheet">
+<!-- Leaflet Tactical Map -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-  <!-- Leaflet CSS & JS for Tactical GIS Map -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- GIGW 3.0 Standard Government Stylesheet -->
-  <link rel="stylesheet" href="/static/style.css" />
+<link rel="stylesheet" href="/static/style.css?v=20260828_02" />
+<link rel="stylesheet" href="/static/ui-components.css?v=20260828_02" />
+
+<style>
+  /* 100% Full-Width Screen Coverage & Anti-Distortion Layout */
+  html, body {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .wrap {
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+    padding: 0 48px !important;
+    box-sizing: border-box !important;
+  }
+
+  .hero .wrap {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 48px !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .ledger-mark {
+    display: block !important;
+    position: static !important;
+    writing-mode: horizontal-tb !important;
+    transform: none !important;
+    font-family: var(--mono) !important;
+    font-size: 11.5px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.08em !important;
+    color: var(--saffron) !important;
+    text-transform: uppercase !important;
+    margin: 0 0 16px 0 !important;
+  }
+
+  .hero {
+    width: 100% !important;
+    padding: 40px 0 36px !important;
+    background: var(--paper) !important;
+    border-bottom: 1px solid var(--line) !important;
+    box-sizing: border-box !important;
+  }
+
+  .hero-container {
+    display: grid !important;
+    grid-template-columns: 1.1fr 0.9fr !important;
+    gap: 44px !important;
+    width: 100% !important;
+    align-items: stretch !important;
+    box-sizing: border-box !important;
+  }
+
+  @media (max-width: 1100px) {
+    .hero-container {
+      grid-template-columns: 1fr !important;
+      gap: 32px !important;
+    }
+  }
+
+  .hero-left {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+  }
+
+  .hero-right {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+  }
+
+  .hero-terminal-card {
+    border: 1px solid var(--line) !important;
+    border-top: 4px solid var(--navy) !important;
+    box-shadow: 0 16px 40px rgba(14,35,64,0.12) !important;
+    background: #FFFFFF !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    overflow: hidden !important;
+    border-radius: 2px !important;
+  }
+
+  .hero-image-wrap {
+    position: relative !important;
+    flex: 1 !important;
+    min-height: 420px !important;
+    overflow: hidden !important;
+    background: #0E2340 !important;
+    width: 100% !important;
+  }
+
+  .hero-image-wrap img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+  }
+
+  /* Specific enhancements for imagery and paper ledger layout */
+  .img-frame {
+    position: relative;
+    overflow: hidden;
+    background: var(--paper-dim);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+  }
+  .img-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+  .img-frame:hover img {
+    transform: scale(1.02);
+  }
+  .img-caption {
+    padding: 10px 14px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-soft);
+    border-top: 1px solid var(--line);
+    background: #FFFFFF;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 40px;
+    align-items: center;
+  }
+  @media (max-width: 860px) {
+    .about-grid { grid-template-columns: 1fr; }
+  }
+
+  .stat-pill-live {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #FFFFFF;
+    border: 1px solid var(--line);
+    padding: 4px 10px;
+    border-radius: 2px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--navy);
+  }
+
+  .pulse-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--green);
+    display: inline-block;
+    box-shadow: 0 0 0 0 rgba(47, 107, 79, 0.7);
+    animation: pulseDot 2s infinite;
+  }
+  @keyframes pulseDot {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(47, 107, 79, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(47, 107, 79, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(47, 107, 79, 0); }
+  }
+
+  .gov-badge-seal {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    background: #FFFFFF;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+  }
+</style>
 </head>
 <body>
 
-  <!-- 1. National Tricolor Top Ribbon -->
+  <!-- Top Tricolor Ribbon -->
   <div class="gov-tricolor-bar"></div>
 
-  <!-- 2. Sovereign Accessibility & Utility Bar -->
-  <div class="gov-utility-bar">
-    <div class="gov-utility-content">
-      <div class="gov-utility-left">
-        <span style="color:#F59E0B; font-weight:800;">
-          <svg class="gov-icon gov-icon-sm" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          भारत सरकार • GOVERNMENT OF INDIA
-        </span>
-        <span style="color:rgba(255,255,255,0.25);">|</span>
-        <span style="color:#E2E8F0;">गृह मंत्रालय • Ministry of Home Affairs</span>
-        <span style="color:rgba(255,255,255,0.25);">|</span>
-        <span id="ist-clock-display" style="color:#F59E0B; font-family:var(--font-mono); font-weight:700;">
-          <svg class="gov-icon gov-icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          Loading IST...
-        </span>
+  <!-- 1. Institutional Top Strip -->
+  <div class="top-strip">
+    <div class="wrap">
+      <div class="emblem-row">
+        <img src="/static/images/official_state_emblem.png" alt="Emblem of India" style="width:16px; height:20px; object-fit:contain; " />
+        <span>भारत सरकार · Government of India • Ministry of Home Affairs / I4C • Reserve Bank of India (RBI) Consortium</span>
       </div>
-      <div class="gov-utility-right">
-        <button onclick="openOfficerSettingsModal()" class="btn-utility" style="background:rgba(255,255,255,0.18); color:#FFFFFF; border:1px solid rgba(255,255,255,0.3);">
-          <svg class="gov-icon gov-icon-sm" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          Officer Access & Rights
-        </button>
-        <a href="#main-content" class="btn-utility">Skip to Content</a>
-        <button class="btn-utility" onclick="document.body.style.fontSize='15px'">A+</button>
-        <button class="btn-utility" onclick="document.body.style.fontSize='14px'">A</button>
-        <button class="btn-utility" onclick="document.body.style.fontSize='13px'">A-</button>
-        <button class="btn-utility" onclick="alert('Switched to Hindi / हिन्दी')">हिन्दी</button>
+      <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+        <span class="ist-date-clock" style="color:#E8C9A8; font-weight:600;">Loading Official Clocks...</span>
+        <span style="opacity:0.3;">|</span>
+        <span class="badge badge-green" style="font-size:10.5px; padding:3px 8px;">● 48 CBS NODES SYNCED (118ms)</span>
+        <span style="opacity:0.3;">|</span>
+        <a href="#" onclick="openJanParichayModal(); return false;" style="color:#CBD6E2; text-decoration:none; font-weight:600;">Officer JanParichay SSO</a>
+        <select aria-label="Language Selector" onchange="switchLanguage(this.value)">
+          <option value="en">English (EN)</option>
+          <option value="hi">हिन्दी (HI)</option>
+        </select>
       </div>
     </div>
   </div>
 
-  <!-- 3. Master Sovereign Header -->
-  <header class="gov-main-header">
-    <div class="gov-header-container">
-      <a href="/static/index.html" class="gov-brand">
-        <img src="/static/images/ashok_stambh.jpg" alt="State Emblem of India Ashok Stambh" class="gov-emblem" />
-        <div class="gov-title-group">
-          <div class="gov-subtitle-dept">गृह मंत्रालय • MINISTRY OF HOME AFFAIRS</div>
-          <div class="gov-subtitle-desc">भारतीय साइबर अपराध समन्वय केंद्र (I4C) • National Cyber Crime Coordination Centre</div>
-          <h1>
-            DURGAM <span class="gov-badge-domain">GOV.IN</span>
-          </h1>
+  <!-- 2. Master Institutional Header -->
+  <header class="site">
+    <div class="wrap">
+      <a href="/static/index.html" class="brand">
+        <div class="mark">
+          <img src="/static/images/official_state_emblem.png" alt="Emblem" style="width:100%; height:100%; object-fit:contain;" />
+        </div>
+        <div>
+          <div class="name">DURGAM (दूर्गम)</div>
+          <div class="tag">National Cyber Financial Fraud Defense Matrix • I4C / RBI Switch</div>
         </div>
       </a>
-
-      <div class="gov-header-actions">
-        <a href="tel:1930" class="btn-1930-helpline">
-          <svg class="gov-icon gov-icon-lg" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-          <div>
-            <div style="font-size:9px; text-transform:uppercase; color:#FEE2E2;">24x7 National Toll-Free</div>
-            <div style="font-size:14px; font-weight:900;">1930 HELPLINE</div>
-          </div>
-        </a>
-
-        <a href="/static/login.html" class="btn-sso-login">
-          <svg class="gov-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          <span>Department SSO Login</span>
-        </a>
+      <nav class="site-nav">
+        <a href="#about" class="active">About Matrix</a>
+        <a href="/static/citizen.html">Citizen 1930 SOS</a>
+        <a href="/static/track.html">Track Docket</a>
+        <a href="/static/dispute.html">Dispute Resolution</a>
+        <a href="/static/restitution.html">Restitution Status</a>
+        <a href="/static/academy.html">Academy</a>
+      </nav>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <a href="#" onclick="openJanParichayModal(); return false;" class="btn btn-outline" style="font-size:12.5px; padding:8px 14px;">Officer Portal</a>
+        <a href="tel:1930" class="btn btn-primary" style="font-size:12.5px; padding:8px 14px; background:var(--rust); border-color:var(--rust);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:4px;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>Dial 1930</a>
       </div>
     </div>
   </header>
 
-  <!-- 4. SOVEREIGN HERO SECTION (Distress Bar & Live Status Pills) -->
-  <section class="gov-hero-section">
-    <div class="gov-hero-container">
-      <div class="hero-badge-tag">
-        <svg class="gov-icon gov-icon-sm" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        I4C • NATIONAL CYBER DEFENSE INITIATIVE
-      </div>
+  <!-- 4. Sovereign Hero: Institutional Government Paper-Ledger Command Matrix (Full-Width High Visibility) -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="ledger-mark">SOVEREIGN CASE LEDGER — 001 — NATIONAL COMMAND MATRIX</div>
       
-      <h2 class="hero-headline">
-        National Cyber Financial Fraud Interception & Recovery Grid
-      </h2>
-      
-      <p class="hero-subtitle">
-        Sub-180ms automated inter-bank pre-settlement hold execution across 48 scheduled commercial banks, preventing cybercrime syndicates from laundering stolen funds into multi-hop mule networks under Section 106 BNSS 2023.
-      </p>
+      <div class="hero-container">
+        
+        <!-- Left Column: Sovereign Institutional Message & Mandatory Pillars (Full Width) -->
+        <div class="hero-left">
+          <div>
+            <div style="display:inline-flex; align-items:center; gap:10px; background:#FFFFFF; border:1px solid var(--line); border-left:4px solid var(--saffron); border-radius:2px; padding:7px 16px; margin-bottom:18px;">
+              <img src="/static/images/official_state_emblem.png" alt="Emblem" style="width:16px; height:20px; object-fit:contain;" />
+              <span style="font-family:var(--mono); font-size:12px; font-weight:700; color:var(--navy); letter-spacing:0.04em; text-transform:uppercase;">
+                भारत सरकार · Government of India • Ministry of Home Affairs (I4C)
+              </span>
+            </div>
+            
+            <h1 style="font-family:var(--serif); font-size:clamp(2.3rem, 3.6vw, 3.4rem); font-weight:700; line-height:1.14; margin:0 0 16px; color:var(--navy);">
+              National Cyber Financial Fraud <br>
+              <span style="color:var(--saffron); font-style:normal;">Real-Time Interception Matrix</span>
+            </h1>
+            
+            <p style="font-size:16px; color:var(--ink-soft); line-height:1.75; margin-bottom:24px;">
+              DURGAM unites citizen <strong>1930 distress calls</strong>, <strong>48 scheduled commercial banks</strong>, and <strong>police CAD patrol units</strong> into an autonomous sub-140ms pre-settlement hold mesh — stopping fraudulent cash-outs before money disappears.
+            </p>
 
-      <!-- 1-Click Instant Distress Ingestion & UTR Query Bar -->
-      <div class="hero-search-wrapper">
-        <input 
-          type="text" 
-          id="hero-quick-utr" 
-          class="hero-search-input" 
-          placeholder="Enter Bank Transaction Reference (UTR / RRN / Account / Mobile No.) to Intercept..."
-        />
-        <button onclick="handleHeroQuickReport()" class="btn-hero-submit">
-          <svg class="gov-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-          Initiate 1930 Interception
-        </button>
-      </div>
+            <!-- 3 Sovereign Statutory Guarantee Pillars (Full Width) -->
+            <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:12px; margin-bottom:24px; width:100%;">
+              <div style="background:#FFFFFF; border:1px solid var(--line); border-top:3px solid var(--rust); padding:14px 14px; border-radius:3px; font-family:var(--mono); color:var(--navy); box-shadow:0 2px 6px rgba(0,0,0,0.03);">
+                <div style="font-size:10.5px; color:var(--ink-soft); text-transform:uppercase; margin-bottom:3px;">Injunction SLA</div>
+                <strong style="color:var(--rust); display:block; font-size:14.5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:3px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>&lt; 140ms</strong>
+                <div style="font-size:11px; color:var(--navy); margin-top:2px;">ISO 20022 camt.056</div>
+              </div>
+              <div style="background:#FFFFFF; border:1px solid var(--line); border-top:3px solid var(--green); padding:14px 14px; border-radius:3px; font-family:var(--mono); color:var(--navy); box-shadow:0 2px 6px rgba(0,0,0,0.03);">
+                <div style="font-size:10.5px; color:var(--ink-soft); text-transform:uppercase; margin-bottom:3px;">Legal Restitution</div>
+                <strong style="color:var(--green); display:block; font-size:14.5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:3px;"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>Sec 106 BNSS</strong>
+                <div style="font-size:11px; color:var(--navy); margin-top:2px;">Pre-Trial Reversal</div>
+              </div>
+              <div style="background:#FFFFFF; border:1px solid var(--line); border-top:3px solid var(--saffron); padding:14px 14px; border-radius:3px; font-family:var(--mono); color:var(--navy); box-shadow:0 2px 6px rgba(0,0,0,0.03);">
+                <div style="font-size:10.5px; color:var(--ink-soft); text-transform:uppercase; margin-bottom:3px;">Evidence Vault</div>
+                <strong style="color:var(--saffron); display:block; font-size:14.5px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:3px;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>Sec 63 BSA</strong>
+                <div style="font-size:11px; color:var(--navy); margin-top:2px;">On-Chain Merkle Proof</div>
+              </div>
+            </div>
 
-      <!-- 3 Live Telemetry Stat Pills -->
-      <div class="hero-stats-row">
-        <div class="hero-stat-pill">
-          <span style="color:#059669;">●</span>
-          <strong>₹14.82 Crores Quarantined Today</strong> (60.24% Direct Protection)
+            <div style="display:flex; gap:12px; margin-bottom:22px; flex-wrap:wrap; align-items:center;">
+              <a href="/static/citizen.html" class="btn btn-alert" style="padding:13px 26px; font-size:13.5px; border-radius:3px; box-shadow:0 6px 18px rgba(154,51,36,0.28); font-weight:700;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:4px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>File Incident (1930 SOS)
+              </a>
+              <a href="/static/track.html" class="btn btn-outline" style="padding:13px 24px; font-size:13.5px; border-radius:3px; background:#FFFFFF; border:1px solid var(--line); color:var(--navy); font-weight:600;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:4px;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>Track Case Docket
+              </a>
+              <a href="#" onclick="openJanParichayModal(); return false;" class="btn btn-ghost-ink" style="padding:13px 20px; font-size:13.5px; border-radius:3px; background:#FFFFFF; border:1px solid var(--line); font-weight:600;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:4px;"><path d="M3 21h18M4 18h16M6 18v-7M10 18v-7M14 18v-7M18 18v-7M12 3 2 9h20l-10-6z"></path></svg>Officer Portal SSO
+              </a>
+            </div>
+          </div>
+
+          <!-- Clean Golden Hour Status -->
+          <div style="display:flex; align-items:center; gap:12px; font-family:var(--mono); font-size:12px; color:var(--ink-soft); background:#FFFFFF; border:1px solid var(--line); padding:9px 16px; border-radius:3px; width:100%;">
+            <span style="color:var(--rust); font-weight:700;">● GOLDEN HOUR ACTIVE:</span>
+            <span id="gh-clock" style="font-weight:700; color:var(--navy); background:var(--paper-dim); padding:3px 8px; border-radius:2px; border:1px solid var(--line); font-size:12.5px;">23:28</span>
+            <span>minutes remaining for 100% pre-settlement recovery window</span>
+          </div>
         </div>
-        <div class="hero-stat-pill">
-          <span style="color:#D97706;">⚡</span>
-          <strong>Sub-180ms Switch Micro-Hold SLA</strong>
+
+        <!-- Right Column: Institutional Live Crime & Financial Telemetry Graph Suite (Full Width) -->
+        <div class="hero-right">
+          <div class="hero-terminal-card" style="background:#FFFFFF;">
+            
+            <div style="background:var(--navy); color:#FFFFFF; padding:12px 18px; display:flex; justify-content:space-between; align-items:center;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#E8C9A8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+                <span style="font-family:var(--mono); font-size:11.5px; font-weight:700; letter-spacing:0.04em; color:#FFFFFF;">LIVE NATIONAL CRIME TELEMETRY & RESTITUTION GRID</span>
+              </div>
+              <span class="badge badge-green" style="font-size:10px; padding:2px 7px;">● 48 CBS NODES LIVE</span>
+            </div>
+
+            <!-- 4 Live Real-Time Crime & Recovery KPI Counters -->
+            <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:1px; background:var(--line); border-bottom:1px solid var(--line);">
+              <div style="background:#FFFFFF; padding:10px 12px;">
+                <div style="font-size:10px; font-family:var(--mono); color:var(--ink-soft); text-transform:uppercase;">Daily 1930 SOS</div>
+                <strong style="font-size:15px; color:var(--rust); font-family:var(--mono); display:block;" id="hero-daily-complaints">1,432</strong>
+                <div style="font-size:10px; color:var(--green); font-weight:600;">99.4% Triaged</div>
+              </div>
+              <div style="background:#FFFFFF; padding:10px 12px;">
+                <div style="font-size:10px; font-family:var(--mono); color:var(--ink-soft); text-transform:uppercase;">Loss Quarantined</div>
+                <strong style="font-size:15px; color:var(--green); font-family:var(--mono); display:block;" id="hero-loss-recovered">₹30.83 Cr</strong>
+                <div style="font-size:10px; color:var(--green); font-weight:600;">98.4% Secured</div>
+              </div>
+              <div style="background:#FFFFFF; padding:10px 12px;">
+                <div style="font-size:10px; font-family:var(--mono); color:var(--ink-soft); text-transform:uppercase;">Hold Velocity</div>
+                <strong style="font-size:15px; color:var(--saffron); font-family:var(--mono); display:block;" id="hero-hold-speed">118.2 ms</strong>
+                <div style="font-size:10px; color:var(--ink-soft);">SLA &lt;180ms</div>
+              </div>
+              <div style="background:#FFFFFF; padding:10px 12px;">
+                <div style="font-size:10px; font-family:var(--mono); color:var(--ink-soft); text-transform:uppercase;">Mules Frozen</div>
+                <strong style="font-size:15px; color:var(--navy); font-family:var(--mono); display:block;" id="hero-mules-quarantined">16,509</strong>
+                <div style="font-size:10px; color:var(--rust); font-weight:600;">GNN Verified</div>
+              </div>
+            </div>
+            
+            <!-- Graph View Tabs -->
+            <div style="padding:8px 14px 4px; display:flex; justify-content:space-between; align-items:center; background:#FAF8F5; border-bottom:1px solid var(--line-light); flex-wrap:wrap; gap:6px;">
+              <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                <button onclick="switchHeroChart('complaints')" id="tab-btn-complaints" style="background:#0E2340; color:#FFF; border:none; padding:4px 10px; font-size:11px; font-family:var(--mono); border-radius:2px; cursor:pointer;">
+                  Daily Complaints vs Restitution (24h)
+                </button>
+                <button onclick="switchHeroChart('volume')" id="tab-btn-volume" style="background:transparent; color:#4B5563; border:1px solid var(--line); padding:4px 10px; font-size:11px; font-family:var(--mono); border-radius:2px; cursor:pointer;">
+                  Quarantined Loss (₹ Cr)
+                </button>
+                <button onclick="switchHeroChart('vectors')" id="tab-btn-vectors" style="background:transparent; color:#4B5563; border:1px solid var(--line); padding:4px 10px; font-size:11px; font-family:var(--mono); border-radius:2px; cursor:pointer;">
+                  Threat Vector Distribution
+                </button>
+              </div>
+              <span style="font-size:10.5px; font-family:var(--mono); color:var(--green); font-weight:600;">
+                ● LIVE ISO 20022 FEED
+              </span>
+            </div>
+
+            <!-- Canvas Container -->
+            <div style="padding:12px 14px; background:#FFFFFF; flex:1; min-height:260px; position:relative;">
+              <canvas id="hero-crime-telemetry-chart" height="230"></canvas>
+            </div>
+
+            <div style="padding:10px 16px; background:#FAF8F5; border-top:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; font-family:var(--mono); font-size:11.5px; color:var(--ink-soft);">
+              <span>Engine: <strong>Section 106 BNSS Micro-Hold Switch</strong></span>
+              <span style="color:var(--green); font-weight:700;">● ZERO-LEAKAGE ENFORCEMENT</span>
+            </div>
+          </div>
         </div>
-        <div class="hero-stat-pill">
-          <span style="color:#7C3AED;">⚖️</span>
-          <strong>Section 106 BNSS 2023 Statutory Court Lien</strong>
-        </div>
+
       </div>
     </div>
   </section>
 
-  <!-- 5. MAIN CONTENT AREA -->
-  <main class="gov-main-content" id="main-content">
 
-    <!-- 1. FOUR SOVEREIGN GATEWAY PORTALS -->
-    <div class="gateway-grid">
-      <!-- Portal 1: Citizen -->
-      <div class="gateway-card" style="border-top:3px solid var(--gov-danger);">
-        <div>
-          <span class="gateway-badge" style="background:#FEE2E2; color:#DC2626;">CITIZEN HELPLINE</span>
-          <h3 class="gateway-title">1. 1930 Fraud Report & Refund Desk</h3>
-          <p class="gateway-desc">
-            File emergency distress calls with NLP entity extraction, track 5-stage statutory restitution timeline, and report unconsented Aadhaar accounts.
-          </p>
+
+<!-- 5. Sovereign Metric Strip -->
+<section class="ledger-section wrap" style="border-top:none; padding-top:40px; padding-bottom:40px;">
+  <div class="metric-strip">
+    <div class="metric">
+      <div class="num" id="stat-funds">₹30.83 Cr</div>
+      <div class="lbl">Stolen funds frozen & quarantined</div>
+      <div class="sub" id="stat-funds-sub">● Streaming from 48 CBS Nodes</div>
+    </div>
+    <div class="metric">
+      <div class="num" id="stat-latency">118.2 ms</div>
+      <div class="lbl">Average hold propagation latency</div>
+      <div class="sub">● Sub-180ms statutory SLA</div>
+    </div>
+    <div class="metric">
+      <div class="num" id="stat-mules">16,509</div>
+      <div class="lbl">Mule transactions processed</div>
+      <div class="sub">● GNN anomaly validated</div>
+    </div>
+    <div class="metric">
+      <div class="num" id="stat-nodes">48 Banks</div>
+      <div class="lbl">Scheduled commercial banks connected</div>
+      <div class="sub" style="color:var(--green);">● 100% Core Banking Mesh</div>
+    </div>
+  </div>
+
+  <!-- Live Interbank Incident & Injunction Ticker -->
+  <div style="margin-top:18px; background:#FFFFFF; border:1px solid var(--line); border-radius:2px; padding:10px 18px; display:flex; align-items:center; gap:14px; font-family:var(--mono); font-size:11.5px; overflow:hidden;">
+    <span style="display:flex; align-items:center; gap:6px; color:var(--rust); font-weight:700; flex-shrink:0;">
+      <span class="pulse-dot"></span> LIVE INTERCEPT FEED:
+    </span>
+    <marquee behavior="scroll" direction="left" scrollamount="6" style="color:var(--navy); flex:1;" id="live-marquee">
+      [00:48:12] SBI Nodal Desk: ₹2.50L Pre-Settlement Hold Placed on Mule Acc ••••4821 (41.8ms) ··· [00:48:09] ERSS-112: PCR Eagle 4 Dispatched to Connaught Place ATM Cluster #14 ··· [00:48:04] DoT CEIR: IMEI 864920194820194 Quarantined across all 4 TSPs ··· [00:47:58] Special Cyber Court: Section 106 BNSS Restitution Order Issued (INR 5.0L) ··· [00:47:51] FIU-IND: 150,000 USDT Frozen on Compliant VASP Gate
+    </marquee>
+  </div>
+</section>
+
+<!-- 6. About the Government Initiative Section -->
+<section class="ledger-section" id="about" style="background:#FFFFFF;">
+  <div class="wrap">
+    <div class="ledger-mark">CASE LEDGER — 002 — SOVEREIGN MANDATE</div>
+    
+    <div class="about-grid">
+      <div>
+        <div class="sec-eyebrow">About the Initiative</div>
+        <h2 class="sec-title" style="margin-bottom:16px;">Securing India's Sovereign Digital Economy</h2>
+        <p style="font-size:15px; color:var(--ink-soft); line-height:1.7; margin-bottom:18px;">
+          <strong>DURGAM (दूर्गम)</strong> is the specialized national cyber financial fraud defense matrix established under the <strong>Indian Cybercrime Coordination Centre (I4C)</strong>, Ministry of Home Affairs, Government of India.
+        </p>
+        <p style="font-size:14px; color:var(--ink-soft); line-height:1.7; margin-bottom:24px;">
+          Operating in deep coordination with the <strong>Reserve Bank of India (RBI)</strong>, Central Bureau of Investigation (CBI), Financial Intelligence Unit (FIU-IND), and Department of Telecommunications (DoT), DURGAM solves the critical lag of traditional post-facto cyber investigations by implementing an instant, multi-agency pre-settlement hold switch.
+        </p>
+
+        <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:14px; margin-bottom:24px;">
+          <div class="gov-badge-seal">
+            <img src="/static/images/official_state_emblem.png" alt="Emblem" style="width:28px; height:34px; object-fit:contain;" />
+            <div>
+              <div style="font-family:var(--serif); font-weight:600; font-size:13px; color:var(--navy);">Ministry of Home Affairs</div>
+              <div style="font-family:var(--mono); font-size:10.5px; color:var(--ink-soft);">I4C Headquarters, New Delhi</div>
+            </div>
+          </div>
+
+          <div class="gov-badge-seal">
+            <div style="font-family:var(--serif); font-size:24px; font-weight:700; color:var(--green);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:3px;"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg></div>
+            <div>
+              <div style="font-family:var(--serif); font-weight:600; font-size:13px; color:var(--navy);">Section 106, BNSS 2023</div>
+              <div style="font-family:var(--mono); font-size:10.5px; color:var(--green);">Statutory Restitution Framework</div>
+            </div>
+          </div>
         </div>
-        <a href="/static/citizen.html" class="btn-utility" style="background:var(--gov-danger); color:#FFFFFF; border:none; padding:8px 14px; font-weight:800; justify-content:center;">
-          Open Citizen Desk →
-        </a>
+
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <a href="/static/academy.html" class="btn btn-ghost-ink">Learn About Cyber Hygiene →</a>
+          <a href="/static/judiciary.html" class="btn btn-ghost-ink">View Statutory Acts →</a>
+        </div>
       </div>
 
-      <!-- Portal 2: Police -->
-      <div class="gateway-card" style="border-top:3px solid var(--gov-navy);">
-        <div>
-          <span class="gateway-badge" style="background:#E2E8F0; color:var(--gov-navy);">LAW ENFORCEMENT</span>
-          <h3 class="gateway-title">2. Police Cyber Command (NC4)</h3>
-          <p class="gateway-desc">
-            Spatiotemporal ATM cashout forecast algorithms, 1-Click CAD beat patrol dispatch (ETA &lt; 4 mins), and automated CCTNS e-FIR drafting.
-          </p>
+      <!-- About Image Frame -->
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <div class="img-frame" style="height:280px;">
+          <img src="/static/images/digital_india_cyber_mesh.jpg" alt="Digital India Sovereign Cyber Grid" />
+          <div class="img-caption">
+            <span>DIGITAL INDIA SOVEREIGN CYBER MESH</span>
+            <span style="color:var(--green); font-weight:600;">GOI-I4C-SECURED</span>
+          </div>
         </div>
-        <a href="/static/police.html" class="btn-utility" style="background:var(--gov-navy); color:#FFFFFF; border:none; padding:8px 14px; font-weight:800; justify-content:center;">
-          Open Police War Room →
-        </a>
-      </div>
-
-      <!-- Portal 3: Bank -->
-      <div class="gateway-card" style="border-top:3px solid var(--gov-gold);">
-        <div>
-          <span class="gateway-badge" style="background:#FEF3C7; color:#B45309;">BANKING NODAL FRM</span>
-          <h3 class="gateway-title">3. ISO 20022 camt.056 Gateway</h3>
-          <p class="gateway-desc">
-            Scheduled Commercial Bank gateway for executing sub-180ms micro-holds, 30-minute dissolve timers, and DPDP ZK-Consortium mule searches.
-          </p>
+        <div style="font-family:var(--mono); font-size:11.5px; color:var(--ink-soft); line-height:1.6; background:var(--paper); padding:14px; border:1px solid var(--line); border-radius:2px;">
+          <strong>Legal Authorization:</strong> Admissible digital evidence cryptographically sealed under Section 63 of Bharatiya Sakshya Adhiniyam (BSA) 2023 on the sovereign Polygon ledger.
         </div>
-        <a href="/static/bank.html" class="btn-utility" style="background:var(--gov-gold); color:#FFFFFF; border:none; padding:8px 14px; font-weight:800; justify-content:center;">
-          Open Bank Switch →
-        </a>
-      </div>
-
-      <!-- Portal 4: Judiciary -->
-      <div class="gateway-card" style="border-top:3px solid var(--gov-purple);">
-        <div>
-          <span class="gateway-badge" style="background:#F5F3FF; color:#6D28D9;">SPECIAL CYBER COURTS</span>
-          <h3 class="gateway-title">4. Section 63 BSA Evidence Vault</h3>
-          <p class="gateway-desc">
-            Court-admissible electronic evidence ledger, Polygon Amoy SHA-256 Merkle root notarization, and Section 106 BNSS victim restitution orders.
-          </p>
-        </div>
-        <a href="/static/judiciary.html" class="btn-utility" style="background:var(--gov-purple); color:#FFFFFF; border:none; padding:8px 14px; font-weight:800; justify-content:center;">
-          Open Evidence Bench →
-        </a>
       </div>
     </div>
 
-    <!-- 2. CINEMATIC 2-COLUMN CYBERSECURITY ADVISORY CAROUSEL -->
-    <div class="cinematic-carousel-panel" onmouseenter="pauseCinematicCarousel()" onmouseleave="resumeCinematicCarousel()">
-      <div class="cinematic-header">
-        <div style="display:flex; align-items:center; gap:8px;">
-          <span style="font-size:12px; font-weight:900; color:var(--gov-navy);">
-            🚨 OFFICIAL CYBER THREAT INTELLIGENCE & ADVISORIES
-          </span>
-          <span style="font-size:10px; background:#FEE2E2; color:#DC2626; padding:2px 7px; border-radius:4px; font-weight:800;">
-            MHA / I4C / SEBI JOINT BULLETINS
-          </span>
-        </div>
-        <div style="display:flex; align-items:center; gap:8px;">
-          <button onclick="prevCinematicSlide()" class="btn-utility" style="background:#FFFFFF; color:var(--gov-navy); border-color:var(--gov-border-strong); width:28px; height:28px; padding:0; justify-content:center; font-weight:bold;">‹</button>
-          <span id="cinematic-slide-num" style="font-family:var(--font-mono); font-size:11px; font-weight:800; color:var(--gov-navy);">1 / 5</span>
-          <button onclick="nextCinematicSlide()" class="btn-utility" style="background:#FFFFFF; color:var(--gov-navy); border-color:var(--gov-border-strong); width:28px; height:28px; padding:0; justify-content:center; font-weight:bold;">›</button>
-        </div>
-      </div>
+  </div>
+</section>
 
-      <!-- Slide 1: Digital Arrest -->
-      <div class="cinematic-slide active" id="c-slide-1">
-        <div class="cinematic-slide-body">
-          <div class="cinematic-img-col">
-            <img src="/static/images/digital_arrest_real_desk.jpg" alt="Police Cyber Crime Investigation Desk" />
-            <div class="cinematic-img-caption">
-              <strong>Official Investigation:</strong> Cyber Police Command investigating video call extortion syndicates.
-            </div>
-          </div>
-          <div class="cinematic-text-col">
-            <div>
-              <span style="font-size:10px; font-weight:900; background:#FEE2E2; color:#DC2626; padding:2px 8px; border-radius:4px;">
-                HIGH PRIORITY • MHA BULLETIN #491
-              </span>
-              <h3 style="font-family:var(--font-display); font-size:20px; font-weight:900; color:var(--gov-navy); margin:8px 0;">
-                Digital Arrest & Video Call Extortion Neutralization
-              </h3>
-              <p style="font-size:12.5px; color:var(--gov-text-muted); line-height:1.6; margin-bottom:14px;">
-                Organized syndicates posing as CBI or Narcotics Police coerce citizens over Skype/WhatsApp video calls alleging intercepted parcels. Victims are forced to wire savings to "RBI Escrow" accounts. <strong>Indian Government agencies NEVER conduct arrests or seek verification money over video calls.</strong>
-              </p>
-              <div style="background:var(--gov-surface); padding:10px 14px; border-radius:6px; border:1px solid var(--gov-border); margin-bottom:16px; font-size:11.5px; display:flex; gap:16px; flex-wrap:wrap;">
-                <span><strong>Severity:</strong> <span style="color:#DC2626;">Critical (Level 5)</span></span>
-                <span><strong>Avg Loss:</strong> ₹3.5L – ₹28.0 Lakhs</span>
-                <span><strong>Golden Hour:</strong> 0 – 30 Minutes</span>
-              </div>
-            </div>
-            <div style="display:flex; gap:10px; flex-wrap:wrap;">
-              <a href="tel:1930" class="btn-hero-submit" style="padding:8px 16px; font-size:11.5px;">
-                Call 1930 Toll-Free
-              </a>
-              <a href="/static/citizen.html" class="btn-utility" style="background:var(--gov-navy); color:#FFFFFF; border:none; padding:8px 16px; font-size:11.5px;">
-                Register 1930 Dispute →
-              </a>
-            </div>
-          </div>
-        </div>
+<!-- 7. Live Telemetry & Interbank Simulator Section -->
+<section class="ledger-section" id="telemetry">
+  <div class="wrap">
+    <div class="ledger-mark">CASE LEDGER — 003 — LIVE TELEMETRY</div>
+    <div class="sec-head">
+      <div>
+        <div class="sec-eyebrow">Real-Time Defense Matrix</div>
+        <h2 class="sec-title">Live Sovereign Telemetry & Interbank Volume</h2>
       </div>
-
-      <!-- Slide 2: Telegram Task Scams -->
-      <div class="cinematic-slide" id="c-slide-2">
-        <div class="cinematic-slide-body">
-          <div class="cinematic-img-col">
-            <img src="/static/images/telegram_task_real_phone.jpg" alt="Task Scam Message on Phone" />
-            <div class="cinematic-img-caption">
-              <strong>Modus Operandi:</strong> Fraudulent part-time rating task messages received on messaging apps.
-            </div>
-          </div>
-          <div class="cinematic-text-col">
-            <div>
-              <span style="font-size:10px; font-weight:900; background:#FEF3C7; color:#B45309; padding:2px 8px; border-radius:4px;">
-                ORGANIZED FRAUD • MHA BULLETIN #492
-              </span>
-              <h3 style="font-family:var(--font-display); font-size:20px; font-weight:900; color:var(--gov-navy); margin:8px 0;">
-                Telegram Part-Time Rating & Merchant Task Liquidity Traps
-              </h3>
-              <p style="font-size:12.5px; color:var(--gov-text-muted); line-height:1.6; margin-bottom:14px;">
-                Victims are lured with daily payouts for rating listings or maps. After small initial credits, fraudsters demand ₹50,000–₹5,00,000 "prepaid merchant deposit" before withdrawals are blocked. <strong>Corporate employers NEVER demand liquidity deposits.</strong>
-              </p>
-              <div style="background:var(--gov-surface); padding:10px 14px; border-radius:6px; border:1px solid var(--gov-border); margin-bottom:16px; font-size:11.5px; display:flex; gap:16px; flex-wrap:wrap;">
-                <span><strong>Severity:</strong> <span style="color:#B45309;">High (Level 4)</span></span>
-                <span><strong>Avg Loss:</strong> ₹1.2L – ₹8.5 Lakhs</span>
-                <span><strong>Model:</strong> GraphSAGE Multi-Hop Traversal</span>
-              </div>
-            </div>
-            <div style="display:flex; gap:10px; flex-wrap:wrap;">
-              <a href="/static/citizen.html" class="btn-utility" style="background:var(--gov-gold); color:#FFFFFF; border:none; padding:8px 16px; font-size:11.5px;">
-                Report Task Scam →
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Slide 3: Fake VIP Stock Trading -->
-      <div class="cinematic-slide" id="c-slide-3">
-        <div class="cinematic-slide-body">
-          <div class="cinematic-img-col">
-            <img src="/static/images/bank_security_operations.jpg" alt="Banking Nodal Operations" />
-            <div class="cinematic-img-caption">
-              <strong>Interception:</strong> Scheduled Commercial Bank Nodal SOC executing ISO 20022 camt.056 micro-holds.
-            </div>
-          </div>
-          <div class="cinematic-text-col">
-            <div>
-              <span style="font-size:10px; font-weight:900; background:#FFF7ED; color:#EA580C; padding:2px 8px; border-radius:4px;">
-                SEBI & RBI JOINT ADVISORY • BULLETIN #493
-              </span>
-              <h3 style="font-family:var(--font-display); font-size:20px; font-weight:900; color:var(--gov-navy); margin:8px 0;">
-                Unregulated VIP WhatsApp Groups & Fabricated Stock Trading APKs
-              </h3>
-              <p style="font-size:12.5px; color:var(--gov-text-muted); line-height:1.6; margin-bottom:14px;">
-                Fraud syndicates share fake SEBI certificates and custom APKs showing artificial 400% returns. Funds are siphoned into corporate shell accounts via RTGS. <strong>Verify brokers exclusively on sebi.gov.in.</strong>
-              </p>
-              <div style="background:var(--gov-surface); padding:10px 14px; border-radius:6px; border:1px solid var(--gov-border); margin-bottom:16px; font-size:11.5px; display:flex; gap:16px; flex-wrap:wrap;">
-                <span><strong>Severity:</strong> <span style="color:#EA580C;">Severe (Level 5)</span></span>
-                <span><strong>Avg Loss:</strong> ₹10.0L – ₹1.5 Crores</span>
-                <span><strong>Interception:</strong> Pre-Settlement RTGS/IMPS Hold</span>
-              </div>
-            </div>
-            <div style="display:flex; gap:10px; flex-wrap:wrap;">
-              <a href="/static/citizen.html" class="btn-utility" style="background:var(--gov-saffron); color:#FFFFFF; border:none; padding:8px 16px; font-size:11.5px;">
-                Register Investment Dispute →
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Slide 4: Electricity Bill APKs -->
-      <div class="cinematic-slide" id="c-slide-4">
-        <div class="cinematic-slide-body">
-          <div class="cinematic-img-col">
-            <img src="/static/images/sms_malware_real_phone.jpg" alt="Fake Electricity Bill SMS on Phone" />
-            <div class="cinematic-img-caption">
-              <strong>Modus Operandi:</strong> Fraudulent SMS warnings sent to induce victims into downloading remote support APKs.
-            </div>
-          </div>
-          <div class="cinematic-text-col">
-            <div>
-              <span style="font-size:10px; font-weight:900; background:#F3F0FF; color:#6D28D9; padding:2px 8px; border-radius:4px;">
-                REMOTE MALWARE • MHA BULLETIN #494
-              </span>
-              <h3 style="font-family:var(--font-display); font-size:20px; font-weight:900; color:var(--gov-navy); margin:8px 0;">
-                Malicious Electricity Bill SMS & Screen-Sharing APK Malware
-              </h3>
-              <p style="font-size:12.5px; color:var(--gov-text-muted); line-height:1.6; margin-bottom:14px;">
-                SMS notices threaten electricity disconnection at 9:30 PM, instructing victims to call fake numbers and install screen-sharing software. <strong>State Discoms NEVER send APK download links via SMS.</strong>
-              </p>
-              <div style="background:var(--gov-surface); padding:10px 14px; border-radius:6px; border:1px solid var(--gov-border); margin-bottom:16px; font-size:11.5px; display:flex; gap:16px; flex-wrap:wrap;">
-                <span><strong>Severity:</strong> <span style="color:#6D28D9;">High (Level 4)</span></span>
-                <span><strong>Avg Loss:</strong> ₹80,000 – ₹4.5 Lakhs</span>
-                <span><strong>Defense:</strong> DPDP ZK Banking Token Revocation</span>
-              </div>
-            </div>
-            <div style="display:flex; gap:10px; flex-wrap:wrap;">
-              <a href="/static/citizen.html" class="btn-utility" style="background:var(--gov-purple); color:#FFFFFF; border:none; padding:8px 16px; font-size:11.5px;">
-                Check Credentials →
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Slide 5: Mule Account Liability -->
-      <div class="cinematic-slide" id="c-slide-5">
-        <div class="cinematic-slide-body">
-          <div class="cinematic-img-col">
-            <img src="/static/images/judicial_cyber_courtroom.jpg" alt="Special Cyber Courtroom" />
-            <div class="cinematic-img-caption">
-              <strong>Judicial Bench:</strong> Special Cyber Court validating cryptographic Section 63 BSA evidence certificates.
-            </div>
-          </div>
-          <div class="cinematic-text-col">
-            <div>
-              <span style="font-size:10px; font-weight:900; background:#ECFDF5; color:#047857; padding:2px 8px; border-radius:4px;">
-                STATUTORY PROSECUTION • BULLETIN #495
-              </span>
-              <h3 style="font-family:var(--font-display); font-size:20px; font-weight:900; color:var(--gov-navy); margin:8px 0;">
-                Strict Criminal Liability for Mule Account Rental & Identity Trafficking
-              </h3>
-              <p style="font-size:12.5px; color:var(--gov-text-muted); line-height:1.6; margin-bottom:14px;">
-                Renting or selling bank accounts, UPI IDs, or SIM cards to cyber fraudsters attracts severe prosecution under Section 66D IT Act 2000 and Section 106 BNSS 2023 with permanent PAN/Aadhaar blacklisting and non-bailable imprisonment.
-              </p>
-              <div style="background:var(--gov-surface); padding:10px 14px; border-radius:6px; border:1px solid var(--gov-border); margin-bottom:16px; font-size:11.5px; display:flex; gap:16px; flex-wrap:wrap;">
-                <span><strong>Statutory Acts:</strong> Section 106 BNSS & 66D IT Act</span>
-                <span><strong>Penalty:</strong> Non-Bailable Arrest & Permanent Lien</span>
-              </div>
-            </div>
-            <div style="display:flex; gap:10px; flex-wrap:wrap;">
-              <a href="/static/judiciary.html" class="btn-utility" style="background:var(--gov-green); color:#FFFFFF; border:none; padding:8px 16px; font-size:11.5px;">
-                View Section 63 BSA Evidence Vault →
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
+      <p class="sec-note">Streaming live operational metrics across 48 commercial banks, police command, and DoT CEIR telecom injunctions.</p>
     </div>
 
-    <!-- 3. PRIMARY OPERATIONAL INTELLIGENCE MATRIX (GNN Money Trail + GIS Map) -->
-    <div class="ops-grid">
+    <!-- Chart & Live Simulation Grid -->
+    <div style="display:grid; grid-template-columns:1.2fr 0.8fr; gap:28px; margin-bottom:36px;">
       
-      <!-- LEFT: Inter-Bank Money Trail Flow -->
-      <div class="gov-card" style="margin-bottom:0;">
-        <div class="gov-card-header">
-          <div class="gov-card-title">
-            <svg class="gov-icon gov-icon-lg" viewBox="0 0 24 24" style="stroke:var(--gov-navy);"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-            <span>Inter-Bank Money Trail & Mule Layering Forensic Flow</span>
+      <!-- Chart.js Graph in Paper Ledger Style -->
+      <div style="background:#fff; border:1px solid var(--line); border-radius:3px; padding:24px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+          <div style="font-family:var(--serif); font-size:1.15rem; font-weight:600; color:var(--navy);">
+            Quarantined Recoveries vs. Defrauded Inflow (₹ Lakhs)
           </div>
-          <button onclick="triggerAIMultiHopInference()" class="btn-utility" style="background:var(--gov-navy); color:#FFFFFF; border:none; padding:4px 10px; font-size:11px;">
-            ⚡ Run GraphSAGE GNN (&lt; 70ms)
-          </button>
+          <span style="font-family:var(--mono); font-size:11px; color:var(--green); font-weight:600;">● STREAMING LIVE</span>
         </div>
-
-        <canvas id="money-trail-canvas"></canvas>
-
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-top:12px; font-size:11px; font-weight:700;">
-          <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            <span><span style="display:inline-block; width:8px; height:8px; background:#2563EB; border-radius:50%; margin-right:3px;"></span> Remitter</span>
-            <span><span style="display:inline-block; width:8px; height:8px; background:#F59E0B; border-radius:50%; margin-right:3px;"></span> Layer 1 Mule</span>
-            <span><span style="display:inline-block; width:8px; height:8px; background:#EA580C; border-radius:50%; margin-right:3px;"></span> Aggregator</span>
-            <span><span style="display:inline-block; width:8px; height:8px; background:#DC2626; border-radius:50%; margin-right:3px;"></span> Terminal ATM</span>
-          </div>
-          <span style="color:var(--gov-text-muted);">GNN Traversal Latency: <strong>68.4 ms</strong></span>
+        <div style="height:340px; position:relative;">
+          <canvas id="telemetryChart"></canvas>
         </div>
       </div>
 
-      <!-- RIGHT: Geospatial ATM Hotspot Radar -->
-      <div class="gov-card" style="margin-bottom:0;">
-        <div class="gov-card-header">
-          <div class="gov-card-title">
-            <svg class="gov-icon gov-icon-lg" viewBox="0 0 24 24" style="stroke:var(--gov-navy);"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
-            <span>Spatiotemporal ATM Hotspot Surveillance</span>
-          </div>
-          <button onclick="handleCADDispatch()" class="btn-utility" style="background:#DC2626; color:#FFFFFF; border:none; padding:4px 10px; font-size:11px;">
-            🚔 1-Click CAD Dispatch
-          </button>
-        </div>
-
-        <div class="radar-container">
-          <div id="map-view"></div>
-        </div>
-
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-top:12px; font-size:11.5px; font-weight:800;">
-          <span style="color:var(--gov-danger);">Target: <strong id="active-state-atm">SBI ATM, Connaught Place</strong></span>
-          <span style="color:var(--gov-green);">PCR: <strong id="pcr-callsign-display">Falcon 1</strong> (<strong id="pcr-live-dist">1.40 km</strong>)</span>
-          <span style="color:var(--gov-gold);">ETA: <strong id="pcr-live-eta">4 Mins</strong></span>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- 4. GOLDEN HOUR 3-STEP IMMEDIATE EMERGENCY ACTION PROTOCOL -->
-    <div class="gov-card">
-      <div class="gov-card-header">
+      <!-- Live Interactive Inter-Bank Hold Cascade Simulator -->
+      <div style="background:#fff; border:1px solid var(--line); border-radius:3px; padding:24px; display:flex; flex-direction:column; justify-content:space-between;">
         <div>
-          <div class="gov-card-title">
-            <svg class="gov-icon gov-icon-lg" viewBox="0 0 24 24" style="stroke:var(--gov-navy);"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            <span>Victim Golden Hour Protocol: 3 Immediate Steps to Intercept Stolen Funds</span>
+          <div style="font-family:var(--mono); font-size:11px; letter-spacing:0.08em; color:var(--saffron); text-transform:uppercase; margin-bottom:6px;">
+            Interactive Sandbox
           </div>
-          <div style="font-size:11.5px; color:var(--gov-text-muted); margin-top:2px;">
-            Statutory time-critical action checklist to ensure 100% pre-settlement recovery before fraudsters withdraw cash
+          <div style="font-family:var(--serif); font-size:1.2rem; font-weight:600; color:var(--navy); margin-bottom:10px;">
+            Simulate ISO 20022 camt.056 Cascade
+          </div>
+          <p style="font-size:13px; color:var(--ink-soft); line-height:1.55; margin-bottom:18px;">
+            Test the automated multi-hop lien broadcast across recipient banks when a victim files a fraud claim.
+          </p>
+
+          <div style="margin-bottom:14px;">
+            <div style="display:flex; justify-content:space-between; font-size:12px; font-family:var(--mono); margin-bottom:4px;">
+              <span>Defrauded Amount:</span>
+              <strong id="sim-amt-lbl" style="color:var(--navy);">₹5,00,000</strong>
+            </div>
+            <input type="range" id="sim-amt-range" min="50000" max="2500000" step="50000" value="500000" style="width:100%; accent-color:var(--saffron);" oninput="updateSimAmt(this.value)" />
+          </div>
+
+          <div style="margin-bottom:18px;">
+            <div style="display:flex; justify-content:space-between; font-size:12px; font-family:var(--mono); margin-bottom:4px;">
+              <span>Mule Splitting Depth:</span>
+              <strong id="sim-hops-lbl" style="color:var(--navy);">4-Hop Split</strong>
+            </div>
+            <input type="range" id="sim-hops-range" min="1" max="5" value="4" style="width:100%; accent-color:var(--saffron);" oninput="document.getElementById('sim-hops-lbl').innerText = this.value + '-Hop Split'" />
           </div>
         </div>
-      </div>
 
-      <div class="protocol-grid">
-        <div class="protocol-card">
-          <div class="protocol-step-num" style="background:#DC2626;">1</div>
-          <strong style="color:var(--gov-navy); font-size:14px; display:block;">Within 0–30 Mins: Report Distress</strong>
-          <p style="font-size:12px; color:var(--gov-text-muted); margin-top:6px; line-height:1.5;">
-            Dial <strong>1930</strong> or file on this portal with Transaction Reference (UTR/RRN). The DURGAM engine initiates automated ISO 20022 camt.056 micro-holds across beneficiary banks in &lt; 180ms.
-          </p>
-          <a href="/static/citizen.html" class="btn-utility" style="background:#DC2626; color:#FFFFFF; border:none; margin-top:12px; font-size:11px;">
-            File Immediate 1930 Distress Call →
-          </a>
-        </div>
-
-        <div class="protocol-card">
-          <div class="protocol-step-num" style="background:#B45309;">2</div>
-          <strong style="color:var(--gov-navy); font-size:14px; display:block;">Within 30–60 Mins: Secure Perimeter</strong>
-          <p style="font-size:12px; color:var(--gov-text-muted); margin-top:6px; line-height:1.5;">
-            Block compromised UPI VPAs, change NetBanking passwords, and disable International/E-commerce limits via your bank app. If remote APK was installed, disconnect Wi-Fi and factory-reset device.
-          </p>
-          <button onclick="alert('Guidance: Contact your home bank customer care or visit nearest branch to freeze netbanking tokens.')" class="btn-utility" style="background:var(--gov-gold); color:#FFFFFF; border:none; margin-top:12px; font-size:11px;">
-            View Security Perimeter Guide →
-          </button>
-        </div>
-
-        <div class="protocol-card">
-          <div class="protocol-step-num" style="background:#047857;">3</div>
-          <strong style="color:var(--gov-navy); font-size:14px; display:block;">Within Day 1–7: Restitution Claim</strong>
-          <p style="font-size:12px; color:var(--gov-text-muted); margin-top:6px; line-height:1.5;">
-            DURGAM auto-generates CCTNS e-FIR and Section 63 BSA Blockchain Evidence certificate. Submit this to the designated Special Cyber Magistrate for fast-track restitution decree under Section 106 BNSS 2023.
-          </p>
-          <a href="/static/citizen.html" class="btn-utility" style="background:var(--gov-green); color:#FFFFFF; border:none; margin-top:12px; font-size:11px;">
-            Track Restitution Lifecycle →
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <!-- 5. SOVEREIGN PLATFORM TRANSPARENCY & MATHEMATICAL VERIFICATION ARCHITECTURE -->
-    <div class="gov-card">
-      <div class="gov-card-header">
         <div>
-          <div class="gov-card-title">
-            <svg class="gov-icon gov-icon-lg" viewBox="0 0 24 24" style="stroke:var(--gov-navy);"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            <span>Sovereign Platform Transparency & Mathematical Verification Architecture</span>
+          <button onclick="runHoldSimulation()" class="btn btn-primary" style="width:100%; justify-content:center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:3px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>Broadcast camt.056 Micro-Hold Directives
+          </button>
+          <div id="sim-result-box" style="display:none; margin-top:12px; font-family:var(--mono); font-size:11.5px; background:var(--paper); padding:10px; border:1px solid var(--line); border-radius:2px; line-height:1.6;">
+            <!-- Output injected by JS -->
           </div>
-          <div style="font-size:11.5px; color:var(--gov-text-muted); margin-top:2px;">
-            Open algorithmic transparency, Zero-Knowledge privacy guarantees, and verifiable blockchain Merkle notarization
-          </div>
-        </div>
-        <span style="font-size:10.5px; background:#ECFDF5; color:#047857; font-weight:800; padding:3px 8px; border-radius:4px; border:1px solid #A7F3D0;">
-          ✓ ZERO-KNOWLEDGE & ON-CHAIN VERIFIED
-        </span>
-      </div>
-
-      <div class="transparency-matrix">
-        <div class="transparency-box" style="border-top:3px solid #059669;">
-          <div>
-            <div style="font-size:11px; font-weight:900; color:#059669; text-transform:uppercase;">1. PRIVACY GUARANTEE</div>
-            <strong style="color:var(--gov-navy); font-size:14px; margin-top:4px; display:block;">DPDP Act 2023 Zero-Knowledge Proofs</strong>
-            <p style="font-size:12px; color:var(--gov-text-muted); margin-top:6px; line-height:1.5;">
-              Salted SHA-256 hash queries enable cross-bank mule cluster detection across 48 commercial banks without exposing unhashed citizen PII or account numbers.
-            </p>
-          </div>
-          <span style="font-size:11px; font-weight:700; color:#059669; margin-top:10px;">✓ 100% PII Confidentiality</span>
-        </div>
-
-        <div class="transparency-box" style="border-top:3px solid #7C3AED;">
-          <div>
-            <div style="font-size:11px; font-weight:900; color:#7C3AED; text-transform:uppercase;">2. TAMPER-PROOF EVIDENCE</div>
-            <strong style="color:var(--gov-navy); font-size:14px; margin-top:4px; display:block;">Polygon Amoy Blockchain Merkle Notary</strong>
-            <p style="font-size:12px; color:var(--gov-text-muted); margin-top:6px; line-height:1.5;">
-              Every financial fraud case dossier is sealed into cryptographic Merkle tree roots committed to public ledger every 10 mins for court-admissible proof under Section 63 BSA 2023.
-            </p>
-          </div>
-          <span style="font-size:11px; font-weight:700; color:#7C3AED; margin-top:10px;">✓ Publicly Auditable Roots</span>
-        </div>
-
-        <div class="transparency-box" style="border-top:3px solid #EA580C;">
-          <div>
-            <div style="font-size:11px; font-weight:900; color:#EA580C; text-transform:uppercase;">3. LATENCY WATERFALL</div>
-            <strong style="color:var(--gov-navy); font-size:14px; margin-top:4px; display:block;">Sub-180ms End-to-End Interception SLA</strong>
-            <p style="font-size:12px; color:var(--gov-text-muted); margin-top:6px; line-height:1.5;">
-              14.2ms NLP Ingestion + 68.4ms GraphSAGE GNN Inference + 89.1ms ISO 20022 camt.056 Pre-Settlement Switch Hold = Total 171.7ms sub-second response.
-            </p>
-          </div>
-          <span style="font-size:11px; font-weight:700; color:#EA580C; margin-top:10px;">✓ Verified 171.7ms Real-Time Run-Rate</span>
-        </div>
-
-        <div class="transparency-box" style="border-top:3px solid #0B2545;">
-          <div>
-            <div style="font-size:11px; font-weight:900; color:var(--gov-navy); text-transform:uppercase;">4. ACCESS GOVERNANCE</div>
-            <strong style="color:var(--gov-navy); font-size:14px; margin-top:4px; display:block;">Cryptographic Role-Based Isolation</strong>
-            <p style="font-size:12px; color:var(--gov-text-muted); margin-top:6px; line-height:1.5;">
-              Independent cryptographic gateways for Citizens (1930 filing), Police (CAD & e-FIR), Banks (Lien switch), and Judiciary (Restitution decree).
-            </p>
-          </div>
-          <span style="font-size:11px; font-weight:700; color:var(--gov-navy); margin-top:10px;">✓ Zero-Vulnerability RBAC</span>
         </div>
       </div>
     </div>
+  </div>
+</section>
 
-    <!-- 6. STATUTORY LEGAL FRAMEWORK -->
-    <div class="gov-card">
-      <div class="gov-card-header">
-        <div class="gov-card-title">
-          <svg class="gov-icon gov-icon-lg" viewBox="0 0 24 24" style="stroke:var(--gov-navy);"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
-          <span>Statutory Legal Framework for Cyber Financial Fraud Restitution (कानूनी ढांचा)</span>
-        </div>
+<!-- 8. Geospatial GIS Tactical Map & GNN Mule Network -->
+<section class="ledger-section" id="mule-radar" style="background:var(--paper-dim);">
+  <div class="wrap">
+    <div class="ledger-mark">CASE LEDGER — 004 — GIS & GNN GRAPH</div>
+    <div class="sec-head">
+      <div>
+        <div class="sec-eyebrow">Spatial & Graph Intelligence</div>
+        <h2 class="sec-title">Pan-India ATM Cashout Heatmap & Mule Network</h2>
       </div>
-
-      <div style="overflow-x:auto;">
-        <table class="gov-table">
-          <thead>
-            <tr>
-              <th style="width:25%;">Statutory Act & Section</th>
-              <th style="width:35%;">Legal Mandate</th>
-              <th style="width:40%;">Operational Mechanism in DURGAM</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style="font-weight:800; color:var(--gov-navy);">Section 106, Bharatiya Nagarik Suraksha Sanhita (BNSS) 2023</td>
-              <td>Pre-FIR Attachment & Restitution of Stolen Property</td>
-              <td>Automated 30-minute ISO 20022 pre-settlement micro-holds convert directly to statutory court liens.</td>
-            </tr>
-            <tr>
-              <td style="font-weight:800; color:var(--gov-navy);">Section 63, Bharatiya Sakshya Adhiniyam (BSA) 2023</td>
-              <td>Admissibility of Electronic Evidence in Courts</td>
-              <td>Cryptographic SHA-256 Merkle root evidence sealing on Polygon Amoy public ledger with court certificates.</td>
-            </tr>
-            <tr>
-              <td style="font-weight:800; color:var(--gov-navy);">Section 66D, Information Technology Act 2000</td>
-              <td>Punishment for Cheating by Personation using Computer Resource</td>
-              <td>Automated CCTNS e-FIR generation with officer digital signature for fast-track investigation.</td>
-            </tr>
-            <tr>
-              <td style="font-weight:800; color:var(--gov-navy);">Digital Personal Data Protection (DPDP) Act 2023</td>
-              <td>Zero-Knowledge Financial Privacy & Data Protection</td>
-              <td>Salted Zero-Knowledge hash mule consortium searches protect citizen PII across 48 commercial banks.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <p class="sec-note">Spatio-Temporal Kernel Density Estimation (ST-KDE) for physical ATM intercepts combined with GraphSAGE GNN money trail reconstruction.</p>
     </div>
 
-  </main>
+    <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:28px;">
+      
+      <!-- Leaflet GIS Tactical Map -->
+      <div style="background:#fff; border:1px solid var(--line); border-radius:3px; overflow:hidden;">
+        <div style="padding:14px 20px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; background:#FAF8F5;">
+          <div style="font-family:var(--serif); font-weight:600; font-size:14.5px; color:var(--navy);">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:4px;"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>Tactical GIS Radar — ERSS-112 PCR Patrol Beats
+          </div>
+          <span style="font-family:var(--mono); font-size:11px; color:var(--saffron); font-weight:600;">ACTIVE RADAR</span>
+        </div>
+        <div id="tactical-map" style="height:480px; width:100%;"></div>
+      </div>
 
-  <!-- Sovereign Government Footer (GIGW 3.0 Standard) -->
-  <footer class="gov-footer">
-    <div class="gov-footer-container">
-      <div>
-        <h4 style="color:#FFFFFF; font-family:var(--font-display); font-size:14px; font-weight:800; margin-bottom:10px;">DURGAM (दूर्गम)</h4>
-        <p style="line-height:1.7;">National Cybercrime Real-Time Interception & Mule Account Risk-Grid Engine. An initiative of the Indian Cyber Crime Coordination Centre (I4C), Ministry of Home Affairs, Government of India.</p>
-        <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">
-          <span style="background:rgba(255,255,255,0.12); padding:3px 8px; border-radius:4px; font-size:10px;">✓ CERT-In Compliant</span>
-          <span style="background:rgba(255,255,255,0.12); padding:3px 8px; border-radius:4px; font-size:10px;">✓ STQC GIGW 3.0 Standard</span>
-          <span style="background:rgba(255,255,255,0.12); padding:3px 8px; border-radius:4px; font-size:10px;">✓ NIC MeghRaj Cloud</span>
+      <!-- Real-Time Force-Directed GNN Canvas -->
+      <div style="background:#fff; border:1px solid var(--line); border-radius:3px; display:flex; flex-direction:column;">
+        <div style="padding:14px 20px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; background:#FAF8F5;">
+          <div style="font-family:var(--serif); font-weight:600; font-size:14.5px; color:var(--navy);">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:4px;"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>GNN Money Mule Cluster Graph
+          </div>
+          <button onclick="injectMuleGraphNode()" class="btn btn-outline" style="padding:3px 8px; font-size:11px; color:var(--ink);">+ Inject Node</button>
+        </div>
+        <div style="position:relative; flex:1; min-height:480px; background:#1B2430; overflow:hidden;">
+          <canvas id="gnn-canvas" style="width:100%; height:100%; display:block; cursor:grab;"></canvas>
+          <div id="gnn-inspector" style="position:absolute; bottom:12px; left:12px; background:rgba(8,21,36,0.92); border:1px solid #33455C; color:#E4EAF0; font-family:var(--mono); font-size:11px; padding:10px 14px; border-radius:2px; max-width:260px;">
+            <div style="color:var(--saffron-dim); font-weight:700;">INSPECTED MULE NODE</div>
+            <div>Account: <strong id="insp-acc" style="color:#fff;">SBI-MULE-4821</strong></div>
+            <div>Mule Score: <strong id="insp-risk" style="color:#E8C9A8;">0.94 [CRITICAL]</strong></div>
+            <div>Status: <span style="color:#A7F3D0;">camt.056 Hold Placed (42ms)</span></div>
+          </div>
         </div>
       </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- 9. Services List (Four Stakeholder Gateways) -->
+<section class="ledger-section" id="services">
+  <div class="wrap">
+    <div class="ledger-mark">CASE LEDGER — 005 — SERVICES</div>
+    <div class="sec-head">
       <div>
-        <h4 style="color:#FFFFFF; font-family:var(--font-display); font-size:14px; font-weight:800; margin-bottom:10px;">STATUTORY ACTS & COMPLIANCE</h4>
-        <ul style="list-style:none; line-height:1.9;">
-          <li>• Bharatiya Nagarik Suraksha Sanhita (BNSS) 2023 - Sec 106</li>
-          <li>• Bharatiya Sakshya Adhiniyam (BSA) 2023 - Sec 63</li>
-          <li>• Digital Personal Data Protection (DPDP) Act 2023</li>
-          <li>• Information Technology Act 2000 - Sec 66D</li>
+        <div class="sec-eyebrow">Operational Gateways</div>
+        <h2 class="sec-title">Four ways in, tailored for each stakeholder</h2>
+      </div>
+      <p class="sec-note">Specialized workflows for citizens, law enforcement, banking compliance, and judicial restitution.</p>
+    </div>
+
+    <div class="service-list">
+      <a href="/static/citizen.html" class="service-row">
+        <span class="idx">01</span>
+        <span class="name">Report a Financial Cybercrime (1930 SOS)</span>
+        <span class="desc">File an incident in seconds to trigger automated ISO 20022 pre-settlement holds across beneficiary bank accounts.</span>
+        <span class="go">Report incident →</span>
+      </a>
+      <a href="#threats" class="service-row">
+        <span class="idx">02</span>
+        <span class="name">Read Current Threat Advisories & Vectors</span>
+        <span class="desc">Inspect high-priority syndicates active right now — fake arrest video calls, APK screen-mirroring, and crypto off-ramps.</span>
+        <span class="go">View advisories →</span>
+      </a>
+      <a href="/static/academy.html" class="service-row">
+        <span class="idx">03</span>
+        <span class="name">Cyber Awareness & National Certification</span>
+        <span class="desc">Take an interactive scam-spotting simulator course and earn the official MHA National Cyber Shield Certificate.</span>
+        <span class="go">Start academy →</span>
+      </a>
+      <a href="/static/judiciary.html" class="service-row">
+        <span class="idx">04</span>
+        <span class="name">Section 106 BNSS 2023 Restitution Docket</span>
+        <span class="desc">Access statutory guidelines, cryptographic proof dockets (Section 63 BSA), and automated judicial decree issuance.</span>
+        <span class="go">Court guidelines →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- 10. Active Threat Modus Operandi with Real Photos -->
+<section class="ledger-section" id="threats" style="background:#FFFFFF;">
+  <div class="wrap">
+    <div class="ledger-mark">CASE LEDGER — 006 — THREAT VECTORS</div>
+    <div class="sec-head">
+      <div>
+        <div class="sec-eyebrow">Currently Active Modus Operandi</div>
+        <h2 class="sec-title">The four fraud syndicates causing highest loss volume</h2>
+      </div>
+      <p class="sec-note">Ranked by real-time incident reports filed across state police CAD desks this month.</p>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:24px;">
+      
+      <!-- Threat Card 1: Digital Arrest with Real Photo -->
+      <div class="threat-card" style="border:1px solid var(--line); padding:0; overflow:hidden;">
+        <div class="img-frame" style="height:190px; border:none; border-bottom:1px solid var(--line);">
+          <img src="/static/images/digital_arrest_real_desk.jpg" alt="Fake Digital Arrest Scam" />
+          <div class="img-caption">
+            <span style="color:var(--rust); font-weight:700;">● CRITICAL VECTOR</span>
+            <span>VIDEO CALL IMPERSONATION</span>
+          </div>
+        </div>
+        <div style="padding:24px;">
+          <div class="sev">Highest reported loss per incident</div>
+          <h3>Fake Digital Arrest Video Extortion</h3>
+          <p>Syndicates pose as CBI, Customs, or State Police officers over Skype/WhatsApp video calls, coercing victims into transferring savings to a "verification escrow."</p>
+          <div class="facts">
+            <div>Typical loss<strong>₹25 Lakh+</strong></div>
+            <div>Response<strong>Immediate ISO 20022 Hold & DoT Device Blacklist</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Threat Card 2: Mule Splitting with Real Photo -->
+      <div class="threat-card" style="border:1px solid var(--line); padding:0; overflow:hidden;">
+        <div class="img-frame" style="height:190px; border:none; border-bottom:1px solid var(--line);">
+          <img src="/static/images/mule_network_tracing.jpg" alt="Mule Network Layering" />
+          <div class="img-caption">
+            <span style="color:var(--rust); font-weight:700;">● HIGH VELOCITY</span>
+            <span>MULTI-HOP BANK LAYERING</span>
+          </div>
+        </div>
+        <div style="padding:24px;">
+          <div class="sev">Highest daily transaction volume</div>
+          <h3>Multi-Tier Mule Account Splitting</h3>
+          <p>Stolen funds are instantaneously layered through 3 to 5 hops of rented bank accounts to obscure the money trail before physical ATM cashout.</p>
+          <div class="facts">
+            <div>Typical depth<strong>4 Accounts / 15 Mins</strong></div>
+            <div>Response<strong>GraphSAGE Neural Traversal & Pre-Settlement Lien</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Threat Card 3: SMS Malware with Real Photo -->
+      <div class="threat-card" style="border:1px solid var(--line); padding:0; overflow:hidden;">
+        <div class="img-frame" style="height:190px; border:none; border-bottom:1px solid var(--line);">
+          <img src="/static/images/sms_malware_real_phone.jpg" alt="Malicious SMS APK Dropper" />
+          <div class="img-caption">
+            <span style="color:var(--saffron); font-weight:700;">● RISING VECTOR</span>
+            <span>SMS / WHATSAPP APK PAYLOADS</span>
+          </div>
+        </div>
+        <div style="padding:24px;">
+          <div class="sev med">Rising SMS / WhatsApp vectors</div>
+          <h3>Malicious Bill Payment & APK Droppers</h3>
+          <p>Victims receive fake electricity/traffic challan warnings prompting them to install an `.apk` payload that steals SMS OTPs and mirrors banking screens.</p>
+          <div class="facts">
+            <div>Vector<strong>SMS / WhatsApp APK</strong></div>
+            <div>Response<strong>DoT CEIR IMEI Blacklist & SIM Deactivation</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Threat Card 4: Telegram Trading with Real Photo -->
+      <div class="threat-card" style="border:1px solid var(--line); padding:0; overflow:hidden;">
+        <div class="img-frame" style="height:190px; border:none; border-bottom:1px solid var(--line);">
+          <img src="/static/images/telegram_task_real_phone.jpg" alt="Telegram Task Fraud" />
+          <div class="img-caption">
+            <span style="color:var(--saffron); font-weight:700;">● CRYPTO OFF-RAMP</span>
+            <span>FAKE HIGH-YIELD INVESTMENT</span>
+          </div>
+        </div>
+        <div style="padding:24px;">
+          <div class="sev med">Crypto off-ramps</div>
+          <h3>Telegram Task & Fake Trading Groups</h3>
+          <p>Victims are lured into fraudulent high-yield investment channels, depositing funds that are rapidly laundered through TRC-20 USDT crypto mixers.</p>
+          <div class="facts">
+            <div>Off-ramp<strong>Crypto VASP Exchanges</strong></div>
+            <div>Response<strong>FIU-IND PMLA Sec 17 Wallet Freezes</strong></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- 11. Case Docket Lookup Panel -->
+<section class="ledger-section" id="docket">
+  <div class="wrap">
+    <div class="ledger-mark">CASE LEDGER — 007 — CASE DOCKET LOOKUP</div>
+    <div class="docket-panel">
+      <div>
+        <h3>Track a Case Docket or Transaction UTR</h3>
+        <p>Enter any 1930 Incident ID, UTR transaction reference, or IFSC to inspect the live status — reported, ISO micro-hold placed, police beat dispatched, or restitution sealed.</p>
+      </div>
+      <div>
+        <div class="docket-form">
+          <input id="docket-input" type="text" placeholder="e.g. DURGAM-2026-DL-8421 or UTR 429184021" />
+          <button class="btn btn-primary" onclick="lookupCase()">Track Docket</button>
+        </div>
+        <div id="docket-result"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 12. Public Citizen Cyber Defense & Victim Assistance Services -->
+<section class="ledger-section" id="services" style="background:var(--paper-dim);">
+  <div class="wrap">
+    <div class="ledger-mark">CASE LEDGER — 008 — CITIZEN DEFENSE SERVICES</div>
+    <div class="sec-head">
+      <div>
+        <div class="sec-eyebrow">Public Assistance & Grievance Redressal</div>
+        <h2 class="sec-title">Sovereign Citizen Cyber Defense & Victim Protection Suite</h2>
+      </div>
+      <p class="sec-note">Public-facing grievance redressal, emergency distress reporting, and statutory restitution services.</p>
+    </div>
+
+    <div class="desk-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); gap:24px;">
+      
+      <!-- 1. Citizen 1930 Distress SOS -->
+      <div class="paper-card" style="padding:0; overflow:hidden; border-top:4px solid var(--rust);">
+        <div style="height:140px; overflow:hidden; background:#0E2340; position:relative;">
+          <img src="/static/images/citizen_1930_response_desk.jpg" alt="Citizen 1930" style="width:100%; height:100%; object-fit:cover; opacity:0.9;" />
+          <div style="position:absolute; inset:0; background:linear-gradient(to top, rgba(14,35,64,0.95), transparent);"></div>
+          <div style="position:absolute; bottom:12px; left:16px; color:#FFFFFF; font-family:var(--serif); font-weight:700; font-size:1.15rem;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:4px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>Citizen 1930 Distress SOS
+          </div>
+        </div>
+        <div style="padding:20px;">
+          <div style="font-size:11px; font-family:var(--mono); color:var(--rust); font-weight:700; margin-bottom:6px;">CLEARANCE: PUBLIC_ACCESS</div>
+          <p style="font-size:13px; color:var(--ink-soft); line-height:1.6; margin-bottom:16px;">
+            Immediate emergency fraud reporting triggering automated sub-140ms pre-settlement bank liens across all 48 commercial banks.
+          </p>
+          <a href="/static/citizen.html" class="btn btn-alert" style="width:100%; justify-content:center; font-size:12.5px; padding:10px;">File Emergency 1930 SOS →</a>
+        </div>
+      </div>
+
+      <!-- 2. Track Multi-Agency Docket -->
+      <div class="paper-card" style="padding:0; overflow:hidden; border-top:4px solid var(--navy);">
+        <div style="height:140px; overflow:hidden; background:#0E2340; position:relative;">
+          <img src="/static/images/digital_india_cyber_mesh.jpg" alt="Track Case Docket" style="width:100%; height:100%; object-fit:cover; opacity:0.9;" />
+          <div style="position:absolute; inset:0; background:linear-gradient(to top, rgba(14,35,64,0.95), transparent);"></div>
+          <div style="position:absolute; bottom:12px; left:16px; color:#FFFFFF; font-family:var(--serif); font-weight:700; font-size:1.15rem;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:4px;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>National Case Docket Tracker
+          </div>
+        </div>
+        <div style="padding:20px;">
+          <div style="font-size:11px; font-family:var(--mono); color:var(--navy); font-weight:700; margin-bottom:6px;">CLEARANCE: PUBLIC_ACCESS</div>
+          <p style="font-size:13px; color:var(--ink-soft); line-height:1.6; margin-bottom:16px;">
+            Track real-time multi-agency status of your complaint across Police CAD dispatches, Bank FRM hold status, and Judicial decrees.
+          </p>
+          <a href="/static/track.html" class="btn btn-primary" style="width:100%; justify-content:center; font-size:12.5px; padding:10px;">Track Case Docket →</a>
+        </div>
+      </div>
+
+      <!-- 3. False-Positive Dispute Resolution -->
+      <div class="paper-card" style="padding:0; overflow:hidden; border-top:4px solid var(--saffron);">
+        <div style="height:140px; overflow:hidden; background:#0E2340; position:relative;">
+          <img src="/static/images/sms_malware_real_phone.jpg" alt="Dispute Resolution" style="width:100%; height:100%; object-fit:cover; opacity:0.9;" />
+          <div style="position:absolute; inset:0; background:linear-gradient(to top, rgba(14,35,64,0.95), transparent);"></div>
+          <div style="position:absolute; bottom:12px; left:16px; color:#FFFFFF; font-family:var(--serif); font-weight:700; font-size:1.15rem;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:4px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>1-Tap False-Positive Dispute
+          </div>
+        </div>
+        <div style="padding:20px;">
+          <div style="font-size:11px; font-family:var(--mono); color:var(--saffron); font-weight:700; margin-bottom:6px;">CLEARANCE: PUBLIC_ACCESS</div>
+          <p style="font-size:13px; color:var(--ink-soft); line-height:1.6; margin-bottom:16px;">
+            Legitimate citizen or merchant whose account was frozen by mistake? Submit instant Aadhaar 2FA automated unfreeze verification.
+          </p>
+          <a href="/static/dispute.html" class="btn btn-primary" style="width:100%; justify-content:center; font-size:12.5px; padding:10px; background:var(--saffron); border-color:var(--saffron);">Submit Dispute Request →</a>
+        </div>
+      </div>
+
+      <!-- 4. Section 106 BNSS Victim Restitution -->
+      <div class="paper-card" style="padding:0; overflow:hidden; border-top:4px solid var(--green);">
+        <div style="height:140px; overflow:hidden; background:#0E2340; position:relative;">
+          <img src="/static/images/sovereign_command_gold.jpg" alt="Restitution" style="width:100%; height:100%; object-fit:cover; opacity:0.9;" />
+          <div style="position:absolute; inset:0; background:linear-gradient(to top, rgba(14,35,64,0.95), transparent);"></div>
+          <div style="position:absolute; bottom:12px; left:16px; color:#FFFFFF; font-family:var(--serif); font-weight:700; font-size:1.15rem;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:3px;"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>Victim Fund Restitution Portal
+          </div>
+        </div>
+        <div style="padding:20px;">
+          <div style="font-size:11px; font-family:var(--mono); color:var(--green); font-weight:700; margin-bottom:6px;">CLEARANCE: PUBLIC_ACCESS</div>
+          <p style="font-size:13px; color:var(--ink-soft); line-height:1.6; margin-bottom:16px;">
+            Statutory pre-trial fund restitution tracking under Section 106 Bharatiya Nagarik Suraksha Sanhita (BNSS 2023).
+          </p>
+          <a href="/static/restitution.html" class="btn btn-primary" style="width:100%; justify-content:center; font-size:12.5px; padding:10px; background:var(--green); border-color:var(--green);">Claim Restitution Status →</a>
+        </div>
+      </div>
+
+      <!-- 5. Cyber Shield Training Academy -->
+      <div class="paper-card" style="padding:0; overflow:hidden; border-top:4px solid var(--navy);">
+        <div style="height:140px; overflow:hidden; background:#0E2340; position:relative;">
+          <img src="/static/images/telegram_task_real_phone.jpg" alt="Cyber Academy" style="width:100%; height:100%; object-fit:cover; opacity:0.9;" />
+          <div style="position:absolute; inset:0; background:linear-gradient(to top, rgba(14,35,64,0.95), transparent);"></div>
+          <div style="position:absolute; bottom:12px; left:16px; color:#FFFFFF; font-family:var(--serif); font-weight:700; font-size:1.15rem;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:4px;"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>Cyber Shield Training Academy
+          </div>
+        </div>
+        <div style="padding:20px;">
+          <div style="font-size:11px; font-family:var(--mono); color:var(--navy); font-weight:700; margin-bottom:6px;">CLEARANCE: PUBLIC_ACCESS</div>
+          <p style="font-size:13px; color:var(--ink-soft); line-height:1.6; margin-bottom:16px;">
+            Interactive simulation course on identifying Digital Arrests, APK malware, and fake trading groups. Earn an official MHA certificate.
+          </p>
+          <a href="/static/academy.html" class="btn btn-outline" style="width:100%; justify-content:center; font-size:12.5px; padding:10px;">Start Cyber Academy →</a>
+        </div>
+      </div>
+
+      <!-- 6. Official JanParichay SSO Gateway -->
+      <div class="paper-card" style="padding:0; overflow:hidden; border-top:4px solid #081524;">
+        <div style="height:140px; overflow:hidden; background:#0E2340; position:relative;">
+          <img src="/static/images/sovereign_cyber_command_clean.jpg" alt="Officer Gateway" style="width:100%; height:100%; object-fit:cover; opacity:0.9;" />
+          <div style="position:absolute; inset:0; background:linear-gradient(to top, rgba(14,35,64,0.95), transparent);"></div>
+          <div style="position:absolute; bottom:12px; left:16px; color:#FFFFFF; font-family:var(--serif); font-weight:700; font-size:1.15rem;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:4px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>Restricted Officer SSO Gateway
+          </div>
+        </div>
+        <div style="padding:20px;">
+          <div style="font-size:11px; font-family:var(--mono); color:var(--rust); font-weight:700; margin-bottom:6px;">CLEARANCE: AUTHORIZED_OFFICERS_ONLY</div>
+          <p style="font-size:13px; color:var(--ink-soft); line-height:1.6; margin-bottom:16px;">
+            JanParichay SSO access for verified Police, Banking Nodal, DoT Telecom, FIU-IND, and Judicial Officers.
+          </p>
+          <button onclick="openJanParichayModal()" class="btn btn-primary" style="width:100%; justify-content:center; font-size:12.5px; padding:10px; background:#0E2340; cursor:pointer;">Officer Sign In (JanParichay) →</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- 13. Emergency Action Banner with 1930 Image -->
+<section class="emergency-band">
+  <div class="wrap">
+    <div>
+      <div class="msg">Defrauded within the last 30 minutes? Act immediately.</div>
+      <div class="sub">Every minute inside the Golden Hour significantly increases the likelihood of a 100% pre-settlement recovery.</div>
+    </div>
+    <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+      <a href="tel:1930" class="btn" style="background:#fff; color:var(--rust); font-weight:700;">Dial 1930 (Toll-Free, 24×7)</a>
+      <a href="/static/citizen.html" class="btn" style="background:rgba(255,255,255,0.15); color:#fff; border:1px solid #fff;">Report Online SOS</a>
+    </div>
+  </div>
+</section>
+
+<!-- 13.5 Sovereign Inter-Agency Consortium Authority Strip -->
+<section style="background:#FFFFFF; border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:28px 0;">
+  <div class="wrap">
+    <div style="font-family:var(--mono); font-size:11px; text-transform:uppercase; color:var(--ink-soft); letter-spacing:0.06em; margin-bottom:18px; text-align:center; font-weight:700;">
+      NATIONAL CYBER FRAUD DEFENSE CONSORTIUM · STATUTORY PARTNER AGENCIES
+    </div>
+    <div style="display:flex; justify-content:space-around; align-items:center; flex-wrap:wrap; gap:24px; opacity:0.95;">
+      
+      <div style="display:flex; align-items:center; gap:10px;">
+        <img src="/static/images/official_state_emblem.png" alt="MHA I4C" style="width:34px; height:34px; object-fit:contain; " />
+        <div>
+          <strong style="font-size:12.5px; color:var(--navy); display:block; font-family:var(--serif);">I4C / MHA</strong>
+          <span style="font-size:10px; font-family:var(--mono); color:var(--ink-soft);">Ministry of Home Affairs</span>
+        </div>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:10px;">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M4 18h16M6 18v-7M10 18v-7M14 18v-7M18 18v-7M12 3 2 9h20l-10-6z"></path></svg>
+        <div>
+          <strong style="font-size:12.5px; color:var(--navy); display:block; font-family:var(--serif);">Reserve Bank of India</strong>
+          <span style="font-size:10px; font-family:var(--mono); color:var(--ink-soft);">48 CBS Direct FRM Nodes</span>
+        </div>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:10px;">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        <div>
+          <strong style="font-size:12.5px; color:var(--navy); display:block; font-family:var(--serif);">NPCI / UPI Switch</strong>
+          <span style="font-size:10px; font-family:var(--mono); color:var(--ink-soft);">camt.056 Injunction Mesh</span>
+        </div>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:10px;">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--rust)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+        <div>
+          <strong style="font-size:12.5px; color:var(--navy); display:block; font-family:var(--serif);">DoT / CEIR TAFCOP</strong>
+          <span style="font-size:10px; font-family:var(--mono); color:var(--ink-soft);">Sec 28 Telecom Act 2023</span>
+        </div>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:10px;">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--saffron)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+        <div>
+          <strong style="font-size:12.5px; color:var(--navy); display:block; font-family:var(--serif);">FIU-IND FinNet 2.0</strong>
+          <span style="font-size:10px; font-family:var(--mono); color:var(--ink-soft);">PMLA Section 17 Mixers</span>
+        </div>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:10px;">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>
+        <div>
+          <strong style="font-size:12.5px; color:var(--navy); display:block; font-family:var(--serif);">High Courts & CJMs</strong>
+          <span style="font-size:10px; font-family:var(--mono); color:var(--ink-soft);">Sec 106 BNSS Restitution</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- 14. Institutional Sovereign Footer -->
+<footer class="site">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+          <img src="/static/images/official_state_emblem.png" alt="Emblem" style="width:24px; height:30px; object-fit:contain; " />
+          <div style="font-family:var(--serif); font-size:1.3rem; color:#fff;">DURGAM (दूर्गम)</div>
+        </div>
+        <p style="max-width:34ch; line-height:1.6; color:#9FB0C4;">
+          National Cyber Financial Fraud Defense Matrix. An initiative of the Indian Cybercrime Coordination Centre (I4C), Ministry of Home Affairs, Government of India.
+        </p>
+      </div>
+      <div>
+        <h5>Agency War Rooms</h5>
+        <ul>
+          <li><a href="/static/police.html">Police CAD War Room</a></li>
+          <li><a href="/static/bank.html">Core Banking Switch</a></li>
+          <li><a href="/static/telecom.html">DoT Telecom CEIR</a></li>
+          <li><a href="/static/fiu.html">FIU-IND FinNet Desk</a></li>
+          <li><a href="/static/judiciary.html">Special Cyber Court</a></li>
+          <li><a href="/static/dossier.html">Section 63 BSA Dossier</a></li>
+          <li><a href="/static/citizen.html">Citizen 1930 Portal</a></li>
         </ul>
       </div>
       <div>
-        <h4 style="color:#FFFFFF; font-family:var(--font-display); font-size:14px; font-weight:800; margin-bottom:10px;">24x7 EMERGENCY ASSISTANCE</h4>
-        <p>National Cyber Crime Helpline: <strong style="color:#F59E0B; font-size:15px; font-weight:900;">1930</strong></p>
-        <p>Official Portal: <a href="https://cybercrime.gov.in" target="_blank" style="color:#F59E0B; text-decoration:none;">cybercrime.gov.in</a></p>
-        <p>Address: I4C, NDCC-II Building, Jai Singh Road, New Delhi - 110001</p>
+        <h5>Central Governance</h5>
+        <ul>
+          <li><a href="/static/admin.html">Sovereign Admin Console</a></li>
+          <li><a href="/static/reports.html">Parliamentary Reports</a></li>
+          <li><a href="/static/sop.html">Standard Operating Manual</a></li>
+          <li><a href="/static/users.html">User Access Governance</a></li>
+          <li><a href="/static/verify.html">Verification Engine</a></li>
+          <li><a href="/static/analytics.html">Threat Analytics Radar</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Statutory Compliance</h5>
+        <ul>
+          <li><a href="/static/sop.html">Section 106, BNSS 2023 (Restitution)</a></li>
+          <li><a href="/static/dossier.html">Section 63, BSA 2023 (Digital Proof)</a></li>
+          <li><a href="/static/academy.html">National Cyber Shield Academy</a></li>
+          <li><a href="/static/login.html">JanParichay Officer Sign-In</a></li>
+        </ul>
       </div>
     </div>
-
-    <div class="gov-footer-bottom">
-      <div>© 2026 Government of India • Ministry of Home Affairs • All Rights Reserved.</div>
-      <div>Website Policies • Hyperlinking Policy • Privacy Policy • RTI Citizen Charter • Terms of Use</div>
+    <div class="foot-bottom">
+      <span>© 2026 Government of India · Ministry of Home Affairs · All Rights Reserved</span>
+      <span>48 Scheduled Commercial Banks Mesh Connected (ISO 20022 camt.056)</span>
     </div>
-  </footer>
+  </div>
+</footer>
 
-  <!-- Application Engine -->
-  <script src="/static/app.js"></script>
+<!-- 15. Master Logic Scripts -->
+<script>
+  // 1. Live IST Clock & Indian Date Format
+  function updateClock(){
+    const now = new Date();
+    const ist = new Date(now.toLocaleString('en-US', {timeZone:'Asia/Kolkata'}));
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    
+    const dayName = days[ist.getDay()];
+    const dateNum = ist.getDate();
+    const monthName = months[ist.getMonth()];
+    const year = ist.getFullYear();
+
+    const h = String(ist.getHours()).padStart(2,'0');
+    const m = String(ist.getMinutes()).padStart(2,'0');
+    const s = String(ist.getSeconds()).padStart(2,'0');
+    
+    const el = document.getElementById('ist-date-clock');
+    if (el) el.textContent = `${dayName}, ${dateNum} ${monthName} ${year} • IST ${h}:${m}:${s}`;
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+
+  // 2. Golden-Hour Countdown (30-min rolling window)
+  let ghSeconds = 24*60 + 12;
+  const totalWindow = 30*60;
+  function tickGoldenHour(){
+    ghSeconds -= 1;
+    if (ghSeconds < 0) ghSeconds = totalWindow;
+    const m = String(Math.floor(ghSeconds/60)).padStart(2,'0');
+    const s = String(ghSeconds%60).padStart(2,'0');
+    const clockEl = document.getElementById('gh-clock');
+    const barEl = document.getElementById('gh-bar');
+    if (clockEl) clockEl.textContent = `${m}:${s}`;
+    if (barEl) barEl.style.width = `${(ghSeconds/totalWindow)*100}%`;
+  }
+  setInterval(tickGoldenHour, 1000);
+
+  // 3. Case Docket Lookup
+  function lookupCase(){
+    const val = document.getElementById('docket-input').value.trim();
+    const box = document.getElementById('docket-result');
+    box.style.display = 'block';
+    if (!val){
+      box.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:4px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg> Please enter a valid Transaction UTR reference or Incident ID.';
+      return;
+    }
+    const safeVal = val.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    box.innerHTML = `
+      <div style="display:flex; justify-content:space-between; border-bottom:1px solid #33455C; padding-bottom:6px; margin-bottom:8px;">
+        <span style="color:#E8C9A8; font-weight:700;">DOCKET IDENTIFIER: ${safeVal}</span>
+        <span style="color:#A7F3D0;">● PRE-SETTLEMENT HOLD ACTIVE</span>
+      </div>
+      <div><strong>Original Claim:</strong> ₹2,50,000.00 (Victim Account: SBI ••••4821)</div>
+      <div><strong>Beneficiary Mule Hops:</strong> 3 recipient accounts flagged (ICICI, HDFC, Axis)</div>
+      <div><strong>ISO Directive:</strong> camt.056 Lien Applied at 118.2ms • Section 106 BNSS Pending Court Order</div>
+      <div><strong>Police Beat:</strong> PCR Eagle 4 Dispatched to ATM Node 14 (Connaught Place, Delhi)</div>
+    `;
+  }
+
+  // 4. Simulator UI Helper
+  function updateSimAmt(val){
+    document.getElementById('sim-amt-lbl').innerText = '₹' + Number(val).toLocaleString('en-IN');
+  }
+
+  function runHoldSimulation(){
+    const amt = Number(document.getElementById('sim-amt-range').value);
+    const hops = document.getElementById('sim-hops-range').value;
+    const box = document.getElementById('sim-result-box');
+    box.style.display = 'block';
+    box.innerHTML = `
+      <div style="color:var(--green); font-weight:700; margin-bottom:4px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:4px;"><polyline points="20 6 9 17 4 12"></polyline></svg>ISO 20022 camt.056 DIRECTIVE BROADCAST SUCCESSFUL</div>
+      <div>Total Quarantined: <strong>₹${amt.toLocaleString('en-IN')}</strong> across <strong>${hops} Mule Hops</strong></div>
+      <div>Execution Latency: <strong>41.8 ms</strong> | Pre-Settlement Hold: <strong>30-Min Auto-Decay Active</strong></div>
+      <div>Notification dispatched to SBI, HDFC, ICICI, Axis Nodal Desks.</div>
+    `;
+  }
+
+  // 5. Real-Time Telemetry Polling Engine
+  let liveTelemetryInterval = null;
+  let chartInstance = null;
+
+  async function updateLiveTelemetry() {
+    try {
+      const res = await fetch('/api/v1/bank/network-telemetry');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.total_quarantined_volume_crores) {
+          const fundsEl = document.getElementById('stat-funds');
+          if (fundsEl) fundsEl.innerText = `₹${data.total_quarantined_volume_crores.toFixed(2)} Cr`;
+        }
+        if (data.total_transactions_processed) {
+          const mulesEl = document.getElementById('stat-mules');
+          if (mulesEl) mulesEl.innerText = data.total_transactions_processed.toLocaleString('en-IN');
+        }
+        
+        // Random micro-jitter for live propagation latency
+        const latencyEl = document.getElementById('stat-latency');
+        if (latencyEl) {
+          const jitter = (116.5 + Math.random() * 3.5).toFixed(1);
+          latencyEl.innerText = `${jitter} ms`;
+        }
+
+        // Push live point to Chart
+        if (chartInstance && chartInstance.data) {
+          const now = new Date();
+          const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+          
+          if (chartInstance.data.labels.length > 8) {
+            chartInstance.data.labels.shift();
+            chartInstance.data.datasets[0].data.shift();
+            chartInstance.data.datasets[1].data.shift();
+          }
+          
+          const currentCr = data.total_quarantined_volume_crores || 30.8;
+          chartInstance.data.labels.push(timeStr);
+          chartInstance.data.datasets[0].data.push(Math.round(currentCr * 100));
+          chartInstance.data.datasets[1].data.push(Math.round((currentCr + 2.5) * 100));
+          chartInstance.update('none');
+        }
+      }
+    } catch (e) {
+      console.warn('Telemetry polling notice:', e);
+    }
+  }
+
+  // 6. Chart.js In Paper-Ledger Palette
+  document.addEventListener('DOMContentLoaded', () => {
+    const ctx = document.getElementById('telemetryChart');
+    if (ctx) {
+      chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['10:40:00', '10:42:00', '10:44:00', '10:46:00', '10:47:00', '10:48:00', 'Live'],
+          datasets: [
+            {
+              label: 'Quarantined Recoveries (₹ L)',
+              data: [2750, 2820, 2910, 2990, 3040, 3080, 3083],
+              borderColor: '#2F6B4F',
+              backgroundColor: 'rgba(47, 107, 79, 0.08)',
+              fill: true,
+              tension: 0.35,
+              borderWidth: 2.5,
+              pointRadius: 4,
+              pointBackgroundColor: '#2F6B4F'
+            },
+            {
+              label: 'Reported Defrauded Volume (₹ L)',
+              data: [3010, 3090, 3180, 3260, 3310, 3340, 3350],
+              borderColor: '#C1652B',
+              backgroundColor: 'transparent',
+              borderDash: [5, 5],
+              tension: 0.35,
+              borderWidth: 1.8,
+              pointRadius: 3,
+              pointBackgroundColor: '#C1652B'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: { duration: 500 },
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: {
+                font: { family: "'IBM Plex Mono', monospace", size: 11 },
+                color: '#1B2430',
+                boxWidth: 14
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: '#E5DFD3' },
+              ticks: { font: { family: "'IBM Plex Mono', monospace", size: 10 }, color: '#4B5563' }
+            },
+            y: {
+              grid: { color: '#E5DFD3' },
+              ticks: { font: { family: "'IBM Plex Mono', monospace", size: 10 }, color: '#4B5563' }
+            }
+          }
+        }
+      });
+    }
+
+    // Start live telemetry polling every 3.5 seconds
+    updateLiveTelemetry();
+    setInterval(updateLiveTelemetry, 3500);
+
+    // 7. Leaflet Map Initialization
+    if (document.getElementById('tactical-map')) {
+      const map = L.map('tactical-map', { zoomControl: false }).setView([22.5, 78.9], 4);
+      L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+        subdomains: 'abcd',
+        maxZoom: 19
+      }).addTo(map);
+
+      const hotspots = [
+        { lat: 28.6139, lng: 77.2090, name: 'Delhi NCR Hub', risk: 'HIGH', pcr: 'Eagle 4 Dispatched' },
+        { lat: 19.0760, lng: 72.8777, name: 'Mumbai BKC Node', risk: 'CRITICAL', pcr: 'Tiger 2 Enroute' },
+        { lat: 24.2167, lng: 86.6500, name: 'Jamtara Complex', risk: 'CRITICAL', pcr: 'Station Raid Active' },
+        { lat: 27.5000, lng: 77.0000, name: 'Mewat Triangle', risk: 'HIGH', pcr: 'Patrol Beat 8' },
+        { lat: 12.9716, lng: 77.5946, name: 'Bengaluru Tech Hub', risk: 'MODERATE', pcr: 'Cyber Cell Alpha' }
+      ];
+
+      hotspots.forEach(h => {
+        const marker = L.circleMarker([h.lat, h.lng], {
+          radius: 9,
+          fillColor: h.risk === 'CRITICAL' ? '#9A3324' : '#C1652B',
+          color: '#0E2340',
+          weight: 2,
+          opacity: 1,
+          fillOpacity: 0.85
+        }).addTo(map);
+
+        marker.bindPopup(`
+          <div style="font-family:'IBM Plex Mono', monospace; font-size:11px;">
+            <strong style="color:#0E2340; font-size:12px;">${h.name}</strong><br>
+            Threat Level: <span style="color:#9A3324; font-weight:700;">${h.risk}</span><br>
+            Response: <strong>${h.pcr}</strong>
+          </div>
+        `);
+      });
+    }
+
+    // 8. Animated GNN Force-Directed Physics Canvas with Particle Flow
+    const canvas = document.getElementById('gnn-canvas');
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      let width = canvas.width = canvas.parentElement.clientWidth;
+      let height = canvas.height = canvas.parentElement.clientHeight;
+
+      const nodes = [
+        { id: 'VICTIM', x: width * 0.2, y: height * 0.5, r: 14, color: '#2F6B4F', label: 'Victim SBI' },
+        { id: 'MULE-1', x: width * 0.45, y: height * 0.35, r: 12, color: '#C1652B', label: 'Mule ICICI' },
+        { id: 'MULE-2', x: width * 0.45, y: height * 0.65, r: 12, color: '#C1652B', label: 'Mule HDFC' },
+        { id: 'MULE-3', x: width * 0.7, y: height * 0.4, r: 10, color: '#9A3324', label: 'Mule Axis (ATM)' },
+        { id: 'MULE-4', x: width * 0.7, y: height * 0.6, r: 10, color: '#9A3324', label: 'Crypto Off-Ramp' }
+      ];
+
+      const edges = [
+        { from: 0, to: 1, val: '₹1.5L' },
+        { from: 0, to: 2, val: '₹1.0L' },
+        { from: 1, to: 3, val: '₹1.5L' },
+        { from: 2, to: 4, val: '₹1.0L' }
+      ];
+
+      let particleProgress = 0;
+
+      function renderGNN() {
+        ctx.fillStyle = '#1B2430';
+        ctx.fillRect(0, 0, width, height);
+
+        particleProgress = (particleProgress + 0.01) % 1;
+
+        // Draw Edges
+        edges.forEach(e => {
+          const n1 = nodes[e.from];
+          const n2 = nodes[e.to];
+          ctx.strokeStyle = '#4B5563';
+          ctx.lineWidth = 1.5;
+          ctx.setLineDash([4, 4]);
+          ctx.beginPath();
+          ctx.moveTo(n1.x, n1.y);
+          ctx.lineTo(n2.x, n2.y);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          // Animated particle moving along the edge
+          const px = n1.x + (n2.x - n1.x) * particleProgress;
+          const py = n1.y + (n2.y - n1.y) * particleProgress;
+          ctx.fillStyle = '#FF681A';
+          ctx.beginPath();
+          ctx.arc(px, py, 3.5, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Edge Label
+          const midX = (n1.x + n2.x) / 2;
+          const midY = (n1.y + n2.y) / 2;
+          ctx.fillStyle = '#9FB0C4';
+          ctx.font = '10px "IBM Plex Mono", monospace';
+          ctx.fillText(e.val, midX - 10, midY - 6);
+        });
+
+        // Draw Nodes
+        nodes.forEach(n => {
+          ctx.fillStyle = n.color;
+          ctx.beginPath();
+          ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.strokeStyle = '#FFFFFF';
+          ctx.lineWidth = 2;
+          ctx.stroke();
+
+          // Text Label
+          ctx.fillStyle = '#FFFFFF';
+          ctx.font = '11px "Inter", sans-serif';
+          ctx.fillText(n.label, n.x - 24, n.y + n.r + 14);
+        });
+
+        requestAnimationFrame(renderGNN);
+      }
+
+      renderGNN();
+      window.addEventListener('resize', () => {
+        width = canvas.width = canvas.parentElement.clientWidth;
+        height = canvas.height = canvas.parentElement.clientHeight;
+      });
+
+      window.injectMuleGraphNode = function() {
+        const id = nodes.length;
+        nodes.push({
+          id: `MULE-${id}`,
+          x: width * 0.85,
+          y: height * (0.2 + Math.random() * 0.6),
+          r: 9,
+          color: '#9A3324',
+          label: `ATM-Cashout-${id}`
+        });
+        edges.push({ from: 3, to: id, val: '₹50K' });
+      };
+    }
+  });
+
+  // --------------------------------------------------------------------------
+  // LIVE HERO CRIME & FINANCIAL TELEMETRY CHARTS
+  // --------------------------------------------------------------------------
+  let heroCrimeChartInstance = null;
+  
+  const heroChartDatasets = {
+    complaints: {
+      type: 'line',
+      data: {
+        labels: ['00:00', '03:00', '06:00', '09:00', '12:00', '15:00', '18:00', '21:00', 'Live'],
+        datasets: [
+          {
+            label: 'Daily 1930 Distress SOS Ingested',
+            data: [42, 85, 130, 390, 710, 940, 1180, 1340, 1432],
+            borderColor: '#9A3324',
+            backgroundColor: 'rgba(154, 51, 36, 0.12)',
+            fill: true,
+            tension: 0.35,
+            borderWidth: 2.5,
+            pointRadius: 3.5,
+            pointBackgroundColor: '#9A3324'
+          },
+          {
+            label: 'Pre-Settlement Holds Executed (<140ms)',
+            data: [40, 84, 128, 385, 702, 928, 1165, 1322, 1411],
+            borderColor: '#2F6B4F',
+            backgroundColor: 'rgba(47, 107, 79, 0.18)',
+            fill: true,
+            tension: 0.35,
+            borderWidth: 2.5,
+            pointRadius: 3.5,
+            pointBackgroundColor: '#2F6B4F'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: { font: { family: "'IBM Plex Mono', monospace", size: 11 }, boxWidth: 12 }
+          },
+          tooltip: {
+            backgroundColor: '#0E2340',
+            titleFont: { family: "'IBM Plex Mono', monospace", size: 12 },
+            bodyFont: { family: "'Inter', sans-serif", size: 12 }
+          }
+        },
+        scales: {
+          y: {
+            grid: { color: '#E8E2D5' },
+            ticks: { font: { family: "'IBM Plex Mono', monospace", size: 10 } }
+          },
+          x: {
+            grid: { display: false },
+            ticks: { font: { family: "'IBM Plex Mono', monospace", size: 10 } }
+          }
+        }
+      }
+    },
+    volume: {
+      type: 'bar',
+      data: {
+        labels: ['SBI', 'HDFC', 'ICICI', 'PNB', 'BoB', 'Axis', 'Canara', 'Kotak'],
+        datasets: [
+          {
+            label: 'Quarantined Restitution Volume (₹ Crores)',
+            data: [9.42, 6.18, 4.85, 3.20, 2.95, 2.10, 1.45, 0.68],
+            backgroundColor: '#2F6B4F',
+            borderRadius: 3
+          },
+          {
+            label: 'Total Attempted Fraud Inflow (₹ Crores)',
+            data: [9.60, 6.30, 4.98, 3.32, 3.05, 2.18, 1.52, 0.72],
+            backgroundColor: 'rgba(154, 51, 36, 0.4)',
+            borderRadius: 3
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: { font: { family: "'IBM Plex Mono', monospace", size: 11 }, boxWidth: 12 }
+          }
+        },
+        scales: {
+          y: {
+            grid: { color: '#E8E2D5' },
+            ticks: {
+              font: { family: "'IBM Plex Mono', monospace", size: 10 },
+              callback: (val) => '₹' + val + ' Cr'
+            }
+          },
+          x: {
+            grid: { display: false },
+            ticks: { font: { family: "'IBM Plex Mono', monospace", size: 10 } }
+          }
+        }
+      }
+    },
+    vectors: {
+      type: 'doughnut',
+      data: {
+        labels: ['Digital Arrest (34%)', 'APK Malware (28%)', 'Courier Parcel (16%)', 'MHA Impersonation (12%)', 'Loan App Fraud (6%)', 'OTP Phishing (4%)'],
+        datasets: [{
+          data: [34, 28, 16, 12, 6, 4],
+          backgroundColor: ['#9A3324', '#C1652B', '#1A5B8C', '#0E2340', '#E8C9A8', '#2F6B4F'],
+          borderWidth: 2,
+          borderColor: '#FFFFFF'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'right',
+            labels: { font: { family: "'IBM Plex Mono', monospace", size: 10.5 }, boxWidth: 12 }
+          }
+        }
+      }
+    }
+  };
+
+  function initHeroCrimeChart() {
+    const canvas = document.getElementById('hero-crime-telemetry-chart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (heroCrimeChartInstance) heroCrimeChartInstance.destroy();
+    
+    const cfg = heroChartDatasets.complaints;
+    heroCrimeChartInstance = new Chart(ctx, {
+      type: cfg.type,
+      data: cfg.data,
+      options: cfg.options
+    });
+  }
+
+  window.switchHeroChart = function(type) {
+    const tabs = ['complaints', 'volume', 'vectors'];
+    tabs.forEach(t => {
+      const btn = document.getElementById(`tab-btn-${t}`);
+      if (btn) {
+        if (t === type) {
+          btn.style.background = '#0E2340';
+          btn.style.color = '#FFFFFF';
+          btn.style.borderColor = '#0E2340';
+        } else {
+          btn.style.background = 'transparent';
+          btn.style.color = '#4B5563';
+          btn.style.borderColor = 'var(--line)';
+        }
+      }
+    });
+
+    const canvas = document.getElementById('hero-crime-telemetry-chart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (heroCrimeChartInstance) heroCrimeChartInstance.destroy();
+    
+    const cfg = heroChartDatasets[type] || heroChartDatasets.complaints;
+    heroCrimeChartInstance = new Chart(ctx, {
+      type: cfg.type,
+      data: cfg.data,
+      options: cfg.options
+    });
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    initHeroCrimeChart();
+  });
+
+  function switchLanguage(lang) {
+    console.log("Language switched to:", lang);
+  }
+</script>
+
 </body>
 </html>

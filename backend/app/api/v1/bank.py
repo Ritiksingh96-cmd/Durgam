@@ -147,15 +147,11 @@ def get_360_bank_connectivity_matrix():
     from backend.app.services.bank_health_service import bank_health_service
     return bank_health_service.ping_all_banking_infrastructure()
 
-class SwitchSimulationRequest:
-
-
-
-
-    account_number: str
-    bank_ifsc: str
-    amount: float
-    mule_score: float
+class SwitchSimulationRequest(BaseModel):
+    account_number: str = "482910482910"
+    bank_ifsc: str = "SBIN0001024"
+    amount: float = 250000.0
+    mule_score: float = 0.94
 
 @router.post("/simulate-switch-transaction")
 def simulate_iso20022_switch_transaction(payload: Dict[str, Any]):
@@ -218,5 +214,117 @@ def simulate_iso20022_switch_transaction(payload: Dict[str, Any]):
             "resolution_code": "FRAD",
             "cbs_ledger_status": "SMART_PARTIAL_AMOUNT_LIEN_LOCKED"
         }
+    }
+
+class ZKBroadcastRequest(BaseModel):
+    identifier: str
+    ifsc: str = "SBIN0001024"
+    reporting_agency: Optional[str] = "Bank FRM Nodal Desk"
+    bank_code: str = "SBIN"
+    risk_tier: Optional[str] = "CRITICAL_CONFIRMED_MULE"
+    notes: Optional[str] = "Flagged via multi-hop layering telemetry"
+
+@router.post("/zk-broadcast")
+def broadcast_new_mule_hash(payload: ZKBroadcastRequest):
+    """
+    Broadcasts a salted Zero-Knowledge SHA-256 suspect hash to all 48 participating banks.
+    DPDP Act 2023 Section 8 Compliant.
+    """
+    from backend.app.services.zk_consortium import zk_consortium_engine
+    return zk_consortium_engine.broadcast_mule_hash(
+        identifier=payload.identifier,
+        ifsc=payload.ifsc,
+        reporting_agency=payload.reporting_agency or "Bank FRM Nodal",
+        bank_code=payload.bank_code,
+        risk_tier=payload.risk_tier or "CRITICAL_CONFIRMED_MULE",
+        notes=payload.notes or "Flagged via multi-hop telemetry"
+    )
+
+@router.get("/zk-shared-hashes")
+def get_interbank_shared_hashes(limit: int = 50):
+    """Fetches real-time stream of all inter-bank shared ZK hashes across 48 CBS switches."""
+    from backend.app.services.zk_consortium import zk_consortium_engine
+    hashes = zk_consortium_engine.get_all_shared_hashes(limit=limit)
+    return {
+        "status": "SUCCESS",
+        "total_active_hashes": len(hashes),
+        "shared_hashes": hashes,
+        "compliance": "Section 8 DPDP Act 2023 (Zero-Plaintext Exchange)"
+    }
+
+@router.get("/mule-graph/{case_id}")
+def get_mule_account_graph(case_id: str):
+    """
+    Returns real-time directed Multi-Hop Layering Graph for a case or account.
+    Traces fund dispersion: Victim -> Hop 1 Jan Dhan -> Hop 2 Current -> Hop 3 Regional -> Terminal ATM Kiosk.
+    """
+    from backend.app.services.graph_service import MultiHopGraphEngine
+    engine = MultiHopGraphEngine()
+    
+    # Check if incident exists in DB
+    incident = db_service.get_incident(case_id)
+    if incident:
+        amount = incident.get("loss_amount", 250000.0)
+        v_name = incident.get("victim_name", "Citizen Victim")
+        v_acc = incident.get("victim_account", "40291048291")
+        v_bank = incident.get("victim_bank", "State Bank of India")
+    else:
+        amount = 350000.0
+        v_name = "Citizen Victim (Reported 1930)"
+        v_acc = "59201948201"
+        v_bank = "HDFC Bank Ltd"
+
+    trail = engine.trace_case_trail(
+        case_id=case_id,
+        victim_name=v_name,
+        victim_account=v_acc,
+        source_bank=v_bank,
+        amount=amount
+    )
+    return {
+        "status": "SUCCESS",
+        "case_id": case_id,
+        "nodes": trail["nodes"],
+        "edges": trail["edges"],
+        "layering_hops": len(trail["nodes"]) - 1,
+        "total_quarantined_inr": amount,
+        "terminal_atm_target": trail.get("terminal_city", "Connaught Place, Delhi")
+    }
+
+@router.get("/predict-atm-cashouts")
+def get_predicted_atm_cashouts(city: str = "Delhi"):
+    """
+    Federated ST-KDE ATM Cashout Predictor.
+    Forecasts physical withdrawal kiosks, withdrawal time windows, and intercept probability.
+    """
+    from backend.app.services.inter_bank_mesh import inter_bank_mesh
+    atms = [a for a in inter_bank_mesh.federated_atm_kiosks if city.lower() in a.get("city", "").lower()]
+    if not atms:
+        atms = inter_bank_mesh.federated_atm_kiosks
+
+    results = []
+    for atm in atms:
+        risk = atm.get("base_risk_score", 0.85)
+        eta_mins = round(max(3.0, (1.0 - risk) * 18.0), 1)
+        results.append({
+            "atm_id": atm["atm_id"],
+            "bank_name": atm["bank_name"],
+            "bank_code": atm["bank_code"],
+            "location_name": atm["location_name"],
+            "city": atm.get("city", "Delhi"),
+            "latitude": atm["latitude"],
+            "longitude": atm["longitude"],
+            "predicted_cashout_risk": risk,
+            "estimated_time_remaining_minutes": eta_mins,
+            "historical_mule_cashouts": atm.get("historical_mule_cashouts", 120),
+            "cctv_status": atm.get("cctv_facial_recognition_status", "ACTIVE_24x7"),
+            "recommended_action": "TRIGGER_REMOTE_HARDWARE_LOCK" if risk > 0.85 else "DISPATCH_PATROL_UNIT"
+        })
+
+    results.sort(key=lambda x: x["predicted_cashout_risk"], reverse=True)
+    return {
+        "status": "SUCCESS",
+        "total_monitored_kiosks": len(results),
+        "predicted_hotspots": results
     }
 

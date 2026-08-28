@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>National Standard Operating Procedures (SOP) & 1930 Manual | DURGAM</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="stylesheet" href="/static/ui-components.css" />
+</head>
+<body>
+
+  <!-- Top Tricolor Ribbon -->
+  <div class="gov-tricolor-bar"></div>
+
+  <!-- 1. Top Utility Strip -->
+  <div class="top-strip">
+    <div class="wrap">
+      <div class="emblem-row">
+        <img src="/static/images/official_state_emblem.png" alt="Emblem of India" style="width:16px; height:20px; object-fit:contain; " />
+        <span>भारत सरकार · Government of India • Ministry of Home Affairs / National Cyber Defense SOP</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+        <span class="ist-date-clock" style="color:#E8C9A8;">Loading Official Clocks...</span>
+        <span style="opacity:0.3;">|</span>
+        <span class="badge badge-green">● OFFICIAL MANUAL v4.2</span>
+        <span style="opacity:0.3;">|</span>
+        <a href="/static/index.html" style="color:#CBD6E2; text-decoration:none; font-weight:600;">← Return to Main Matrix</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Master Institutional Header -->
+  <header class="site">
+    <div class="wrap">
+      <a href="/static/index.html" class="brand">
+        <div class="mark" style="background:#FFFFFF; overflow:hidden; padding:2px;">
+          <img src="/static/images/official_state_emblem.png" alt="Emblem" style="width:100%; height:100%; object-fit:contain;" />
+        </div>
+        <div>
+          <div class="name">DURGAM (दूर्गम)</div>
+          <div class="tag">National Standard Operating Procedures (SOP) & Operational Manual</div>
+        </div>
+      </a>
+      <nav class="site-nav">
+        <a href="/static/index.html">Main Matrix</a>
+        <a href="/static/dashboard.html">Executive Command</a>
+        <a href="/static/sop.html" class="active">SOP Manual</a>
+        <a href="/static/police.html">Police CAD</a>
+        <a href="/static/bank.html">Bank Switch</a>
+        <a href="/static/admin.html">Admin</a>
+        <a href="/static/academy.html">Academy</a>
+      </nav>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span class="badge badge-navy" style="font-size:11px; padding:6px 12px;">MHA APPROVED</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- 3. Sub-Header Summary Strip -->
+  <div style="background:#EAE4D6; border-bottom:1px solid var(--line); padding:10px 0;">
+    <div class="wrap" style="display:flex; justify-content:space-between; align-items:center; font-size:12px; font-family:var(--mono);">
+      <div>
+        <span style="color:var(--navy); font-weight:600;">📖 STANDARD OPERATING MANUAL:</span>
+        <span style="color:var(--ink-soft);">Guidelines for 1930 Call Desks, Bank Nodal Officers, PCR Units & Magistrates</span>
+      </div>
+      <div>
+        <span class="badge badge-saffron">SUB-140ms GOLDEN HOUR SLA</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Main Body Content -->
+  <main class="wrap" style="padding-top:28px; padding-bottom:64px;">
+
+    <!-- Protocol 1: Citizen 1930 Intake -->
+    <div class="paper-card">
+      <div class="paper-card-header">
+        <div>
+          <div class="badge badge-rust" style="margin-bottom:6px;">PROTOCOL 01 · 1930 CALL DESK</div>
+          <div class="paper-card-title">1930 Distress Helpline 3-Minute Rapid Triage SOP</div>
+        </div>
+        <span class="badge badge-green">MANDATORY STEP 1</span>
+      </div>
+      <div style="font-size:13px; line-height:1.75; color:var(--ink);">
+        <ol style="margin:0; padding-left:20px;">
+          <li style="margin-bottom:10px;">
+            <strong>Immediate UTR / RRN Ingestion:</strong> Capture the 12-digit Unique Transaction Reference (UTR) number or UPI RRN within the first 60 seconds of call intake.
+          </li>
+          <li style="margin-bottom:10px;">
+            <strong>Automated Zero-Knowledge Consortium Query:</strong> The platform verifies the source bank IFSC and automatically hashes the recipient identifier under DPDP Act 2023 zero-knowledge protocols.
+          </li>
+          <li style="margin-bottom:10px;">
+            <strong>Autonomous Multi-Hop Mule Tracing:</strong> GNN GraphSAGE model traverses the inter-bank transfer graph in under 68ms and flags terminal mule accounts.
+          </li>
+          <li>
+            <strong>Citizen Restitution Docket Generation:</strong> Issue an official 14-digit Acknowledgement Number (e.g. <code>NCRP-1930-48291048</code>) to the complainant via SMS.
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- Protocol 2: Core Banking Switch & Micro-Holds -->
+    <div class="paper-card">
+      <div class="paper-card-header">
+        <div>
+          <div class="badge badge-saffron" style="margin-bottom:6px;">PROTOCOL 02 · SCHEDULED COMMERCIAL BANKS</div>
+          <div class="paper-card-title">ISO 20022 camt.056 Pre-Settlement Micro-Hold SOP</div>
+        </div>
+        <span class="badge badge-navy">SECTION 106 BNSS 2023</span>
+      </div>
+      <div style="font-size:13px; line-height:1.75; color:var(--ink);">
+        <ol style="margin:0; padding-left:20px;">
+          <li style="margin-bottom:10px;">
+            <strong>Sub-140ms Automated Injunction:</strong> Upon GNN mule confidence score &ge; 0.85, an automated ISO 20022 <code>camt.056.001.08</code> hold signal is dispatched to the beneficiary bank CBS node.
+          </li>
+          <li style="margin-bottom:10px;">
+            <strong>30-Minute Temporary Micro-Hold Window:</strong> Bank systems place a 30-minute debit freeze on the terminal mule account balance without affecting legitimate credit inflows.
+          </li>
+          <li style="margin-bottom:10px;">
+            <strong>Confirmation & Non-Repudiation:</strong> Receiving bank nodal manager confirms statutory hold status or converts hold into permanent FIR lien under Section 106 BNSS.
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- Protocol 3: Tactical PCR CAD Interception -->
+    <div class="paper-card">
+      <div class="paper-card-header">
+        <div>
+          <div class="badge badge-navy" style="margin-bottom:6px;">PROTOCOL 03 · BEAT POLICE & PCR CAD</div>
+          <div class="paper-card-title">Spatiotemporal ATM Hotspot & Beat Patrol Interception SOP</div>
+        </div>
+        <span class="badge badge-rust">TACTICAL DISPATCH</span>
+      </div>
+      <div style="font-size:13px; line-height:1.75; color:var(--ink);">
+        <ol style="margin:0; padding-left:20px;">
+          <li style="margin-bottom:10px;">
+            <strong>ST-KDE Hotspot Forecasting:</strong> XGBoost and ST-KDE models evaluate cashout velocities and predict top candidate ATM kiosks within a 5 km radius of the terminal mule branch.
+          </li>
+          <li style="margin-bottom:10px;">
+            <strong>1-Click Telegram CAD Dispatch:</strong> The nearest available PCR unit is provided with GPS turn-by-turn navigation deep-links and suspect vehicle descriptions.
+          </li>
+          <li style="margin-bottom:10px;">
+            <strong>Physical Apprehension & CCTV Preservation:</strong> Patrol team arrives at ATM kiosk, secures CCTV footage, and detains suspect cash-out runners.
+          </li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- Protocol 4: Judicial Pre-Trial Restitution -->
+    <div class="paper-card">
+      <div class="paper-card-header">
+        <div>
+          <div class="badge badge-green" style="margin-bottom:6px;">PROTOCOL 04 · SPECIAL CYBER COURTS</div>
+          <div class="paper-card-title">Section 106 BNSS 2023 Pre-Trial Reversal Decree SOP</div>
+        </div>
+        <span class="badge badge-green">RECOVERY BENCH</span>
+      </div>
+      <div style="font-size:13px; line-height:1.75; color:var(--ink);">
+        <ol style="margin:0; padding-left:20px;">
+          <li style="margin-bottom:10px;">
+            <strong>Digital Evidence Verification:</strong> The Special Judicial Magistrate inspects the Section 63 BSA electronic evidence certificate and validates the Polygon Amoy Merkle root.
+          </li>
+          <li style="margin-bottom:10px;">
+            <strong>Pre-Trial Restitution Decree Issuance:</strong> Magistrate issues judicial reversal direction to the beneficiary bank without waiting for multi-year trial conclusion.
+          </li>
+          <li>
+            <strong>Direct Account Credit Reversal:</strong> Receiving bank executes automated credit back into the victim's verified source bank account within 24 hours.
+          </li>
+        </ol>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- 5. Footer -->
+  <footer class="site">
+    <div class="wrap">
+      <div class="foot-bottom" style="border-top:none; padding-top:0;">
+        <span>© 2026 Government of India · National Informatics Centre (NIC) · Sovereign Cyber SOP Manual</span>
+        <span style="color:var(--saffron-dim);">STANDARDS DIVISION • MHA CYBER DEFENSE</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

@@ -19,6 +19,12 @@ class CrimeCategory(str, Enum):
     INVESTMENT_PONZI = "INVESTMENT_PONZI"
     UPI_QR_FRAUD = "UPI_QR_FRAUD"
     FINANCIAL_FRAUD_GENERAL = "FINANCIAL_FRAUD_GENERAL"
+    IMPERSONATION_MHA = "IMPERSONATION_MHA"         # Fake MHA / CBI / ED impersonation
+    OTP_FRAUD = "OTP_FRAUD"                         # SMS OTP phishing & SIM swap
+    LOAN_FRAUD = "LOAN_FRAUD"                       # Fake loan apps & KYC harvesting
+    KYC_FRAUD = "KYC_FRAUD"                         # Fake KYC / Aadhaar update calls
+    ROMANCE_SCAM = "ROMANCE_SCAM"                   # Pig-butchering / matrimony fraud
+    COURIER_PARCEL_SCAM = "COURIER_PARCEL_SCAM"     # FedEx / DHL fake courier extortion
 
 class ComplaintCreate(BaseModel):
     victim_name: str = Field(..., example="Amit Kumar")

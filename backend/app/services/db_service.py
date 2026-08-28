@@ -260,7 +260,7 @@ def init_db():
     cursor.execute("PRAGMA cache_size = 10000;")
     cursor.execute("PRAGMA temp_store = MEMORY;")
 
-    # Drop old schema table if missing nodes_json
+    # Drop old schema to apply upgraded schema with extra_data_json
     cursor.execute("DROP TABLE IF EXISTS incidents")
 
     cursor.execute("""
@@ -281,7 +281,50 @@ def init_db():
         execution_latency_ms REAL,
         nodes_json TEXT,
         terminal_node_json TEXT,
+        extra_data_json TEXT,
         created_at REAL
+    )
+    """)
+
+    # FIU-IND Suspicious Transaction Reports — Persistent across restarts
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS fiu_strs (
+        str_id TEXT PRIMARY KEY,
+        case_id TEXT,
+        utr_number TEXT,
+        beneficiary_account TEXT,
+        amount_inr REAL,
+        ground_of_suspicion TEXT,
+        status TEXT DEFAULT 'FILED_WITH_FIU_FINNET',
+        priority TEXT DEFAULT 'CRITICAL',
+        filed_by TEXT DEFAULT 'FIU_NODAL_OFFICER',
+        finnet_ack_hash TEXT,
+        timestamp REAL
+    )
+    """)
+
+    # Telecom CEIR IMEI / SIM Blocks — Persistent across restarts
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS imei_blocks (
+        block_id TEXT PRIMARY KEY,
+        imei TEXT NOT NULL,
+        imsi TEXT,
+        case_id TEXT,
+        operator TEXT DEFAULT 'ALL_INDIAN_TSPS',
+        tsps TEXT DEFAULT 'JIO, AIRTEL, VI, BSNL',
+        statutory_act TEXT DEFAULT 'Section 28, Telecommunications Act 2023',
+        status TEXT DEFAULT 'DEVICE_BLACK_LISTED',
+        blocked_by TEXT DEFAULT 'DOT_CEIR_GATEWAY',
+        timestamp REAL
+    )
+    """)
+
+    # System Settings KV Store — Persists auto-trigger rule config
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS system_settings (
+        key TEXT PRIMARY KEY,
+        value_json TEXT,
+        updated_at REAL
     )
     """)
 
@@ -325,14 +368,16 @@ def init_db():
     """)
     conn.commit()
 
+    conn.commit()
+
     # Re-seed with full Pan-India diverse cases
     for case in PAN_INDIA_EMPIRICAL_CASES:
         cursor.execute("""
         INSERT OR REPLACE INTO incidents (
             case_id, ack_number, victim_name, victim_phone, victim_city, victim_state,
             utr_number, source_bank, source_account, loss_amount, crime_category,
-            narrative, status, execution_latency_ms, nodes_json, terminal_node_json, created_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            narrative, status, execution_latency_ms, nodes_json, terminal_node_json, extra_data_json, created_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             case["case_id"],
             case["ack_number"],
@@ -350,9 +395,37 @@ def init_db():
             case["execution_latency_ms"],
             json.dumps(case.get("nodes", [])),
             json.dumps(case.get("terminal_node", {})),
+            json.dumps({}),
             time.time()
         ))
     conn.commit()
+
+    # Seed default FIU STRs if table empty
+    cursor.execute("SELECT COUNT(*) FROM fiu_strs")
+    if cursor.fetchone()[0] == 0:
+        now = time.time()
+        cursor.executemany("""
+        INSERT OR IGNORE INTO fiu_strs (str_id, case_id, utr_number, beneficiary_account, amount_inr, ground_of_suspicion, status, priority, filed_by, finnet_ack_hash, timestamp)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, [
+            ("STR-2026-DL-8910", "DURGAM-DL-001", "482910482910", "XXXX-XXXX-4821", 250000.0, "PMLA Sec 12 Rapid Layering & Mule Account Flow-Through", "FILED_WITH_FIU_FINNET", "CRITICAL", "FIU_NODAL_OFFICER", "0x7a8f9c1b2d3e4f5a6b7c", now - 1800),
+            ("STR-2026-MH-7192", "DURGAM-MH-003", "749201948102", "XXXX-XXXX-3194", 1280000.0, "Cross-Border Layering via Corporate Shell Accounts - RTGS", "FILED_WITH_FIU_FINNET", "HIGH", "FIU_NODAL_OFFICER", "0x9e8d7c6b5a4f3e2d1c0b", now - 3600),
+        ])
+        conn.commit()
+
+    # Seed default IMEI blocks if table empty
+    cursor.execute("SELECT COUNT(*) FROM imei_blocks")
+    if cursor.fetchone()[0] == 0:
+        now = time.time()
+        cursor.executemany("""
+        INSERT OR IGNORE INTO imei_blocks (block_id, imei, imsi, case_id, tsps, status, timestamp)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """, [
+            ("CEIR-BLK-891048", "862910482910482", "404450918291048", "DURGAM-DL-001", "JIO, AIRTEL, VI, BSNL", "DEVICE_BLACK_LISTED", now - 3600),
+            ("CEIR-BLK-719204", "358920194810294", "404450192840192", "DURGAM-MH-003", "JIO, AIRTEL, VI, BSNL", "DEVICE_BLACK_LISTED", now - 7200),
+        ])
+        conn.commit()
+
     conn.close()
 
 # Auto-initialize DB
@@ -377,9 +450,23 @@ def get_all_incidents(limit: int = 20) -> List[Dict[str, Any]]:
     for r in rows:
         d = dict(r)
         if d.get("nodes_json"):
-            d["nodes"] = json.loads(d["nodes_json"])
+            try: d["nodes"] = json.loads(d["nodes_json"])
+            except Exception: d["nodes"] = []
         if d.get("terminal_node_json"):
-            d["terminal_node"] = json.loads(d["terminal_node_json"])
+            try: d["terminal_node"] = json.loads(d["terminal_node_json"])
+            except Exception: d["terminal_node"] = {}
+        if d.get("extra_data_json"):
+            try:
+                extra = json.loads(d["extra_data_json"])
+                # Merge all rich fields back into root dict
+                for key in ("hold_details", "candidate_atms", "dispatch_details",
+                            "evidence_certificate", "mule_detection_matrix",
+                            "universal_docket", "golden_hour_countdown",
+                            "auto_triggers_executed"):
+                    if key in extra:
+                        d[key] = extra[key]
+            except Exception:
+                pass
         results.append(d)
 
     _INCIDENTS_CACHE["data"] = results
@@ -391,9 +478,9 @@ def get_incident_by_identifier(identifier: str) -> Optional[Dict[str, Any]]:
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
-    
+
     cursor.execute("""
-    SELECT * FROM incidents 
+    SELECT * FROM incidents
     WHERE case_id = ? OR ack_number = ? OR utr_number = ?
     """, (clean, clean, clean))
     row = cursor.fetchone()
@@ -403,9 +490,22 @@ def get_incident_by_identifier(identifier: str) -> Optional[Dict[str, Any]]:
         return None
     d = dict(row)
     if d.get("nodes_json"):
-        d["nodes"] = json.loads(d["nodes_json"])
+        try: d["nodes"] = json.loads(d["nodes_json"])
+        except Exception: d["nodes"] = []
     if d.get("terminal_node_json"):
-        d["terminal_node"] = json.loads(d["terminal_node_json"])
+        try: d["terminal_node"] = json.loads(d["terminal_node_json"])
+        except Exception: d["terminal_node"] = {}
+    if d.get("extra_data_json"):
+        try:
+            extra = json.loads(d["extra_data_json"])
+            for key in ("hold_details", "candidate_atms", "dispatch_details",
+                        "evidence_certificate", "mule_detection_matrix",
+                        "universal_docket", "golden_hour_countdown",
+                        "auto_triggers_executed"):
+                if key in extra:
+                    d[key] = extra[key]
+        except Exception:
+            pass
     return d
 
 def insert_incident(incident_data: Dict[str, Any]) -> Dict[str, Any]:
@@ -417,12 +517,25 @@ def insert_incident(incident_data: Dict[str, Any]) -> Dict[str, Any]:
     nodes_json = json.dumps(incident_data.get("nodes", []))
     terminal_json = json.dumps(incident_data.get("terminal_node", {}))
 
+    # Persist all rich pipeline fields that were previously lost on restart
+    extra_fields = {
+        "hold_details": incident_data.get("hold_details", {}),
+        "candidate_atms": incident_data.get("candidate_atms", []),
+        "dispatch_details": incident_data.get("dispatch_details"),
+        "evidence_certificate": incident_data.get("evidence_certificate", {}),
+        "mule_detection_matrix": incident_data.get("mule_detection_matrix", {}),
+        "universal_docket": incident_data.get("universal_docket", {}),
+        "golden_hour_countdown": incident_data.get("golden_hour_countdown", {}),
+        "auto_triggers_executed": incident_data.get("auto_triggers_executed", []),
+    }
+    extra_data_json = json.dumps(extra_fields, default=str)
+
     cursor.execute("""
     INSERT OR REPLACE INTO incidents (
         case_id, ack_number, victim_name, victim_phone, victim_city, victim_state,
         utr_number, source_bank, source_account, loss_amount, crime_category,
-        narrative, status, execution_latency_ms, nodes_json, terminal_node_json, created_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        narrative, status, execution_latency_ms, nodes_json, terminal_node_json, extra_data_json, created_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         case_id,
         ack_number,
@@ -440,10 +553,13 @@ def insert_incident(incident_data: Dict[str, Any]) -> Dict[str, Any]:
         float(incident_data.get("execution_latency_ms", 138.4)),
         nodes_json,
         terminal_json,
+        extra_data_json,
         time.time()
     ))
     conn.commit()
     conn.close()
+    # Invalidate in-memory cache so next read reflects new data
+    _INCIDENTS_CACHE["data"] = None
 
 def update_incident_status(case_id: str, new_status: str) -> bool:
     conn = sqlite3.connect(DB_PATH)
@@ -572,6 +688,86 @@ def revoke_api_key(key_id: str) -> bool:
     conn.close()
     return affected > 0
 
+# --- FIU-IND Suspicious Transaction Reports (Persistent) ---
+def store_str(str_id: str, case_id: str, utr_number: str, beneficiary_account: str,
+              amount_inr: float, ground_of_suspicion: str, finnet_ack_hash: str,
+              filed_by: str = "FIU_NODAL_OFFICER", priority: str = "CRITICAL") -> Dict[str, Any]:
+    import uuid as _uuid
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    now = time.time()
+    sid = str_id or f"STR-2026-IND-{_uuid.uuid4().hex[:6].upper()}"
+    cursor.execute("""
+    INSERT OR REPLACE INTO fiu_strs
+        (str_id, case_id, utr_number, beneficiary_account, amount_inr, ground_of_suspicion,
+         status, priority, filed_by, finnet_ack_hash, timestamp)
+    VALUES (?, ?, ?, ?, ?, ?, 'FILED_WITH_FIU_FINNET', ?, ?, ?, ?)
+    """, (sid, case_id, utr_number, beneficiary_account, amount_inr,
+          ground_of_suspicion, priority, filed_by, finnet_ack_hash, now))
+    conn.commit()
+    conn.close()
+    return {"str_id": sid, "case_id": case_id, "amount_inr": amount_inr,
+            "status": "FILED_WITH_FIU_FINNET", "timestamp": now}
+
+def get_strs(limit: int = 50) -> List[Dict[str, Any]]:
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM fiu_strs ORDER BY timestamp DESC LIMIT ?", (limit,))
+    rows = cursor.fetchall()
+    conn.close()
+    return [dict(r) for r in rows]
+
+# --- Telecom CEIR IMEI / SIM Block Registry (Persistent) ---
+def store_imei_block(block_id: str, imei: str, case_id: str, imsi: str = "",
+                     operator: str = "ALL_INDIAN_TSPS") -> Dict[str, Any]:
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    now = time.time()
+    cursor.execute("""
+    INSERT OR REPLACE INTO imei_blocks
+        (block_id, imei, imsi, case_id, operator, tsps, status, blocked_by, timestamp)
+    VALUES (?, ?, ?, ?, ?, 'JIO, AIRTEL, VI, BSNL', 'DEVICE_BLACK_LISTED', 'DOT_CEIR_GATEWAY', ?)
+    """, (block_id, imei, imsi, case_id, operator, now))
+    conn.commit()
+    conn.close()
+    return {"block_id": block_id, "imei": imei, "case_id": case_id,
+            "status": "DEVICE_BLACK_LISTED", "timestamp": now}
+
+def get_imei_blocks(limit: int = 50) -> List[Dict[str, Any]]:
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM imei_blocks ORDER BY timestamp DESC LIMIT ?", (limit,))
+    rows = cursor.fetchall()
+    conn.close()
+    return [dict(r) for r in rows]
+
+# --- System Settings KV Store (for auto-trigger rules config persistence) ---
+def get_setting(key: str, default: Any = None) -> Any:
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute("SELECT value_json FROM system_settings WHERE key = ?", (key,))
+    row = cursor.fetchone()
+    conn.close()
+    if row:
+        try: return json.loads(row["value_json"])
+        except Exception: return default
+    return default
+
+def set_setting(key: str, value: Any) -> bool:
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("""
+    INSERT OR REPLACE INTO system_settings (key, value_json, updated_at)
+    VALUES (?, ?, ?)
+    """, (key, json.dumps(value, default=str), time.time()))
+    conn.commit()
+    conn.close()
+    return True
+
+
 class DatabaseService:
     @staticmethod
     def get_all_incidents(limit: int = 20) -> List[Dict[str, Any]]:
@@ -625,5 +821,36 @@ class DatabaseService:
     def revoke_api_key(key_id: str) -> bool:
         return revoke_api_key(key_id)
 
-db_service = DatabaseService()
+    # FIU STR persistence
+    @staticmethod
+    def store_str(str_id: str, case_id: str, utr_number: str, beneficiary_account: str,
+                  amount_inr: float, ground_of_suspicion: str, finnet_ack_hash: str,
+                  filed_by: str = "FIU_NODAL_OFFICER", priority: str = "CRITICAL") -> Dict[str, Any]:
+        return store_str(str_id, case_id, utr_number, beneficiary_account,
+                         amount_inr, ground_of_suspicion, finnet_ack_hash, filed_by, priority)
 
+    @staticmethod
+    def get_strs(limit: int = 50) -> List[Dict[str, Any]]:
+        return get_strs(limit)
+
+    # Telecom IMEI block persistence
+    @staticmethod
+    def store_imei_block(block_id: str, imei: str, case_id: str, imsi: str = "",
+                         operator: str = "ALL_INDIAN_TSPS") -> Dict[str, Any]:
+        return store_imei_block(block_id, imei, case_id, imsi, operator)
+
+    @staticmethod
+    def get_imei_blocks(limit: int = 50) -> List[Dict[str, Any]]:
+        return get_imei_blocks(limit)
+
+    # System settings persistence
+    @staticmethod
+    def get_setting(key: str, default: Any = None) -> Any:
+        return get_setting(key, default)
+
+    @staticmethod
+    def set_setting(key: str, value: Any) -> bool:
+        return set_setting(key, value)
+
+
+db_service = DatabaseService()
