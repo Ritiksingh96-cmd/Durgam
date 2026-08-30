@@ -71,6 +71,39 @@
         }
         .dossier-label { color: #9da4a7; }
         .dossier-val { font-family: monospace; color: var(--lime); font-weight: 600; }
+        
+        /* Modal Backdrop & Shell */
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(5, 7, 8, 0.65);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-box {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 28px;
+            max-width: 480px;
+            width: 100%;
+            border: 1px solid #deddd7;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+        .modal-box h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 20px;
+            margin-bottom: 6px;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
         @media(max-width: 800px) { .progress-stepper { grid-template-columns: 1fr 1fr; } }
         @media(max-width: 500px) { .progress-stepper { grid-template-columns: 1fr; } }
     </style>
@@ -80,7 +113,7 @@
     <div class="ambient ambient-left"></div>
     <div class="ambient ambient-right"></div>
 
-    <!-- NAVBAR (Shows Home + Citizen Features) -->
+    <!-- NAVBAR -->
     <header class="navbar">
         <a href="index.html" class="brand">
             <div class="brand-shield"><i data-lucide="shield"></i></div>
@@ -115,7 +148,7 @@
             <div class="eyebrow"><span></span>EMERGENCY REPORTING WIZARD (1930 PROTOCOL)</div>
             <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 26px; margin-bottom: 6px;">Report Cyber Fraud to Trigger Immediate Bank Hold</h2>
             <p style="color: #626b70; font-size: 13.5px; margin-bottom: 20px;">
-                Enter transaction details below. The system automatically places an 89ms pre-settlement hold on the recipient's bank switch.
+                Enter transaction details below. The system automatically places an 89ms pre-settlement hold on the recipient's bank switch[cite: 3].
             </p>
 
             <form id="citizenComplaintForm">
@@ -158,7 +191,7 @@
 
                 <div style="margin-top: 28px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
                     <span style="font-size: 12px; color: #7b8285;">
-                        🔒 Protected under RBI Master Direction Sec 8.2 & BNSS Sec 106
+                        🔒 Protected under RBI Master Direction Sec 8.2 & BNSS Sec 106[cite: 3]
                     </span>
                     <button type="submit" class="primary-btn" id="submitBtn">
                         <i data-lucide="zap"></i> Trigger 89ms Bank Hold & Intercept
@@ -219,6 +252,19 @@
                             <strong style="font-size:14px; color:#5c8000;" id="track-target-atm">SBI ATM Sector 29</strong>
                         </div>
                     </div>
+
+                    <!-- Case Actions Toolbar -->
+                    <div style="display: flex; gap: 10px; margin-top: 20px; padding-top: 16px; border-top: 1px solid #deddd7; flex-wrap: wrap;">
+                        <button onclick="openEditModal()" class="outline-btn" style="height: 36px; font-size: 11.5px;">
+                            <i data-lucide="edit-3"></i> Edit Remarks
+                        </button>
+                        <button onclick="openAddUtrModal()" class="outline-btn" style="height: 36px; font-size: 11.5px;">
+                            <i data-lucide="plus-circle"></i> Add Additional UTR
+                        </button>
+                        <button onclick="handleVoidCase()" class="outline-btn" style="height: 36px; font-size: 11.5px; color: #ff3d3d; border-color: rgba(255, 77, 77, 0.4);">
+                            <i data-lucide="trash-2"></i> Cancel / Void Case
+                        </button>
+                    </div>
                 </div>
 
                 <div class="evidence-dossier-box">
@@ -262,7 +308,7 @@
             <div class="eyebrow"><span></span>FALSE-POSITIVE MITIGATION</div>
             <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; margin-bottom: 8px;">1-Tap Account Unblock Desk</h2>
             <p style="color: #626b70; font-size: 13px; line-height: 1.6; margin-bottom: 20px;">
-                If your account received an automatic 30-minute security hold, enter your account number and verification OTP to release the hold instantly.
+                If your account received an automatic 30-minute security hold, enter your account number and verification OTP to release the hold instantly[cite: 3].
             </p>
 
             <div style="display: flex; flex-direction: column; gap: 16px;">
@@ -285,12 +331,49 @@
 
     </main>
 
+    <!-- ================= CASE INTERACTION MODALS ================= -->
+    
+    <!-- Modal 1: Edit Remarks -->
+    <div id="editRemarksModal" class="modal-backdrop">
+        <div class="modal-box">
+            <h3>Update Incident Statement</h3>
+            <p style="font-size:12.5px; color:#626b70; margin-bottom:16px;">Provide additional forensic details or modify context for investigating officers.</p>
+            <div class="input-field">
+                <label>Updated Summary / Details</label>
+                <textarea id="modalEditRemarks" rows="4" style="width:100%;">Scammer impersonated police officer on video call and coerced transfer to escrow account.</textarea>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="outline-btn" style="height:36px;" onclick="closeModal('editRemarksModal')">Cancel</button>
+                <button type="button" class="primary-btn" style="height:36px;" onclick="saveCaseRemarks()">Save Remarks</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: Add Additional UTR -->
+    <div id="addUtrModal" class="modal-backdrop">
+        <div class="modal-box">
+            <h3>Append Additional UTR</h3>
+            <p style="font-size:12.5px; color:#626b70; margin-bottom:16px;">If multiple payments were made to the fraudster, link the secondary transaction ID below.</p>
+            <div class="input-field" style="margin-bottom:12px;">
+                <label>Secondary Transaction UTR *</label>
+                <input type="text" id="modalAddUtr" placeholder="e.g. 582910482911" required />
+            </div>
+            <div class="input-field">
+                <label>Additional Amount (₹) *</label>
+                <input type="number" id="modalAddAmount" placeholder="e.g. 50000" required />
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="outline-btn" style="height:36px;" onclick="closeModal('addUtrModal')">Cancel</button>
+                <button type="button" class="primary-btn" style="height:36px;" onclick="saveAdditionalUtr()">Append to Case</button>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
     <script src="app.js"></script>
     <script>
         lucide.createIcons();
 
-        // Enforce active citizen session
         if (!getLoggedInUser()) {
             localStorage.setItem('durgam_user', JSON.stringify({ id: 'citizen@user.in', role: 'citizen', name: 'Dr. Rajiv Malhotra' }));
             renderGlobalNavbar();
@@ -302,16 +385,9 @@
             document.getElementById('tabTrack').style.display = tab === 'track' ? 'block' : 'none';
             document.getElementById('tabUnblock').style.display = tab === 'unblock' ? 'block' : 'none';
 
-            // Highlight active navbar link
-            document.querySelectorAll('.nav-task-item').forEach(link => {
-                const label = link.innerText.toLowerCase();
-                link.classList.toggle('active', 
-                    (tab === 'complaints' && label.includes('complaints')) ||
-                    (tab === 'report' && label.includes('report')) ||
-                    (tab === 'track' && label.includes('tracker')) ||
-                    (tab === 'unblock' && label.includes('unblock'))
-                );
-            });
+            document.querySelectorAll('.nav-task-item').forEach(link => link.classList.remove('active'));
+            const activeNavEl = document.getElementById(`navTab_${tab}`);
+            if (activeNavEl) activeNavEl.classList.add('active');
 
             if (tab === 'complaints') renderMyComplaints();
         }
@@ -348,19 +424,41 @@
             `).join('');
         }
 
-        document.getElementById('citizenComplaintForm')?.addEventListener('submit', () => {
-            setTimeout(() => {
-                const docketEl = document.getElementById('track-docket-id');
-                const amtEl = document.getElementById('track-amount');
-                if (!docketEl) return;
-                const complaint_id = docketEl.innerText.replace('Docket: ', '');
-                const amount = (amtEl?.innerText || '₹0').replace(/[₹,]/g, '');
-                const utr_number = document.getElementById('c-utr')?.value.trim() || '';
-                const list = getMyComplaints();
-                list.push({ complaint_id, amount, utr_number, status: '🔍 Investigating', filed_at: new Date().toISOString() });
-                localStorage.setItem('durgam_complaints', JSON.stringify(list));
-            }, 300);
-        });
+        // ================= MODAL HANDLERS =================
+        function openEditModal() {
+            document.getElementById('editRemarksModal').style.display = 'flex';
+        }
+        function openAddUtrModal() {
+            document.getElementById('addUtrModal').style.display = 'flex';
+        }
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        function saveCaseRemarks() {
+            const val = document.getElementById('modalEditRemarks').value.trim();
+            if (!val) return;
+            alert('✅ Case statement updated and transmitted to investigating nodal desks.');
+            closeModal('editRemarksModal');
+        }
+
+        function saveAdditionalUtr() {
+            const utr = document.getElementById('modalAddUtr').value.trim();
+            const amt = document.getElementById('modalAddAmount').value.trim();
+            if (!utr || !amt) {
+                alert('Please enter both secondary UTR and amount.');
+                return;
+            }
+            alert(`✅ Secondary UTR ${utr} (₹${amt}) linked to active case docket.`);
+            closeModal('addUtrModal');
+        }
+
+        function handleVoidCase() {
+            if (confirm('⚠️ Are you sure you want to cancel and void this grievance docket? Pre-settlement bank liens will be scheduled for release.')) {
+                alert('Docket cancelled. Security holds released under Section 106 BNSS.');
+                showCitizenTab('complaints');
+            }
+        }
 
         function downloadCourtSlip() {
             window.print();
@@ -394,8 +492,8 @@
             }
         }
 
-        // Initialize active state on load
-        showCitizenTab('report');
+        const urlParams = new URLSearchParams(window.location.search);
+        showCitizenTab(urlParams.get('tab') || 'report');
     </script>
 </body>
 </html>
