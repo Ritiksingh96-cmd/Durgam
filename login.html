@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DURGAM — Secure Sign In</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .auth-shell {
+            max-width: 480px;
+            margin: 40px auto 60px;
+            background: #ffffff;
+            border: 1px solid #deddd7;
+            border-radius: 24px;
+            padding: 36px 32px;
+            box-shadow: 0 20px 45px rgba(0,0,0,0.04);
+        }
+        /* Top Level Segmented Switcher */
+        .tier-segmented-bar {
+            display: flex;
+            background: #f1f0ea;
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 18px;
+            gap: 4px;
+        }
+        .tier-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px;
+            border: none;
+            border-radius: 9px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #626b70;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .tier-btn.active {
+            background: #050708;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+        .tier-btn.active i {
+            color: var(--lime);
+        }
+        /* Official Sub-Role 4-Column Selector */
+        .official-badge-strip {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            margin-bottom: 20px;
+            background: #faf9f5;
+            padding: 6px;
+            border-radius: 12px;
+            border: 1px solid #e7e5de;
+        }
+        .subrole-btn {
+            padding: 8px 2px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            background: transparent;
+            font-size: 11px;
+            font-weight: 700;
+            color: #626b70;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            transition: 0.2s;
+            text-align: center;
+        }
+        .subrole-btn.active {
+            background: #ffffff;
+            border-color: #deddd7;
+            color: #111820;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        }
+        .subrole-btn i {
+            width: 16px;
+            height: 16px;
+            color: #7b8285;
+        }
+        .subrole-btn.active i {
+            color: #5c8000;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient ambient-left"></div>
+    <div class="ambient ambient-right"></div>
+
+    <header class="navbar">
+        <a href="index.html" class="brand">
+            <div class="brand-shield"><i data-lucide="shield"></i></div>
+            <div class="brand-text">
+                <div class="brand-name">DURGAM<span></span></div>
+                <div class="brand-subtitle">National Cyber Fraud Protection System</div>
+            </div>
+        </a>
+
+        <nav class="nav-links"></nav>
+        <div class="nav-right"></div>
+    </header>
+
+    <main class="page-container">
+        <div class="auth-shell">
+            <div class="eyebrow" style="justify-content:center;"><span></span>PORTAL ACCESS</div>
+            <h2 id="loginHeading" style="font-family:'Space Grotesk', sans-serif; font-size:22px; text-align:center; margin-bottom: 4px;">Sign In to Citizen Desk</h2>
+            <p id="loginSubheading" style="font-size:12px; color:#626b70; text-align:center; margin-bottom: 20px;">Report cyber fraud & trigger 89ms bank holds.</p>
+
+            <!-- Tier 1: Main Category Switch (Citizen vs Official Portal) -->
+            <div class="tier-segmented-bar">
+                <button type="button" class="tier-btn active" id="btnTierPublic" onclick="setAuthTier('public')">
+                    <i data-lucide="user"></i> Citizen Login
+                </button>
+                <button type="button" class="tier-btn" id="btnTierOfficial" onclick="setAuthTier('official')">
+                    <i data-lucide="shield-check"></i> Official Portal
+                </button>
+            </div>
+
+            <!-- Tier 2: Official 4-Way Sub-Role Selector -->
+            <div id="officialSubroles" class="official-badge-strip" style="display: none;">
+                <button type="button" class="subrole-btn active" id="subRoleBank" onclick="setSubRole('bank')">
+                    <i data-lucide="landmark"></i>
+                    <span>Bank Nodal</span>
+                </button>
+                <button type="button" class="subrole-btn" id="subRoleI4C" onclick="setSubRole('i4c')">
+                    <i data-lucide="shield-half"></i>
+                    <span>I4C Center</span>
+                </button>
+                <button type="button" class="subrole-btn" id="subRolePolice" onclick="setSubRole('police')">
+                    <i data-lucide="shield-alert"></i>
+                    <span>Police PCR</span>
+                </button>
+                <button type="button" class="subrole-btn" id="subRoleCourt" onclick="setSubRole('judiciary')">
+                    <i data-lucide="scale"></i>
+                    <span>Judiciary</span>
+                </button>
+            </div>
+
+            <form id="roleLoginForm">
+                <div id="dynamicFormFields">
+                    <div class="input-field" style="margin-bottom:14px;">
+                        <label id="identifierLabel">Mobile Number or Email *</label>
+                        <input type="text" id="login-identifier" value="9811029481" placeholder="e.g. 9811029481 or user@email.com" required />
+                    </div>
+                </div>
+
+                <div class="input-field" style="margin-bottom:20px;">
+                    <label>Password / Access PIN *</label>
+                    <input type="password" id="login-pass" value="password123" placeholder="Enter password" required />
+                </div>
+
+                <button type="submit" id="submitBtn" class="primary-btn" style="width:100%; justify-content:center;">
+                    <i data-lucide="log-in"></i> Sign In to <span id="submitRoleLabel" style="margin-left:4px;">Citizen Portal</span>
+                </button>
+            </form>
+
+            <p id="regPrompt" style="text-align:center; font-size:12.5px; color:#626b70; margin-top:20px;">
+                New to DURGAM? <a id="regLink" href="register.html?role=citizen" style="color:#5c8000; font-weight:700; text-decoration:none;">Create an account</a>
+            </p>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        lucide.createIcons();
+
+        let activeTier = 'public';
+        let activeRole = 'citizen';
+
+        const ROLE_CONFIGS = {
+            citizen: {
+                heading: "Sign In to Citizen Desk",
+                subheading: "Report cyber fraud & trigger 89ms bank holds.",
+                fieldLabel: "Registered Mobile Number or Email *",
+                fieldPlaceholder: "e.g. 9811029481 or user@email.com",
+                defaultValue: "9811029481",
+                submitText: "Citizen Portal",
+                destination: "citizen.html",
+                allowRegister: true
+            },
+            bank: {
+                heading: "Bank Nodal Security Gateway",
+                subheading: "Inter-bank mule registry & Section 106 BNSS hold management.",
+                fieldLabel: "Bank Nodal Officer Email / IFSC Code *",
+                fieldPlaceholder: "frm@sbi.co.in",
+                defaultValue: "frm@sbi.co.in",
+                submitText: "Bank Switch",
+                destination: "bank.html",
+                allowRegister: true
+            },
+            i4c: {
+                heading: "I4C National Command Center",
+                subheading: "Command intelligence dashboard for multi-hop money trails.",
+                fieldLabel: "Officer Email / Badge ID *",
+                fieldPlaceholder: "i4c.ops@gov.in",
+                defaultValue: "i4c.ops@gov.in",
+                submitText: "Command Center",
+                destination: "command.html",
+                allowRegister: false
+            },
+            police: {
+                heading: "Police Tactical Command Room",
+                subheading: "AI-forecasted ATM cashout hotspots & CAD patrol dispatch.",
+                fieldLabel: "PCR Unit Call Sign / Officer ID *",
+                fieldPlaceholder: "pcr.falcon1@police.gov.in",
+                defaultValue: "pcr.falcon1@police.gov.in",
+                submitText: "Police War Room",
+                destination: "police.html",
+                allowRegister: false
+            },
+            judiciary: {
+                heading: "Special Cyber Court & Evidence Bench",
+                subheading: "Section 63 BSA evidence dossiers & restitution decrees.",
+                fieldLabel: "Judicial Officer / Bench Reference *",
+                fieldPlaceholder: "bench1@court.gov.in",
+                defaultValue: "bench1@court.gov.in",
+                submitText: "Legal Vault",
+                destination: "judiciary.html",
+                allowRegister: false
+            }
+        };
+
+        function setAuthTier(tier) {
+            activeTier = tier;
+            document.getElementById('btnTierPublic').classList.toggle('active', tier === 'public');
+            document.getElementById('btnTierOfficial').classList.toggle('active', tier === 'official');
+
+            const subrolesEl = document.getElementById('officialSubroles');
+            if (tier === 'public') {
+                subrolesEl.style.display = 'none';
+                applyRoleUI('citizen');
+            } else {
+                subrolesEl.style.display = 'grid';
+                setSubRole('bank');
+            }
+        }
+
+        function setSubRole(role) {
+            document.querySelectorAll('.subrole-btn').forEach(b => b.classList.remove('active'));
+            if (role === 'bank') document.getElementById('subRoleBank').classList.add('active');
+            if (role === 'i4c') document.getElementById('subRoleI4C').classList.add('active');
+            if (role === 'police') document.getElementById('subRolePolice').classList.add('active');
+            if (role === 'judiciary') document.getElementById('subRoleCourt').classList.add('active');
+            applyRoleUI(role);
+        }
+
+        function applyRoleUI(role) {
+            activeRole = role;
+            const cfg = ROLE_CONFIGS[role] || ROLE_CONFIGS.citizen;
+
+            document.getElementById('loginHeading').innerText = cfg.heading;
+            document.getElementById('loginSubheading').innerText = cfg.subheading;
+            document.getElementById('submitRoleLabel').innerText = cfg.submitText;
+            document.getElementById('identifierLabel').innerText = cfg.fieldLabel;
+
+            const input = document.getElementById('login-identifier');
+            input.placeholder = cfg.fieldPlaceholder;
+            input.value = cfg.defaultValue;
+
+            const regPrompt = document.getElementById('regPrompt');
+            if (cfg.allowRegister) {
+                regPrompt.style.display = 'block';
+                regPrompt.innerHTML = `New to DURGAM? <a href="register.html?role=${role}" style="color:#5c8000; font-weight:700; text-decoration:none;">Create an account</a>`;
+            } else {
+                regPrompt.style.display = 'block';
+                regPrompt.innerHTML = `<span style="font-size:11px; color:#9da4a7;">🔒 Official agency credentials are provisioned by nodal administrators.</span>`;
+            }
+
+            lucide.createIcons();
+        }
+
+        // Auto-select role if URL has parameter (e.g., login.html?role=i4c, login.html?role=police)
+        const params = new URLSearchParams(window.location.search);
+        const qRole = params.get('role');
+        if (qRole && qRole !== 'citizen') {
+            setAuthTier('official');
+            setSubRole(qRole);
+        }
+
+        document.getElementById('roleLoginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const identifier = document.getElementById('login-identifier').value.trim();
+            const cfg = ROLE_CONFIGS[activeRole];
+
+            const nameMap = {
+                citizen: 'Dr. Rajiv Malhotra',
+                bank: 'SBI Nodal Officer',
+                i4c: 'I4C Command Officer',
+                police: 'SI Rajesh Hooda',
+                judiciary: 'Justice K. S. Rathore'
+            };
+
+            const userData = {
+                id: identifier,
+                email: identifier.includes('@') ? identifier : `${identifier}@user.in`,
+                name: nameMap[activeRole] || identifier,
+                role: activeRole
+            };
+
+            localStorage.setItem('durgam_user', JSON.stringify(userData));
+            window.location.href = cfg.destination;
+        });
+    </script>
+</body>
+</html>

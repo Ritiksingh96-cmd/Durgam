@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DURGAM — Stop Cyber Fraud & Recover Stolen Money</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        .hero-search-bar {
+            margin-top: 24px;
+            display: flex;
+            gap: 8px;
+            background: #ffffff;
+            padding: 6px;
+            border-radius: 16px;
+            border: 1.5px solid #deddd7;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.03);
+            max-width: 520px;
+        }
+        .hero-search-bar input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 10px 14px;
+            font-family: inherit;
+            font-size: 13.5px;
+            color: #111820;
+            background: transparent;
+        }
+        .social-proof-strip {
+            width: 100%;
+            margin: 24px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 18px 24px;
+            background: #ffffff;
+            border: 1px solid #deddd7;
+            border-radius: 18px;
+        }
+        .proof-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12.5px;
+            color: #434c52;
+        }
+        .proof-item strong {
+            color: #111820;
+            font-size: 14px;
+        }
+
+        /* --- 2-Tier Portal Hub Styling --- */
+        .portal-hub-container {
+            margin: 28px 0 45px;
+        }
+        .portal-primary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .portal-hub-card {
+            background: #ffffff;
+            border: 1px solid #deddd7;
+            border-radius: 20px;
+            padding: 28px;
+            position: relative;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .portal-hub-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+            border-color: #c4ccb8;
+        }
+        .portal-card-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 14px;
+        }
+        .portal-card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: #050708;
+            color: var(--lime);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .portal-hub-card h3 {
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 18px;
+            color: #111820;
+            margin-bottom: 3px;
+        }
+        .portal-hub-card p {
+            font-size: 13px;
+            color: #626b70;
+            line-height: 1.55;
+            margin-bottom: 20px;
+            min-height: 40px;
+        }
+        .portal-card-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Secondary Agency / Nodal Strip */
+        .agency-deck-strip {
+            background: #fbfbf9;
+            border: 1px solid #e5e4de;
+            border-radius: 20px;
+            padding: 22px 24px;
+        }
+        .agency-deck-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .agency-deck-head span {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            color: #7b8285;
+            text-transform: uppercase;
+        }
+        .agency-badge-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+        .agency-badge-card {
+            background: #ffffff;
+            border: 1px solid #deddd7;
+            border-radius: 14px;
+            padding: 16px 18px;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: 0.2s ease;
+        }
+        .agency-badge-card:hover {
+            border-color: #111820;
+            background: #f7f6f1;
+            transform: translateY(-2px);
+        }
+        .agency-badge-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: #101619;
+            color: var(--lime);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .agency-badge-card strong {
+            display: block;
+            font-size: 13px;
+            color: #111820;
+        }
+        .agency-badge-card small {
+            display: block;
+            font-size: 11px;
+            color: #727b80;
+            margin-top: 1px;
+        }
+        .agency-badge-card .nav-arrow {
+            margin-left: auto;
+            color: #9da4a7;
+            transition: 0.2s;
+        }
+        .agency-badge-card:hover .nav-arrow {
+            color: #111820;
+            transform: translateX(2px);
+        }
+
+        .problem-section {
+            width: 100%;
+            margin: 40px auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        .problem-card-danger {
+            background: #111417;
+            color: #ffffff;
+            border-radius: 24px;
+            padding: 36px;
+            border: 1px solid rgba(255, 77, 77, 0.2);
+        }
+        .cost-calculator {
+            background: #ffffff;
+            border: 1px solid #deddd7;
+            border-radius: 24px;
+            padding: 36px;
+        }
+        .calc-slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #deddd7;
+            outline: none;
+            accent-color: var(--lime-dark);
+            margin: 10px 0 16px;
+        }
+        .how-it-works-grid {
+            width: 100%;
+            margin: 20px 0 40px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+        .step-card {
+            background: #ffffff;
+            border: 1px solid #deddd7;
+            border-radius: 20px;
+            padding: 24px;
+        }
+        .step-badge {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #050708;
+            color: var(--lime);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: "Space Grotesk", sans-serif;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 14px;
+        }
+        .faq-section {
+            width: 100%;
+            margin: 40px 0;
+        }
+        .faq-item {
+            background: #ffffff;
+            border: 1px solid #deddd7;
+            border-radius: 16px;
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+        .faq-question {
+            padding: 20px 24px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            font-size: 15px;
+        }
+        .faq-answer {
+            padding: 0 24px 20px;
+            color: #596268;
+            font-size: 13.5px;
+            line-height: 1.6;
+            display: none;
+        }
+        .faq-item.active .faq-answer { display: block; }
+        .cta-banner {
+            width: 100%;
+            margin: 40px auto 50px;
+            background: #050708;
+            color: #ffffff;
+            border-radius: 28px;
+            padding: 56px 40px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .footer-main {
+            background: #050708;
+            color: #9ca3a7;
+            padding: 48px 32px 24px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            margin-top: 50px;
+        }
+        .footer-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 32px;
+            margin-bottom: 40px;
+        }
+        .footer-col h4 {
+            color: #ffffff;
+            font-size: 13px;
+            font-family: "Space Grotesk", sans-serif;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+        }
+        .footer-col ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 12.5px;
+        }
+        .footer-col a { color: #9ca3a7; text-decoration: none; }
+        .footer-col a:hover { color: var(--lime); }
+        @media(max-width: 1000px) {
+            .portal-primary-grid { grid-template-columns: 1fr; }
+            .agency-badge-grid { grid-template-columns: 1fr; }
+            .problem-section { grid-template-columns: 1fr; }
+            .how-it-works-grid { grid-template-columns: repeat(2, 1fr); }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+            .social-proof-strip { flex-direction: column; align-items: flex-start; }
+        }
+        @media(max-width: 600px) {
+            .how-it-works-grid { grid-template-columns: 1fr; }
+            .footer-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient ambient-left"></div>
+    <div class="ambient ambient-right"></div>
+
+    <!-- NAVBAR (Driven dynamically by script.js) -->
+    <header class="navbar">
+        <a href="index.html" class="brand">
+            <div class="brand-shield"><i data-lucide="shield"></i></div>
+            <div class="brand-text">
+                <div class="brand-name">DURGAM<span></span></div>
+                <div class="brand-subtitle">National Cyber Fraud Protection<br>& Quick Recovery System</div>
+            </div>
+        </a>
+
+        <nav class="nav-links"></nav>
+        <div class="nav-right"></div>
+    </header>
+
+    <main class="page-container">
+
+        <!-- 1. HERO SECTION -->
+        <section class="hero" style="width:100%; margin:0;">
+            <div class="hero-grid"></div>
+
+            <div class="hero-content">
+                <div class="eyebrow">
+                    <span></span>
+                    INSTANT ONLINE FRAUD HELP
+                </div>
+
+                <h1>
+                    LOST MONEY TO SCAMS?<br>
+                    <span class="lime">FREEZE IT IN SECONDS.</span>
+                </h1>
+
+                <p class="hero-description">
+                    When you report a scam, DURGAM instantly stops the fraudster's bank account before they can withdraw cash from an ATM — helping you get your hard-earned money back safely.
+                </p>
+
+                <div class="hero-search-bar">
+                    <input type="text" id="hero-quick-utr" placeholder="Enter Transaction ID (UTR from SMS)..." value="482910482910" />
+                    <button onclick="handleQuickTrack()" class="primary-btn" style="height: 40px; padding: 0 16px; font-size: 12px;">
+                        <i data-lucide="zap"></i> Freeze Money Now
+                    </button>
+                </div>
+
+                <div class="hero-note">
+                    <span class="live-dot"></span>
+                    <span>Direct Bank Protection</span>
+                    <span class="separator"></span>
+                    <span>No Complicated Paperwork</span>
+                </div>
+            </div>
+
+            <!-- OVERVIEW METRIC CARDS -->
+            <div class="overview">
+                <div class="overview-title">
+                    <span></span>
+                    TODAY'S LIVE STATS
+                </div>
+
+                <div class="overview-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon"><i data-lucide="zap"></i></div>
+                        <span class="metric-label">Account Freeze Speed</span>
+                        <strong class="metric-number" id="telemetry-speed">Instant</strong>
+                        <span class="metric-change positive">⚡ Takes under 1 second</span>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-icon"><i data-lucide="shield-check"></i></div>
+                        <span class="metric-label">Saved Money Today</span>
+                        <strong class="metric-number" id="telemetry-volume">₹14.82 Cr</strong>
+                        <span class="metric-change positive">↑ Returned to victims</span>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-icon"><i data-lucide="landmark"></i></div>
+                        <span class="metric-label">Connected Banks</span>
+                        <strong class="metric-number" id="telemetry-banks">48 Banks</strong>
+                        <span class="metric-change">SBI, HDFC, ICICI & more</span>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-icon"><i data-lucide="lock-keyhole"></i></div>
+                        <span class="metric-label">System Status</span>
+                        <strong class="metric-number" id="telemetry-uptime">Active 24/7</strong>
+                        <span class="metric-change positive">Ready for help</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. SOCIAL PROOF -->
+        <section class="social-proof-strip">
+            <div class="proof-item">
+                <i data-lucide="check-circle-2" style="color:#5c8000; width:18px;"></i>
+                <span><strong>48 Top Indian Banks</strong> connected directly</span>
+            </div>
+            <div class="proof-item">
+                <i data-lucide="check-circle-2" style="color:#5c8000; width:18px;"></i>
+                <span><strong id="proof-volume">₹14.82 Crores Protected</strong> from scammers today</span>
+            </div>
+            <div class="proof-item">
+                <i data-lucide="check-circle-2" style="color:#5c8000; width:18px;"></i>
+                <span><strong>1-Click Police Alert</strong> sent to the nearest patrol car</span>
+            </div>
+        </section>
+
+        <!-- 3. CLEAN 2-TIER PORTAL ACCESS HUB -->
+        <section class="portal-hub-container">
+            <div class="eyebrow"><span></span>UNIFIED ACCESS HUB</div>
+            <h2 style="font-family:'Space Grotesk', sans-serif; font-size: 26px; margin-bottom: 6px;">Choose Your Access Gateway</h2>
+            <p style="color:#626b70; font-size: 13.5px; max-width: 640px; margin-bottom: 22px;">Instant fraud freeze for citizens and interconnected operational switches for institutions.</p>
+
+            <!-- Tier 1: Primary Public & Banking Pillars -->
+            <div class="portal-primary-grid">
+                <!-- Citizen Card -->
+                <div class="portal-hub-card">
+                    <div class="portal-card-header">
+                        <div class="portal-card-icon"><i data-lucide="user-round"></i></div>
+                        <div>
+                            <h3>Citizen Restitution Desk</h3>
+                            <span style="font-size: 12px; color: #5c8000; font-weight: 700;">● Public Recovery Service</span>
+                        </div>
+                    </div>
+                    <p>Report fraud within the golden hour, track recovery status, and instantly release false-positive merchant holds.</p>
+                    <div class="portal-card-actions">
+                        <a href="login.html?role=citizen" class="primary-btn" style="height:38px; padding:0 18px; font-size:12px;">Sign In</a>
+                        <a href="register.html?role=citizen" class="outline-btn" style="height:38px; padding:0 16px; font-size:12px;">Register</a>
+                    </div>
+                </div>
+
+                <!-- Bank Card -->
+                <div class="portal-hub-card">
+                    <div class="portal-card-header">
+                        <div class="portal-card-icon"><i data-lucide="landmark"></i></div>
+                        <div>
+                            <h3>Bank Nodal Switch</h3>
+                            <span style="font-size: 12px; color: #5c8000; font-weight: 700;">● Core Banking Network</span>
+                        </div>
+                    </div>
+                    <p>Execute ISO 20022 pre-settlement holds, upload statements, and query the zero-knowledge inter-bank mule registry.</p>
+                    <div class="portal-card-actions">
+                        <a href="login.html?role=bank" class="primary-btn" style="height:38px; padding:0 18px; font-size:12px;">Bank Login</a>
+                        <a href="register.html?role=bank" class="outline-btn" style="height:38px; padding:0 16px; font-size:12px;">Register</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tier 2: Unified Official Agency Deck -->
+            <div class="agency-deck-strip">
+                <div class="agency-deck-head">
+                    <span>Restricted Official Desks (Authorized Personnel Only)</span>
+                    <span style="color:#5c8000; font-size:11px; font-weight:700;">🔒 DPDP & MHA Protocol</span>
+                </div>
+                <div class="agency-badge-grid">
+                    <a href="login.html?role=i4c" class="agency-badge-card">
+                        <div class="agency-badge-icon"><i data-lucide="shield-half"></i></div>
+                        <div>
+                            <strong>I4C Command Center</strong>
+                            <small>Multi-hop money trail intelligence</small>
+                        </div>
+                        <i data-lucide="arrow-right" class="nav-arrow" style="width:16px; height:16px;"></i>
+                    </a>
+
+                    <a href="login.html?role=police" class="agency-badge-card">
+                        <div class="agency-badge-icon"><i data-lucide="shield-alert"></i></div>
+                        <div>
+                            <strong>Police War Room</strong>
+                            <small>ATM cashout radar & CAD dispatch</small>
+                        </div>
+                        <i data-lucide="arrow-right" class="nav-arrow" style="width:16px; height:16px;"></i>
+                    </a>
+
+                    <a href="login.html?role=judiciary" class="agency-badge-card">
+                        <div class="agency-badge-icon"><i data-lucide="scale"></i></div>
+                        <div>
+                            <strong>Cyber Legal Vault</strong>
+                            <small>Sec 63 BSA evidence dossiers</small>
+                        </div>
+                        <i data-lucide="arrow-right" class="nav-arrow" style="width:16px; height:16px;"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. PROBLEM & RECOVERY ESTIMATOR -->
+        <section class="problem-section">
+            <div class="problem-card-danger">
+                <div class="eyebrow"><span style="background:#ff4d4d;"></span>WHY SPEED MATTERS</div>
+                <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 28px; line-height: 1.1; margin-bottom: 16px;">
+                    Scammers Withdraw Cash Within 30 Minutes
+                </h2>
+                <p style="font-size: 14px; color: #9da4a7; line-height: 1.7; margin-bottom: 20px;">
+                    Normal bank complaints take days to resolve. But scammers don't wait — they quickly transfer money across fake accounts and withdraw cash from ATMs. <strong>Reporting immediately stops their account before the cash is gone.</strong>
+                </p>
+                <div style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); padding: 16px; border-radius: 14px; font-size: 13px;">
+                    <div style="color: #ff9b31; font-weight: 700; margin-bottom: 4px;">⏱️ Report in the First 30 Minutes</div>
+                    If you report within 30 minutes, your chance of getting your money back is <strong>98%</strong>. After an hour, recovery becomes much harder.
+                </div>
+            </div>
+
+            <div class="cost-calculator" id="estimator">
+                <div class="eyebrow"><span></span>RECOVERY ESTIMATOR</div>
+                <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: 22px; margin-bottom: 8px;">Check Your Refund Chance</h3>
+                <p style="font-size: 13px; color: #626b70; margin-bottom: 20px;">Select your stolen amount and how much time has passed.</p>
+
+                <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700;">
+                    <span>Amount Transferred:</span>
+                    <strong id="disp-amt" style="color: #111820;">₹2,50,000</strong>
+                </div>
+                <input type="range" min="10000" max="1000000" step="10000" value="250000" class="calc-slider" id="calc-amt" oninput="updateRecoveryEstimate()" />
+
+                <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700;">
+                    <span>Time Since Payment:</span>
+                    <strong id="disp-time" style="color: #111820;">10 Mins</strong>
+                </div>
+                <input type="range" min="1" max="120" step="1" value="10" class="calc-slider" id="calc-time" oninput="updateRecoveryEstimate()" />
+
+                <div style="background: #f7f6f1; border: 1px solid #deddd7; border-radius: 14px; padding: 16px; display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                    <div>
+                        <span style="font-size: 11px; color: #626b70; display: block;">Likely Amount You Can Save:</span>
+                        <strong id="calc-result-amt" style="font-family: 'Space Grotesk', sans-serif; font-size: 22px; color: #5c8000;">₹2,42,500</strong>
+                    </div>
+                    <span id="calc-result-badge" class="badge-lime">97.0% Chance</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. 4 EASY STEPS -->
+        <section id="how-it-works" style="margin-top:20px; margin-bottom:20px;">
+            <div class="eyebrow"><span></span>SIMPLE 4-STEP PROCESS</div>
+            <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 28px; margin-bottom: 24px;">How We Protect & Recover Your Money</h2>
+
+            <div class="how-it-works-grid">
+                <div class="step-card">
+                    <div class="step-badge">1</div>
+                    <h3 style="font-size: 15px; margin-bottom: 6px;">1. Enter Details</h3>
+                    <p style="font-size: 12.5px; color: #596268; line-height: 1.5;">Type your phone number and the transaction ID from your bank SMS.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-badge">2</div>
+                    <h3 style="font-size: 15px; margin-bottom: 6px;">2. Bank Freezes Money</h3>
+                    <p style="font-size: 12.5px; color: #596268; line-height: 1.5;">The receiver's bank immediately locks the transferred amount.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-badge">3</div>
+                    <h3 style="font-size: 15px; margin-bottom: 6px;">3. Chain Tracked</h3>
+                    <p style="font-size: 12.5px; color: #596268; line-height: 1.5;">Automated BFS/DFS algorithms follow multi-hop mule accounts.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-badge">4</div>
+                    <h3 style="font-size: 15px; margin-bottom: 6px;">4. Money Refunded</h3>
+                    <p style="font-size: 12.5px; color: #596268; line-height: 1.5;">The locked money is reversed straight back into your bank account.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. FAQS -->
+        <section id="faqs" class="faq-section">
+            <div class="eyebrow"><span></span>FREQUENT QUESTIONS</div>
+            <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 28px; margin-bottom: 24px;">Common Questions Answered Simply</h2>
+
+            <div class="faq-item active">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    How quickly is the scammer's account frozen?
+                    <i data-lucide="chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Instantly. In less than 1 second, a security lock is placed on the recipient's bank account across 48 major Indian banks.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    What information do I need to report?
+                    <i data-lucide="chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Just three things: your mobile number, the stolen amount, and the 12-digit Transaction ID (UTR or UPI reference) from your payment SMS.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    What if an innocent person's account gets locked?
+                    <i data-lucide="chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Genuine shopkeepers and users can unlock their account in seconds simply by verifying their identity with an OTP.
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. CALL TO ACTION -->
+        <section class="cta-banner">
+            <div class="eyebrow" style="justify-content: center;"><span style="background:var(--lime);"></span>ACT NOW BEFORE IT'S TOO LATE</div>
+            <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: clamp(32px, 3.5vw, 48px); margin: 12px 0 16px;">
+                Don't Let Scammers Take Your Money
+            </h2>
+            <p style="font-size: 15px; color: #9da4a7; max-width: 600px; margin: 0 auto 28px; line-height: 1.6;">
+                Every second counts. Report your transaction details now so we can stop the funds before cash is withdrawn.
+            </p>
+            <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
+                <a href="citizen.html" class="primary-btn" style="background:var(--lime); color:#050708; border-color:var(--lime);">
+                    <i data-lucide="shield"></i> Report Fraud & Freeze Money
+                </a>
+                <a href="tel:1930" class="outline-btn" style="color:#ffffff; border-color:rgba(255,255,255,0.3);">
+                    <i data-lucide="phone-call"></i> Call 1930 Helpline
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer-main">
+        <div class="footer-grid">
+            <div>
+                <div class="brand" style="margin-bottom: 12px;">
+                    <div class="brand-shield" style="width:36px; height:40px;"><i data-lucide="shield" style="width:32px; height:32px;"></i></div>
+                    <div class="brand-text">
+                        <div class="brand-name" style="font-size: 20px;">DURGAM<span></span></div>
+                    </div>
+                </div>
+                <p style="font-size: 12.5px; line-height: 1.6; max-width: 320px; color: #7b8285;">
+                    National Cyber Financial Defense Network. Protecting citizens and recovering stolen money across 48 commercial banks in India.
+                </p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Portals</h4>
+                <ul>
+                    <li><a href="citizen.html">Citizen Help Desk</a></li>
+                    <li><a href="bank.html">Bank Nodal Desk</a></li>
+                    <li><a href="police.html">Police War Room</a></li>
+                    <li><a href="judiciary.html">Cyber Court Vault</a></li>
+                    <li><a href="command.html">I4C Command Center</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Quick Help</h4>
+                <ul>
+                    <li><a href="citizen.html">Report Cyber Fraud</a></li>
+                    <li><a href="citizen.html">Track Recovery Status</a></li>
+                    <li><a href="citizen.html">Unlock Account</a></li>
+                    <li><a href="tel:1930">Call 1930 Helpline</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Officer Logins</h4>
+                <ul>
+                    <li><a href="login.html?role=citizen">Citizen Login</a></li>
+                    <li><a href="login.html?role=bank">Bank Officer Sign-In</a></li>
+                    <li><a href="login.html?role=police">Police Officer Sign-In</a></li>
+                    <li><a href="login.html?role=judiciary">Court Bench Sign-In</a></li>
+                    <li><a href="login.html?role=i4c">I4C Command Sign-In</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div style="max-width: 1400px; margin: 0 auto; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.08); font-size: 11.5px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+            <div>© 2026 Government of India • All Rights Reserved.</div>
+            <div>DURGAM National Anti-Fraud System</div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        lucide.createIcons();
+
+        function handleQuickTrack() {
+            const val = document.getElementById("hero-quick-utr").value.trim();
+            if(!val) {
+                alert("Please enter a valid Transaction ID.");
+                return;
+            }
+            window.location.href = "citizen.html";
+        }
+
+        function updateRecoveryEstimate() {
+            const amt = parseFloat(document.getElementById("calc-amt").value);
+            const time = parseFloat(document.getElementById("calc-time").value);
+
+            document.getElementById("disp-amt").innerText = "₹" + amt.toLocaleString("en-IN");
+            document.getElementById("disp-time").innerText = time + " Mins";
+
+            const decay = Math.max(0.15, 0.98 * Math.exp(-time / 35.0));
+            const recovered = Math.round(amt * decay);
+            const pct = (decay * 100).toFixed(1);
+
+            document.getElementById("calc-result-amt").innerText = "₹" + recovered.toLocaleString("en-IN");
+            const badge = document.getElementById("calc-result-badge");
+            badge.innerText = pct + "% Chance";
+            badge.className = decay < 0.4 ? "badge-danger" : "badge-lime";
+        }
+
+        function toggleFaq(el) {
+            el.parentElement.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>

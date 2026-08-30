@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DURGAM — I4C National Command Center</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="ambient ambient-left"></div>
+    <div class="ambient ambient-right"></div>
+
+    <!-- NAVBAR (Auto-renders Home + Command Tasks) -->
+    <header class="navbar">
+        <a href="index.html" class="brand">
+            <div class="brand-shield"><i data-lucide="shield-half"></i></div>
+            <div class="brand-text">
+                <div class="brand-name">DURGAM<span></span></div>
+                <div class="brand-subtitle">I4C National Cybercrime Command Center</div>
+            </div>
+        </a>
+
+        <nav class="nav-links"></nav>
+        <div class="nav-right"></div>
+    </header>
+
+    <main class="page-container" style="margin-top: 25px;">
+        <!-- DASHBOARD TAB -->
+        <div id="cmdTab-dashboard">
+            <div class="eyebrow"><span></span>REAL-TIME NATIONAL OVERVIEW</div>
+            <h2 style="font-family:'Space Grotesk', sans-serif; font-size:26px; margin-bottom: 20px;">I4C Command Dashboard</h2>
+
+            <div class="stat-grid">
+                <div class="stat-card-lite"><div class="si" style="background:#eff6ff;">📋</div><div class="sv" id="s-total">—</div><div class="sl">Total Complaints</div></div>
+                <div class="stat-card-lite"><div class="si" style="background:#fff7ed;">⏳</div><div class="sv" id="s-pending">—</div><div class="sl">Pending</div></div>
+                <div class="stat-card-lite"><div class="si" style="background:#f5f3ff;">🔗</div><div class="sv" id="s-chain">—</div><div class="sl">Chains Detected</div></div>
+                <div class="stat-card-lite"><div class="si" style="background:#f0fdf4;">✅</div><div class="sv" id="s-resolved">—</div><div class="sl">Resolved</div></div>
+                <div class="stat-card-lite"><div class="si" style="background:#fef2f2;">💰</div><div class="sv" id="s-amount">—</div><div class="sl">Total Amount Involved</div></div>
+                <div class="stat-card-lite"><div class="si" style="background:#ecfeff;">🏦</div><div class="sv" id="s-banks">—</div><div class="sl">Banks Registered</div></div>
+                <div class="stat-card-lite"><div class="si" style="background:#fff7ed;">🔔</div><div class="sv" id="s-notifs">—</div><div class="sl">Notifications Sent</div></div>
+                <div class="stat-card-lite"><div class="si" style="background:#f0fdf4;">👥</div><div class="sv" id="s-users">—</div><div class="sl">Registered Users</div></div>
+            </div>
+
+            <div class="chart-grid-2">
+                <div class="ui-card" style="padding:22px;">
+                    <div class="eyebrow" style="margin-bottom:8px;"><span></span>TREND</div>
+                    <h4 style="font-size:14px; margin-bottom:10px;">Complaints Over Last 14 Days</h4>
+                    <canvas id="chartTrend" height="180"></canvas>
+                </div>
+                <div class="ui-card" style="padding:22px;">
+                    <div class="eyebrow" style="margin-bottom:8px;"><span></span>BREAKDOWN</div>
+                    <h4 style="font-size:14px; margin-bottom:10px;">Fraud Type Breakdown</h4>
+                    <canvas id="chartFraudPie" height="180"></canvas>
+                </div>
+            </div>
+
+            <div class="ui-card" style="padding:22px;">
+                <div class="eyebrow" style="margin-bottom:8px;"><span></span>IMPACT</div>
+                <h4 style="font-size:14px; margin-bottom:10px;">Amount by Fraud Type (₹)</h4>
+                <canvas id="chartFraudAmt" height="140"></canvas>
+            </div>
+        </div>
+
+        <!-- ALL COMPLAINTS TAB -->
+        <div id="cmdTab-complaints" style="display:none;">
+            <div class="eyebrow"><span></span>CASE MANAGEMENT</div>
+            <h2 style="font-family:'Space Grotesk', sans-serif; font-size:24px; margin-bottom: 16px;">All Complaints</h2>
+            <div class="ui-card">
+                <div style="overflow-x:auto;">
+                    <table class="custom-table">
+                        <thead><tr><th>Complaint No</th><th>User</th><th>Amount</th><th>Fraud Type</th><th>Mule Account</th><th>Status</th><th>Filed</th><th>Action</th></tr></thead>
+                        <tbody id="cmdComplaintsBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHAINS TAB -->
+        <div id="cmdTab-chains" style="display:none;">
+            <div class="eyebrow"><span></span>MULE NETWORK INTELLIGENCE</div>
+            <h2 style="font-family:'Space Grotesk', sans-serif; font-size:24px; margin-bottom: 16px;">Transfer Chains</h2>
+            <div id="cmdChainsList"></div>
+        </div>
+
+        <!-- BANK DATA TAB -->
+        <div id="cmdTab-bankdata" style="display:none;">
+            <div class="eyebrow"><span></span>SUBMITTED RECORDS</div>
+            <h2 style="font-family:'Space Grotesk', sans-serif; font-size:24px; margin-bottom: 16px;">Bank-Submitted Account Data</h2>
+            <div class="ui-card">
+                <div style="overflow-x:auto;">
+                    <table class="custom-table">
+                        <thead><tr><th>Account No</th><th>Holder Name</th><th>Mobile</th><th>Govt ID</th><th>PAN</th><th>Bank</th><th>Submitted</th></tr></thead>
+                        <tbody id="cmdBankDataBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ANALYTICS TAB -->
+        <div id="cmdTab-analytics" style="display:none;">
+            <div class="eyebrow"><span></span>INTELLIGENCE</div>
+            <h2 style="font-family:'Space Grotesk', sans-serif; font-size:24px; margin-bottom: 16px;">Analytics & Case Status</h2>
+
+            <div class="chart-grid-2">
+                <div class="ui-card" style="padding:22px;">
+                    <h4 style="font-size:14px; margin-bottom:10px;">Complaint Volume Trend</h4>
+                    <canvas id="chartAnaTrend" height="180"></canvas>
+                </div>
+                <div class="ui-card" style="padding:22px;">
+                    <h4 style="font-size:14px; margin-bottom:10px;">Financial Impact by Fraud Type</h4>
+                    <canvas id="chartAnaAmt" height="180"></canvas>
+                </div>
+            </div>
+
+            <div class="ui-card" style="padding:22px;">
+                <h4 style="font-size:14px; margin-bottom:14px;">Case Status Overview</h4>
+                <div id="cmdStatusBars" style="display:flex; gap:22px; flex-wrap:wrap;"></div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script src="app.js"></script>
+    <script>
+        lucide.createIcons();
+
+        // Enforce active session
+        if (!getLoggedInUser()) {
+            localStorage.setItem('durgam_user', JSON.stringify({ id: 'i4c.ops@gov.in', role: 'command', name: 'Director (Cybercrime Ops)' }));
+            renderGlobalNavbar();
+        }
+
+        const FRAUD_TYPES = ['UPI Fraud', 'ATM Fraud', 'Online Banking Fraud', 'Credit Card Fraud', 'Investment Scam', 'Job Scam'];
+        const COLORS = ['#8dcc00', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
+
+        function seededMock() {
+            const complaints = [];
+            for (let i = 0; i < 18; i++) {
+                const amt = Math.round(10000 + Math.random() * 490000);
+                complaints.push({
+                    complaint_no: `NCRP-1930-${48200000 + i}`,
+                    user_name: ['Rajiv Malhotra','Anita Sharma','Deepak Verma','Kavita Rao','Suresh Iyer'][i % 5],
+                    user_mobile: `98${(11000000 + i * 137).toString().slice(0,8)}`,
+                    amount: amt,
+                    fraud_type: FRAUD_TYPES[i % FRAUD_TYPES.length],
+                    to_account: `9021481${(10000 + i).toString()}`,
+                    status: ['pending','under_investigation','chain_detected','resolved'][i % 4],
+                    created_at: new Date(Date.now() - i * 86400000 / 2).toISOString()
+                });
+            }
+            return complaints;
+        }
+
+        let cmdComplaints = seededMock();
+
+        const STATUS_LABEL = {
+            pending: ['badge-pending','⏳ Pending'], under_investigation: ['badge-investigation','🔍 Investigating'],
+            chain_detected: ['badge-chain','🔗 Chain Detected'], resolved: ['badge-resolved','✅ Resolved'], closed: ['badge-resolved','🔒 Closed']
+        };
+
+        function renderComplaints() {
+            const tbody = document.getElementById('cmdComplaintsBody');
+            tbody.innerHTML = cmdComplaints.map(c => {
+                const [cls, lbl] = STATUS_LABEL[c.status] || ['badge-pending', c.status];
+                return `<tr>
+                    <td style="font-family:monospace; color:#5c8000;">${c.complaint_no}</td>
+                    <td><strong>${c.user_name}</strong><br><span style="font-size:11px; color:#7b8285;">${c.user_mobile}</span></td>
+                    <td style="color:#ff3d3d; font-weight:700;">₹${c.amount.toLocaleString('en-IN')}</td>
+                    <td><span class="badge-danger">${c.fraud_type}</span></td>
+                    <td style="font-family:monospace; font-size:12px;">${c.to_account}</td>
+                    <td><span class="${cls}">${lbl}</span></td>
+                    <td style="font-size:12px;">${new Date(c.created_at).toLocaleDateString('en-IN')}</td>
+                    <td>
+                        <select onchange="changeCmdStatus('${c.complaint_no}', this.value)" style="padding:4px 8px; font-size:12px; border-radius:8px; border:1px solid #deddd7;">
+                            <option value="pending" ${c.status==='pending'?'selected':''}>Pending</option>
+                            <option value="under_investigation" ${c.status==='under_investigation'?'selected':''}>Investigating</option>
+                            <option value="chain_detected" ${c.status==='chain_detected'?'selected':''}>Chain Detected</option>
+                            <option value="resolved" ${c.status==='resolved'?'selected':''}>Resolved</option>
+                            <option value="closed" ${c.status==='closed'?'selected':''}>Closed</option>
+                        </select>
+                    </td>
+                </tr>`;
+            }).join('');
+        }
+
+        function changeCmdStatus(no, status) {
+            const c = cmdComplaints.find(x => x.complaint_no === no);
+            if (c) c.status = status;
+            renderComplaints();
+            renderStats();
+        }
+
+        function renderStats() {
+            const total = cmdComplaints.length;
+            const pending = cmdComplaints.filter(c => c.status === 'pending').length;
+            const chain = cmdComplaints.filter(c => c.status === 'chain_detected').length;
+            const resolved = cmdComplaints.filter(c => c.status === 'resolved').length;
+            const amount = cmdComplaints.reduce((a, c) => a + c.amount, 0);
+            document.getElementById('s-total').innerText = total;
+            document.getElementById('s-pending').innerText = pending;
+            document.getElementById('s-chain').innerText = chain;
+            document.getElementById('s-resolved').innerText = resolved;
+            document.getElementById('s-amount').innerText = `₹${amount.toLocaleString('en-IN')}`;
+            document.getElementById('s-banks').innerText = '48';
+            document.getElementById('s-notifs').innerText = '312';
+            document.getElementById('s-users').innerText = '12,480';
+
+            renderStatusBars(total, pending, chain, resolved);
+        }
+
+        function renderStatusBars(total, pending, chain, resolved) {
+            const investigating = cmdComplaints.filter(c => c.status === 'under_investigation').length;
+            const items = [
+                { label: 'Pending', value: pending, color: '#f59e0b' },
+                { label: 'Under Investigation', value: investigating, color: '#3b82f6' },
+                { label: 'Chain Detected', value: chain, color: '#8b5cf6' },
+                { label: 'Resolved', value: resolved, color: '#10b981' }
+            ];
+            document.getElementById('cmdStatusBars').innerHTML = items.map(it => {
+                const pct = total ? Math.round((it.value / total) * 100) : 0;
+                return `<div style="flex:1 1 180px;">
+                    <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px;">
+                        <span style="color:#626b70;">${it.label}</span><span style="font-weight:700; color:${it.color};">${it.value}</span>
+                    </div>
+                    <div class="mini-progress"><div style="width:${pct}%; background:${it.color};"></div></div>
+                    <div style="font-size:11px; color:#7b8285; margin-top:4px;">${pct}% of total</div>
+                </div>`;
+            }).join('');
+        }
+
+        function buildCharts() {
+            const days = Array.from({ length: 14 }, (_, i) => {
+                const d = new Date(Date.now() - (13 - i) * 86400000);
+                return `${d.getDate()}/${d.getMonth() + 1}`;
+            });
+            const dailyCounts = days.map(() => Math.floor(2 + Math.random() * 10));
+            const fraudCounts = FRAUD_TYPES.map(ft => cmdComplaints.filter(c => c.fraud_type === ft).length);
+            const fraudAmts = FRAUD_TYPES.map(ft => cmdComplaints.filter(c => c.fraud_type === ft).reduce((a, c) => a + c.amount, 0));
+
+            new Chart(document.getElementById('chartTrend').getContext('2d'), {
+                type: 'line',
+                data: { labels: days, datasets: [{ label: 'Complaints', data: dailyCounts, borderColor: '#8dcc00', backgroundColor: 'rgba(141,204,0,.15)', fill: true, tension: 0.35 }] },
+                options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+            });
+
+            new Chart(document.getElementById('chartFraudPie').getContext('2d'), {
+                type: 'pie',
+                data: { labels: FRAUD_TYPES, datasets: [{ data: fraudCounts, backgroundColor: COLORS }] },
+                options: { plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } } } }
+            });
+
+            new Chart(document.getElementById('chartFraudAmt').getContext('2d'), {
+                type: 'bar',
+                data: { labels: FRAUD_TYPES, datasets: [{ label: 'Amount (₹)', data: fraudAmts, backgroundColor: COLORS }] },
+                options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+            });
+
+            new Chart(document.getElementById('chartAnaTrend').getContext('2d'), {
+                type: 'bar',
+                data: { labels: days, datasets: [{ label: 'Complaints', data: dailyCounts, backgroundColor: '#3b82f6' }] },
+                options: { plugins: { legend: { display: false } } }
+            });
+
+            new Chart(document.getElementById('chartAnaAmt').getContext('2d'), {
+                type: 'bar',
+                data: { labels: FRAUD_TYPES, datasets: [{ label: 'Amount', data: fraudAmts, backgroundColor: COLORS }] },
+                options: { indexAxis: 'y', plugins: { legend: { display: false } } }
+            });
+        }
+
+        function renderChains() {
+            const chains = [
+                { root_complaint_no: 'NCRP-1930-48291048', root_mule_account: '902148102941', status: 'active',
+                  nodes: [{ acc: '902148102941', ifsc: 'SBIN0001', amt: 250000 }, { acc: '774102981234', ifsc: 'HDFC0002', amt: 210000 }, { acc: '551029841923', ifsc: 'ICIC0009', amt: 180000 }] },
+                { root_complaint_no: 'NCRP-1930-48291102', root_mule_account: '661029481233', status: 'resolved',
+                  nodes: [{ acc: '661029481233', ifsc: 'PUNB0002', amt: 95000 }, { acc: '229481029344', ifsc: 'AXIS0011', amt: 88000 }] }
+            ];
+            document.getElementById('cmdChainsList').innerHTML = chains.map(chain => `
+                <div class="ui-card" style="margin-bottom:16px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom: 4px;">
+                        <div>
+                            <span style="font-family:monospace; font-weight:700; color:#111820;">${chain.root_complaint_no}</span>
+                            <div style="font-size:12px; color:#626b70; margin-top:2px;">Root: <span style="font-family:monospace;">${chain.root_mule_account}</span> · Hops: ${chain.nodes.length}</div>
+                        </div>
+                        <span class="${chain.status === 'active' ? 'badge-investigation' : 'badge-resolved'}">${chain.status}</span>
+                    </div>
+                    <div class="chain-flow">
+                        ${chain.nodes.map((n, i) => `
+                            <div class="chain-node-box ${i === 0 ? 'root' : ''}">
+                                <div class="cn-letter">${String.fromCharCode(65 + i)}</div>
+                                <div class="cn-acc">${n.acc}</div>
+                                <div class="cn-meta">IFSC: ${n.ifsc} · Hop ${i}</div>
+                                <div class="cn-amt">₹${n.amt.toLocaleString('en-IN')}</div>
+                            </div>
+                            ${i < chain.nodes.length - 1 ? '<span class="chain-arrow">→</span>' : ''}
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderBankData() {
+            const rows = [
+                { acc: '902148102941', name: 'Ramesh Kumar', mobile: '9811029481', id_no: 'ID-4821-DEL', pan: 'ABCDE1234F', bank: 'SBI' },
+                { acc: '774102981234', name: 'Suresh Iyer', mobile: '9845102981', id_no: 'ID-9012-MUM', pan: 'PQRSX9988K', bank: 'HDFC' },
+                { acc: '551029841923', name: 'Vinod Patil', mobile: '9922019841', id_no: '—', pan: '—', bank: 'ICICI' }
+            ];
+            document.getElementById('cmdBankDataBody').innerHTML = rows.map(r => `
+                <tr>
+                    <td style="font-family:monospace; font-size:12px;">${r.acc}</td>
+                    <td style="font-weight:600;">${r.name}</td>
+                    <td>${r.mobile}</td>
+                    <td style="font-family:monospace; font-size:12px;">${r.id_no}</td>
+                    <td style="font-family:monospace; font-size:12px;">${r.pan}</td>
+                    <td><span class="badge-submitted">${r.bank}</span></td>
+                    <td style="font-size:12px;">${new Date().toLocaleDateString('en-IN')}</td>
+                </tr>`).join('');
+        }
+
+        function showCmdTab(tab) {
+            ['dashboard','complaints','chains','bankdata','analytics'].forEach(t => {
+                const el = document.getElementById(`cmdTab-${t}`);
+                if (el) el.style.display = t === tab ? 'block' : 'none';
+            });
+            
+            // Sync active state directly to navbar
+            document.querySelectorAll('.nav-task-item').forEach(link => link.classList.remove('active'));
+            const activeNavEl = document.getElementById(`navTab_${tab}`);
+            if (activeNavEl) activeNavEl.classList.add('active');
+        }
+
+        renderComplaints();
+        renderStats();
+        renderChains();
+        renderBankData();
+        window.addEventListener('load', buildCharts);
+
+        // Check query parameter (?tab=complaints) on initial load
+        const urlParams = new URLSearchParams(window.location.search);
+        showCmdTab(urlParams.get('tab') || 'dashboard');
+    </script>
+</body>
+</html>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DURGAM — Police Tactical Cyber Command & CAD Dispatch</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        .grid-police {
+            display: grid;
+            grid-template-columns: 60% 40%;
+            gap: 24px;
+        }
+        #police-map {
+            height: 440px;
+            width: 100%;
+            border-radius: 16px;
+            border: 1.5px solid #deddd7;
+            margin-top: 14px;
+        }
+        .cad-unit-card {
+            background: #ffffff;
+            border: 1px solid #deddd7;
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        @media(max-width: 1050px) {
+            .grid-police { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient ambient-left"></div>
+    <div class="ambient ambient-right"></div>
+
+    <!-- NAVBAR (Auto-renders Home + Police Features) -->
+    <header class="navbar">
+        <a href="index.html" class="brand">
+            <div class="brand-shield"><i data-lucide="shield-alert"></i></div>
+            <div class="brand-text">
+                <div class="brand-name">DURGAM<span></span></div>
+                <div class="brand-subtitle">Police Tactical Cyber Command & CAD Dispatch</div>
+            </div>
+        </a>
+
+        <nav class="nav-links"></nav>
+        <div class="nav-right"></div>
+    </header>
+
+    <main class="page-container grid-police">
+        
+        <!-- LEFT: SPATIOTEMPORAL ATM MAP RADAR -->
+        <div class="ui-card" id="radarSection">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                <div>
+                    <div class="eyebrow"><span></span>SPATIOTEMPORAL RADAR</div>
+                    <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 24px;">AI-Forecasted Cashout Hotspots</h2>
+                </div>
+                <span class="badge-lime">● Live PostGIS Grid Active</span>
+            </div>
+            <p style="font-size: 13px; color: #626b70; margin-top: 4px;">
+                Shows top probability ATM kiosks calculated via Spatiotemporal Gaussian KDE within 15-45 minute withdrawal windows.
+            </p>
+
+            <div id="police-map"></div>
+        </div>
+
+        <!-- RIGHT: DISPATCH DOCKET & PCR FLEET -->
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            
+            <div class="ui-card" style="background: #0c1215; color: #ffffff; border-color: rgba(255,255,255,0.1);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <span style="color: var(--lime); font-size: 11px; font-weight: 700;">🚨 GOLDEN-HOUR ACTIVE INTERCEPT</span>
+                    <span style="font-size: 11px; color: #9da4a7;">Lead Time: 22 Mins</span>
+                </div>
+                <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: 22px; margin-bottom: 6px;">SBI ATM, Sector 29 Market</h3>
+                <p style="font-size: 13px; color: #9da4a7; line-height: 1.6; margin-bottom: 16px;">
+                    Target Mule: <code>MULE_90214810</code> • Quarantined Amount: ₹2,50,000 • Confidence: <strong>94.2%</strong>
+                </p>
+                
+                <div style="display: flex; gap: 10px;">
+                    <button onclick="triggerPatrolDispatch('ATM_SBI_101')" class="primary-btn" style="flex: 1; justify-content: center; background: var(--lime); color: #050708; border-color: var(--lime);">
+                        <i data-lucide="send"></i> Dispatch Falcon 1
+                    </button>
+                    <a href="https://maps.google.com" target="_blank" class="outline-btn" style="color: #ffffff; border-color: rgba(255,255,255,0.3);">
+                        <i data-lucide="navigation"></i> Nav
+                    </a>
+                </div>
+            </div>
+
+            <!-- Field Patrol Fleet Status -->
+            <div class="ui-card">
+                <div class="eyebrow"><span></span>FIELD UNITS</div>
+                <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: 18px; margin-bottom: 14px;">Assigned Sector PCR Vans</h3>
+
+                <div class="cad-unit-card">
+                    <div>
+                        <strong style="font-size: 14px; display: block;">PCR Falcon 1 (HR-26-014)</strong>
+                        <span style="font-size: 12px; color: #626b70;">ASI Virender • Distance: 1.4 km (4 mins)</span>
+                    </div>
+                    <span class="badge-lime" id="falcon-status">READY</span>
+                </div>
+
+                <div class="cad-unit-card">
+                    <div>
+                        <strong style="font-size: 14px; display: block;">PCR Eagle 9 (HR-28-092)</strong>
+                        <span style="font-size: 12px; color: #626b70;">SI Rajesh Hooda • Taoru Corridor</span>
+                    </div>
+                    <span class="badge-lime">STANDBY</span>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        lucide.createIcons();
+
+        // Enforce active police session
+        if (!getLoggedInUser()) {
+            localStorage.setItem('durgam_user', JSON.stringify({ id: 'pcr.falcon1@police.gov.in', role: 'police', name: 'SI Rajesh Hooda' }));
+            renderGlobalNavbar();
+        }
+
+        const map = L.map('police-map').setView([28.4595, 77.0266], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        const redIcon = L.icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34]
+        });
+
+        async function loadPoliceHotspots() {
+            try {
+                const res = await fetch('/api/v1/police/hotspots');
+                const data = await res.json();
+                if (data.hotspots) {
+                    data.hotspots.forEach(atm => {
+                        L.marker([atm.latitude, atm.longitude], { icon: redIcon })
+                            .addTo(map)
+                            .bindPopup(`
+                                <div style="font-family:'DM Sans', sans-serif;">
+                                    <strong>${atm.bank_name}</strong><br>
+                                    <span style="font-size:11px; color:#555;">${atm.address}</span><br>
+                                    <strong style="color:#d9534f;">Risk Score: ${(atm.base_kde_density * 100).toFixed(0)}%</strong><br>
+                                    <button onclick="triggerPatrolDispatch('${atm.atm_id}')" style="margin-top:6px; background:#050708; color:#b7ff00; border:none; padding:4px 8px; border-radius:4px; font-size:10px; cursor:pointer;">Dispatch Unit</button>
+                                </div>
+                            `);
+                    });
+                }
+            } catch (e) {
+                L.marker([28.4595, 77.0266], { icon: redIcon }).addTo(map).bindPopup("<b>Target: SBI Sector 29</b><br>Risk: 94.2%").openPopup();
+                L.marker([28.2568, 76.9534], { icon: redIcon }).addTo(map).bindPopup("<b>Target: PNB Taoru Market</b><br>Risk: 89.4%");
+            }
+        }
+
+        loadPoliceHotspots();
+
+        async function triggerPatrolDispatch(atmId) {
+            try {
+                const res = await fetch('/api/v1/police/dispatch', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        complaint_id: "NCRP-1930-48291048",
+                        atm_id: atmId,
+                        unit_id: "FALCON_1"
+                    })
+                });
+                const data = await res.json();
+                alert(`🚨 CAD DISPATCH CONFIRMED:\n\n• Unit: PCR Falcon 1 (HR-26-014)\n• Target: ${atmId}\n• ETA: ${data.eta_minutes} Minutes\n• Route: Turn-by-turn navigation pushed to officer dashboard.`);
+                document.getElementById('falcon-status').innerText = "EN-ROUTE (4m)";
+                document.getElementById('falcon-status').className = "badge-danger";
+            } catch (err) {
+                alert("🚨 Dispatch Alert Sent: PCR Falcon 1 en-route with GPS navigation.");
+                document.getElementById('falcon-status').innerText = "EN-ROUTE (4m)";
+                document.getElementById('falcon-status').className = "badge-danger";
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DURGAM — Create Your Account</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="ambient ambient-left"></div>
+    <div class="ambient ambient-right"></div>
+
+    <header class="navbar">
+        <a href="index.html" class="brand">
+            <div class="brand-shield"><i data-lucide="shield"></i></div>
+            <div class="brand-text">
+                <div class="brand-name">DURGAM<span></span></div>
+                <div class="brand-subtitle">National Cyber Fraud Protection System</div>
+            </div>
+        </a>
+
+        <nav class="nav-links"></nav>
+        <div class="nav-right">
+            <a href="login.html" class="portal-btn"><i data-lucide="user-round"></i> Sign In</a>
+        </div>
+    </header>
+
+    <main class="page-container">
+        <div class="auth-shell">
+            <div class="eyebrow" style="justify-content:center;"><span></span>NEW ACCOUNT REGISTRATION</div>
+            <h2 id="regTitle" style="font-family:'Space Grotesk', sans-serif; font-size:24px; text-align:center; margin-bottom: 6px;">Create Citizen Account</h2>
+            <p id="regSubtitle" style="font-size:12.5px; color:#626b70; text-align:center; margin-bottom: 22px;">Register to submit fraud reports and unlock security holds.</p>
+
+            <!-- 2-Role Registration Selector (Police, Judiciary, I4C are Admin Provisioned) -->
+            <div class="auth-role-switch" id="regRoleSwitch" style="grid-template-columns: repeat(2, 1fr); margin-bottom: 24px;">
+                <button type="button" class="active" data-role="citizen" onclick="selectRegRole('citizen')">
+                    👤<span class="rlabel">Citizen</span>
+                </button>
+                <button type="button" data-role="bank" onclick="selectRegRole('bank')">
+                    🏦<span class="rlabel">Partner Bank</span>
+                </button>
+            </div>
+
+            <form id="registerForm">
+                <!-- Citizen Specific Fields -->
+                <div id="fields-citizen">
+                    <div class="input-field" style="margin-bottom:14px;">
+                        <label>Full Legal Name *</label>
+                        <input type="text" id="reg-name" placeholder="e.g. Rajiv Malhotra" required />
+                    </div>
+                    <div class="input-field" style="margin-bottom:14px;">
+                        <label>Mobile Number (for SMS & 1930 OTPs) *</label>
+                        <input type="tel" id="reg-mobile" maxlength="10" placeholder="10-digit mobile number" required />
+                    </div>
+                    <div class="input-field" style="margin-bottom:14px;">
+                        <label>Email Address *</label>
+                        <input type="email" id="reg-email" placeholder="rajiv@email.com" required />
+                    </div>
+                </div>
+
+                <!-- Bank Specific Fields -->
+                <div id="fields-bank" style="display:none;">
+                    <div class="input-field" style="margin-bottom:14px;">
+                        <label>Bank / Financial Institution Name *</label>
+                        <input type="text" id="reg-bankname" placeholder="e.g. State Bank of India" />
+                    </div>
+                    <div class="input-field" style="margin-bottom:14px;">
+                        <label>IFSC Prefix / Nodal Branch Code *</label>
+                        <input type="text" id="reg-ifsc" placeholder="e.g. SBIN0001024" style="text-transform:uppercase; font-family:monospace;" />
+                    </div>
+                    <div class="input-field" style="margin-bottom:14px;">
+                        <label>Nodal FRM Officer Email *</label>
+                        <input type="email" id="reg-bankemail" placeholder="frm.nodal@bank.co.in" />
+                    </div>
+                </div>
+
+                <div class="input-field" style="margin-bottom:20px;">
+                    <label>Create Secure Password *</label>
+                    <input type="password" id="reg-pass" placeholder="Enter password (minimum 8 characters)" required />
+                </div>
+
+                <button type="submit" id="regSubmitBtn" class="primary-btn" style="width:100%; justify-content:center;">
+                    <i data-lucide="user-plus"></i> Create <span id="regBtnLabel" style="margin-left:4px;">Citizen Account</span>
+                </button>
+            </form>
+
+            <div style="margin-top: 18px; padding: 12px; border-radius: 12px; background: #fbfdf5; border: 1px solid #e4e2dc; font-size: 11.5px; color: #626b70; line-height: 1.5; text-align: center;">
+                🛡️ <strong>Law Enforcement Notice:</strong> Police, Cyber Court Bench, and I4C Command accounts are strictly provisioned by Ministry of Home Affairs nodal administrators.
+            </div>
+
+            <p style="text-align:center; font-size:12.5px; color:#626b70; margin-top:20px;">
+                Already have an account? <a href="login.html" style="color:#5c8000; font-weight:700; text-decoration:none;">Sign in here</a>
+            </p>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        lucide.createIcons();
+        let regRole = 'citizen';
+
+        function selectRegRole(role) {
+            regRole = role;
+            document.querySelectorAll('#regRoleSwitch button').forEach(b => b.classList.toggle('active', b.dataset.role === role));
+            
+            const isCitizen = role === 'citizen';
+            document.getElementById('fields-citizen').style.display = isCitizen ? 'block' : 'none';
+            document.getElementById('fields-bank').style.display = isCitizen ? 'none' : 'block';
+
+            document.getElementById('regTitle').innerText = isCitizen ? 'Create Citizen Account' : 'Register Bank Switch Node';
+            document.getElementById('regSubtitle').innerText = isCitizen ? 'Register to submit fraud reports and unlock security holds.' : 'Connect your core banking Fraud Risk Management (FRM) node.';
+            document.getElementById('regBtnLabel').innerText = isCitizen ? 'Citizen Account' : 'Bank Node';
+        }
+
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('role')) {
+            selectRegRole(params.get('role'));
+        }
+
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('regSubmitBtn');
+            btn.disabled = true;
+            btn.innerText = "Registering...";
+
+            const name = regRole === 'citizen' ? document.getElementById('reg-name').value.trim() : document.getElementById('reg-bankname').value.trim();
+            const email = regRole === 'citizen' ? document.getElementById('reg-email').value.trim() : document.getElementById('reg-bankemail').value.trim();
+            const password = document.getElementById('reg-pass').value;
+
+            try {
+                await fetch(`${API_BASE_URL}/api/v1/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password, role: regRole })
+                });
+            } catch (err) {
+                console.warn("Backend offline fallback, continuing in demo mode");
+            }
+
+            alert(`✅ Account created successfully for ${name} (${regRole.toUpperCase()}).\n\nYou can now sign in with your credentials.`);
+            window.location.href = `login.html?role=${regRole}`;
+        });
+    </script>
+</body>
+</html>
