@@ -31,44 +31,43 @@
         <div class="nav-right"></div>
     </header>
 
-    <main class="page-container">
-        <div class="ui-card">
+    <main class="page-container">        <div class="ui-card">
             <div class="eyebrow"><span></span>NEURAL DEFENSE PIPELINE</div>
             <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 26px; margin-bottom: 8px;">DURGAM AI Intelligence & Forensic Engine</h2>
             <p style="color: #626b70; font-size: 13.5px; margin-bottom: 24px;">
-                Real-time inference across GNN Multi-Hop Mule Tracing, ST-KDE ATM Cashout Forecasts, Deepfake Analysis, and Multilingual 1930 NLP Ingestion.
+                Real-time automated intelligence across Multi-Hop Money Mule Tracing, ATM Cashout Forecasts, Deepfake Analysis, and Multilingual 1930 Helpline Ingestion.
             </p>
 
             <div class="stat-grid">
                 <div class="stat-card-lite">
                     <div class="si" style="background:#f0fdf4;"><i data-lucide="zap" class="icon-lucide"></i></div>
                     <div class="sv" id="ai-gnn-acc">99.8%</div>
-                    <div class="sl">GNN Mule Accuracy (GATv2)</div>
+                    <div class="sl">Mule Detection Accuracy</div>
                 </div>
                 <div class="stat-card-lite">
                     <div class="si" style="background:#eff6ff;"><i data-lucide="crosshair" class="icon-lucide"></i></div>
                     <div class="sv" id="ai-atm-prec">0.9999</div>
-                    <div class="sl">ST-KDE ATM Precision (XGBoost)</div>
+                    <div class="sl">ATM Threat Precision</div>
                 </div>
                 <div class="stat-card-lite">
                     <div class="si" style="background:#fff7ed;"><i data-lucide="clock" class="icon-lucide"></i></div>
                     <div class="sv">1.76 Mins</div>
-                    <div class="sl">Time-to-Cashout RMSE</div>
+                    <div class="sl">Time-to-Cashout Window</div>
                 </div>
                 <div class="stat-card-lite">
                     <div class="si" style="background:#f5f3ff;"><i data-lucide="shield-check" class="icon-lucide"></i></div>
                     <div class="sv">Sub-85ms</div>
-                    <div class="sl">End-to-End Inference SLA</div>
+                    <div class="sl">End-to-End Hold Latency</div>
                 </div>
             </div>
 
             <!-- Interactive AI Test Suite (All 4 Core Models) -->
             <div class="chart-grid-2" style="margin-top: 24px;">
                 
-                <!-- Tool 1: ATM Cashout Predictor (ST-KDE + XGBoost) -->
+                <!-- Tool 1: ATM Cashout Predictor -->
                 <div style="background: #ffffff; border: 1.5px solid #deddd7; border-radius: 20px; padding: 24px;">
-                    <div class="eyebrow" style="margin-bottom: 6px;"><span></span>MODEL 1: ST-KDE + XGBOOST</div>
-                    <h3 style="font-family:'Space Grotesk', sans-serif; font-size: 18px; margin-bottom: 12px;">ATM Cashout Hotspot Predictor</h3>
+                    <div class="eyebrow" style="margin-bottom: 6px;"><span></span>MODEL 1: ATM CASHOUT PREDICTOR</div>
+                    <h3 style="font-family:'Space Grotesk', sans-serif; font-size: 18px; margin-bottom: 12px;">ATM Cashout Hotspot Forecaster</h3>
                     
                     <div class="form-grid" style="grid-template-columns: 1fr;">
                         <div class="input-field">
@@ -78,43 +77,41 @@
                                 <option value="Jammu">Jammu & Kashmir (Terminal Corridor)</option>
                                 <option value="Mewat">Nuh / Mewat Hotspot Hub</option>
                                 <option value="Mumbai">Mumbai & MMR</option>
-                                <option value="Bengaluru">Bengaluru Tech Hub</option>
+                                <option value="Bengaluru">Bengaluru Cyber Zone</option>
                             </select>
                         </div>
                         <div class="input-field">
-                            <label>Transferred Loss Amount (₹)</label>
+                            <label>Stolen Amount (₹)</label>
                             <input type="number" id="ai-amount" value="250000" />
                         </div>
                         <button onclick="testAtmModel()" class="primary-btn" style="height: 42px; width: 100%; justify-content: center;">
-                            <i data-lucide="play"></i> Run Hotspot Prediction
+                            <i data-lucide="crosshair"></i> Predict Target ATM Hotspots
                         </button>
                     </div>
 
                     <div id="ai-atm-result" style="display: none; margin-top: 16px; background: #fbfdf5; border: 1px solid var(--lime-dark); padding: 14px; border-radius: 12px; font-size: 12.5px;"></div>
                 </div>
 
-                <!-- Tool 2: Multilingual 1930 NLP Classifier -->
+                <!-- Tool 2: Multilingual 1930 NLP Categorizer -->
                 <div style="background: #ffffff; border: 1.5px solid #deddd7; border-radius: 20px; padding: 24px;">
-                    <div class="eyebrow" style="margin-bottom: 6px;"><span></span>MODEL 2: HUGGING FACE NLP</div>
-                    <h3 style="font-family:'Space Grotesk', sans-serif; font-size: 18px; margin-bottom: 12px;">1930 Grievance Entity Extraction</h3>
+                    <div class="eyebrow" style="margin-bottom: 6px;"><span></span>MODEL 2: 1930 HELPLINE NLP</div>
+                    <h3 style="font-family:'Space Grotesk', sans-serif; font-size: 18px; margin-bottom: 12px;">Multilingual Fraud Intent & Entity Extractor</h3>
                     
-                    <div class="form-grid" style="grid-template-columns: 1fr;">
-                        <div class="input-field">
-                            <label>Citizen Grievance Narrative (Hindi / English / Hinglish)</label>
-                            <textarea id="ai-nlp-text" rows="3">Scammer called posing as Mumbai Police officer regarding digital arrest warrant and forced 2.5 lakh transfer to UTR 482910482910.</textarea>
-                        </div>
-                        <button onclick="testNlpModel()" class="primary-btn" style="height: 42px; width: 100%; justify-content: center;">
-                            <i data-lucide="scan-text"></i> Parse Modus Operandi & Entities
-                        </button>
+                    <div class="input-field" style="margin-bottom: 12px;">
+                        <label>Victim Statement (Hindi / Hinglish / English)</label>
+                        <textarea id="ai-nlp-text" rows="3">Scammer called posing as Mumbai Police officer regarding digital arrest warrant and forced 2.5 lakh transfer to UTR 482910482910.</textarea>
                     </div>
+                    <button onclick="testNlpModel()" class="primary-btn" style="height: 42px; width: 100%; justify-content: center;">
+                        <i data-lucide="scan-text"></i> Parse Modus Operandi & Entities
+                    </button>
 
                     <div id="ai-nlp-result" style="display: none; margin-top: 16px; background: #fbfdf5; border: 1px solid var(--lime-dark); padding: 14px; border-radius: 12px; font-size: 12.5px;"></div>
                 </div>
 
-                <!-- Tool 3: PyTorch GraphSAGE GNN Mule Detector -->
+                <!-- Tool 3: Money Mule Ring Classifier -->
                 <div style="background: #ffffff; border: 1.5px solid #deddd7; border-radius: 20px; padding: 24px;">
-                    <div class="eyebrow" style="margin-bottom: 6px;"><span></span>MODEL 3: PYTORCH GRAPHSAGE GNN</div>
-                    <h3 style="font-family:'Space Grotesk', sans-serif; font-size: 18px; margin-bottom: 12px;">Multi-Hop Money Mule Ring Classifier</h3>
+                    <div class="eyebrow" style="margin-bottom: 6px;"><span></span>MODEL 3: MULE NETWORK CLASSIFIER</div>
+                    <h3 style="font-family:'Space Grotesk', sans-serif; font-size: 18px; margin-bottom: 12px;">Multi-Hop Money Mule Ring Detector</h3>
                     
                     <div class="form-grid" style="grid-template-columns: 1fr 1fr; gap: 10px;">
                         <div class="input-field">
@@ -143,17 +140,17 @@
                             </select>
                         </div>
                         <button onclick="testGnnModel()" class="primary-btn" style="grid-column: span 2; height: 42px; width: 100%; justify-content: center;">
-                            <i data-lucide="network"></i> Run GNN Tensor Inference
+                            <i data-lucide="network"></i> Run Syndicate Tracing Analysis
                         </button>
                     </div>
 
                     <div id="ai-gnn-result" style="display: none; margin-top: 16px; background: #fbfdf5; border: 1px solid var(--lime-dark); padding: 14px; border-radius: 12px; font-size: 12.5px;"></div>
                 </div>
 
-                <!-- Tool 4: LightGBM Time-to-Cashout Regressor -->
+                <!-- Tool 4: Time-to-Cashout Predictor -->
                 <div style="background: #ffffff; border: 1.5px solid #deddd7; border-radius: 20px; padding: 24px;">
-                    <div class="eyebrow" style="margin-bottom: 6px;"><span></span>MODEL 4: LIGHTGBM REGRESSOR</div>
-                    <h3 style="font-family:'Space Grotesk', sans-serif; font-size: 18px; margin-bottom: 12px;">Time-to-Cashout Forecaster ($T_{\text{remain}}$)</h3>
+                    <div class="eyebrow" style="margin-bottom: 6px;"><span></span>MODEL 4: CASHOUT TIME PREDICTOR</div>
+                    <h3 style="font-family:'Space Grotesk', sans-serif; font-size: 18px; margin-bottom: 12px;">Time-to-Cashout Forecaster (Golden-Hour Window)</h3>
                     
                     <div class="form-grid" style="grid-template-columns: 1fr 1fr; gap: 10px;">
                         <div class="input-field">
@@ -203,18 +200,19 @@
             const amount = parseFloat(document.getElementById("ai-amount").value) || 250000;
             const resBox = document.getElementById("ai-atm-result");
             resBox.style.display = "block";
-            resBox.innerHTML = "⏳ Running ST-KDE & XGBoost inference on 300+ geocoded ATM dataset...";
+            resBox.innerHTML = "⏳ Running threat intelligence forecast across 300+ geocoded ATM dataset...";
 
             try {
-                const res = await fetch('/api/v1/police/radar-scan', {
+                const res = await fetch("/api/v1/ai/predict-atm-hotspot", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ city, amount, limit: 3 })
                 });
                 const data = await res.json();
                 const top = (data.hotspots && data.hotspots[0]) || {};
+                resBox.style.display = "block";
                 resBox.innerHTML = `
-                    <strong><i data-lucide="check-circle" class="icon-lucide"></i> ST-KDE + XGBoost Forecast Output:</strong><br>
+                    <strong><i data-lucide="check-circle" class="icon-lucide"></i> ATM Threat Forecast Output:</strong><br>
                     • <b>Top Forecasted Target:</b> ${top.bank_name || 'SBI ATM Sector 29'}<br>
                     • <b>Risk Probability Score:</b> ${((top.base_kde_density || 0.965) * 100).toFixed(1)}%<br>
                     • <b>Estimated Intercept ETA:</b> ${top.eta_minutes || 3} Minutes<br>

@@ -139,85 +139,53 @@ function renderGlobalNavbar() {
         return;
     }
 
-    // 2. OFFICER PORTAL FEATURE SPECIFICATIONS
-    const portalServiceTabs = {
-        "bank.html": [
-            { label: "Holds Queue (89ms)", icon: "lock", action: "showBankTab('alerts')", id: "navTab_alerts", active: true },
-            { label: "Transfer Chains", icon: "git-branch", action: "showBankTab('chains')", id: "navTab_chains" },
-            { label: "Upload Statement", icon: "upload", action: "showBankTab('upload')", id: "navTab_upload" },
-            { label: "Submitted Records", icon: "database", action: "showBankTab('accounts')", id: "navTab_accounts" }
-        ],
-        "citizen.html": [
-            { label: "Express Report (1930)", icon: "shield-alert", action: "showCitizenTab('report')", id: "navTab_report", active: true },
-            { label: "Live 4-Hop Tracker", icon: "radar", action: "showCitizenTab('track')", id: "navTab_track" },
-            { label: "My Complaints", icon: "file-text", action: "showCitizenTab('complaints')", id: "navTab_complaints" },
-            { label: "1-Tap Unblock Desk", icon: "unlock", action: "showCitizenTab('unblock')", id: "navTab_unblock" }
-        ],
-        "command.html": [
-            { label: "Overview Dashboard", icon: "layout-dashboard", action: "showCmdTab('dashboard')", id: "navTab_dashboard", active: true },
-            { label: "ATM Hotspot Radar", icon: "map-pin", action: "showCmdTab('radar')", id: "navTab_radar" },
-            { label: "Complaints Feed", icon: "inbox", action: "showCmdTab('complaints')", id: "navTab_complaints" },
-            { label: "Transfer Chains", icon: "share-2", action: "showCmdTab('chains')", id: "navTab_chains" },
-            { label: "Bank Records", icon: "database", action: "showCmdTab('bankdata')", id: "navTab_bankdata" },
-            { label: "Analytics", icon: "bar-chart-3", action: "showCmdTab('analytics')", id: "navTab_analytics" }
-        ],
-        "police.html": [
-            { label: "Hotspot Radar (ST-KDE)", icon: "radio", action: "window.scrollTo({top:0, behavior:'smooth'})", active: true },
-            { label: "Falcon CAD Dispatch", icon: "send", action: "if(typeof triggerPatrolDispatch==='function') triggerPatrolDispatch('ATM_SBI_101')" },
-            { label: "AI Threat Lab", icon: "cpu", href: "ai.html" },
-            { label: "BSA Dossier Vault", icon: "archive", href: "verify.html" }
-        ],
-        "judiciary.html": [
-            { label: "Section 63 BSA Vault", icon: "scale", action: "window.scrollTo({top:0, behavior:'smooth'})", active: true },
-            { label: "Issue Restitution Decree", icon: "gavel", action: "if(typeof issueRestitutionOrder==='function') issueRestitutionOrder('NCRP-1930-48291048')" },
-            { label: "Polygon Ledger Proofs", icon: "check-circle", href: "verify.html" }
-        ],
-        "ai.html": [
-            { label: "Neural Model Inference", icon: "activity", action: "window.scrollTo({top:0, behavior:'smooth'})", active: true },
-            { label: "Police War Room", icon: "shield", href: "police.html" },
-            { label: "Command Center", icon: "terminal", href: "command.html" }
-        ],
-        "verify.html": [
-            { label: "Section 63 Ledger Verification", icon: "check-check", action: "window.scrollTo({top:0, behavior:'smooth'})", active: true },
-            { label: "Court Bench", icon: "scale", href: "judiciary.html" },
-            { label: "Bank Switch", icon: "landmark", href: "bank.html" }
-        ]
+    // 2. OFFICER PORTAL NAVBAR SPECIFICATION (Clean, non-duplicated header)
+    const portalTitles = {
+        "bank.html": { name: "Bank Nodal Operations", role: "Bank Nodal Desk" },
+        "citizen.html": { name: "Citizen Cyber Response", role: "Citizen Assistance" },
+        "command.html": { name: "I4C Command Center", role: "National War Room" },
+        "police.html": { name: "Police PCR War Room", role: "Law Enforcement CAD" },
+        "judiciary.html": { name: "Special Cyber Court", role: "Judicial Bench" },
+        "ai.html": { name: "AI Threat Intelligence Lab", role: "Threat Modeling" },
+        "verify.html": { name: "Section 63 BSA Digital Vault", role: "Evidence Verification" }
     };
 
-    if (portalServiceTabs[currentPath]) {
-        const services = portalServiceTabs[currentPath];
-        let servicesHtml = '';
-        services.forEach((s, idx) => {
-            const clickAttr = s.action ? `onclick="${s.action}; document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active')); this.classList.add('active');"` : '';
-            const hrefAttr = s.href ? `href="${s.href}"` : `href="javascript:void(0)"`;
-            const activeClass = idx === 0 ? 'active' : '';
-            servicesHtml += `
-                <a ${hrefAttr} ${clickAttr} class="${activeClass}" style="display:inline-flex; align-items:center; gap:6px;">
-                    <i data-lucide="${s.icon}" style="width:14px; height:14px;"></i>
-                    <span>${s.label}</span>
-                </a>
-            `;
-        });
-        navLinks.innerHTML = servicesHtml;
+    if (portalTitles[currentPath]) {
+        // Render high-level portal switcher and operational status badge (no duplicate internal tabs)
+        navLinks.innerHTML = `
+            <div style="display:flex; align-items:center; gap:16px; font-size:12.5px; font-weight:600; color:#889096;">
+                <span style="color:#ffffff; font-weight:700; display:flex; align-items:center; gap:6px;">
+                    <span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:#8dcc00; box-shadow:0 0 8px rgba(141,204,0,0.8);"></span>
+                    ${portalTitles[currentPath].name}
+                </span>
+                <span style="color:rgba(255,255,255,0.25);">|</span>
+                <span style="font-size:11.5px; color:#5c8000; font-family:monospace; letter-spacing:0.3px;">SEC. 106 BNSS / RBI PRE-SETTLEMENT MESH</span>
+            </div>
+        `;
 
         navRight.innerHTML = `
-            <a href="index.html" class="outline-btn" style="height:36px; padding:0 12px; font-size:12px; display:inline-flex; align-items:center; gap:6px; color:#ffffff; border-color:rgba(255,255,255,0.2);">
+            <a href="index.html" class="outline-btn" style="height:34px; padding:0 12px; font-size:12px; display:inline-flex; align-items:center; gap:6px; color:#ffffff; border-color:rgba(255,255,255,0.25);">
                 <i data-lucide="home"></i> Home
             </a>
             ${user ? `
-                <span class="portal-btn" style="cursor: default; border-color: rgba(183,255,0,0.35); height: 36px; padding: 0 12px; font-size: 12px; white-space: nowrap;">
-                    <i data-lucide="user-check"></i>
+                <span class="portal-btn" style="cursor: default; border-color: rgba(141,204,0,0.4); height: 34px; padding: 0 12px; font-size:12px; white-space: nowrap; background:rgba(141,204,0,0.08);">
+                    <i data-lucide="shield-check" style="color:var(--lime);"></i>
                     <span>${user.name || user.email || user.id} <small style="color:var(--lime); text-transform:uppercase; font-weight:700;">(${user.role || 'Officer'})</small></span>
                 </span>
-                <button onclick="handleUserLogout()" class="outline-btn" style="height: 36px; padding: 0 12px; font-size: 12px; color: #ff4d4d; border-color: rgba(255,77,77,0.3); display:inline-flex; align-items:center; gap:6px;" title="Logout and Switch Portal">
+                <button onclick="handleUserLogout()" class="outline-btn" style="height: 34px; padding: 0 12px; font-size: 12px; color: #ff4d4d; border-color: rgba(255,77,77,0.4); display:inline-flex; align-items:center; gap:6px;" title="Logout and Switch Portal">
                     <i data-lucide="log-out"></i> Logout
                 </button>
             ` : `
-                <a href="login.html" class="primary-btn" style="height:36px; padding:0 14px; font-size:12px;">
+                <a href="login.html" class="primary-btn" style="height:34px; padding:0 14px; font-size:12px;">
                     <i data-lucide="shield"></i> Sign In
                 </a>
             `}
         `;
+        if (typeof lucide !== 'undefined' && lucide.createIcons) {
+            lucide.createIcons();
+        }
+        return;
+    }
 
         if (typeof lucide !== 'undefined' && lucide.createIcons) {
             lucide.createIcons();
