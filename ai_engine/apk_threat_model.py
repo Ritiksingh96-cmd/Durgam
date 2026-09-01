@@ -80,3 +80,4 @@ class APKOpcodeThreatClassifier:
         }
 
 apk_opcode_classifier = APKOpcodeThreatClassifier()
+DalvikDexMalwareClassifier = APKOpcodeThreatClassifier

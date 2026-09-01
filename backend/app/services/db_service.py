@@ -843,6 +843,23 @@ class DatabaseService:
     def get_imei_blocks(limit: int = 50) -> List[Dict[str, Any]]:
         return get_imei_blocks(limit)
 
+    # Active Bank Holds Query
+    @staticmethod
+    def get_active_holds(limit: int = 50) -> List[Dict[str, Any]]:
+        all_cases = get_all_incidents(limit)
+        holds = []
+        for c in all_cases:
+            if c.get("status") in ("HOLD_CONFIRMED", "MICRO_HOLD_ACTIVE", "ACTIVE_30_MIN_HOLD", "RESTITUTION_ORDERED"):
+                holds.append({
+                    "case_id": c.get("case_id"),
+                    "ack_number": c.get("ack_number"),
+                    "amount": c.get("loss_amount", 250000.0),
+                    "status": c.get("status"),
+                    "source_bank": c.get("source_bank"),
+                    "terminal_node": c.get("terminal_node", {})
+                })
+        return holds
+
     # System settings persistence
     @staticmethod
     def get_setting(key: str, default: Any = None) -> Any:

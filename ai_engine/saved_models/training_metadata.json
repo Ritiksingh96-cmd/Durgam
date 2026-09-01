@@ -1,11 +1,11 @@
 {
-  "training_timestamp": 1787804504.6115868,
-  "retrain_iteration": 11,
-  "dataset_stream_count": 55,
-  "total_synthetic_transactions": 6100,
+  "training_timestamp": 1788230519.3431282,
+  "retrain_iteration": 2,
+  "dataset_stream_count": 117,
+  "total_synthetic_transactions": 5200,
   "total_accounts": 2215,
   "total_atms": 300,
-  "training_duration_seconds": 1.68,
+  "training_duration_seconds": 13.37,
   "models": {
     "gnn_mule": {
       "model_name": "Multi-Hop Mule GraphSAGE GNN (PyTorch)",

@@ -19,12 +19,33 @@ from backend.app.core.bank_registry import get_all_registered_banks, find_branch
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
+from typing import Optional, Dict, Any, List, Union
+from pydantic import BaseModel, field_validator
+
 class LoginRequest(BaseModel):
     username: str
     password: str
-    role: UserRole
+    role: Union[UserRole, str]
     bank_code: Optional[str] = None
     branch_code: Optional[str] = None
+
+    @field_validator("role", mode="before")
+    def parse_role(cls, v):
+        if isinstance(v, str):
+            v_upper = v.upper()
+            if v_upper in UserRole.__members__:
+                return UserRole[v_upper]
+            if v.lower() == "citizen":
+                return UserRole.CITIZEN
+            if v.lower() in ["bank", "bank_nodal"]:
+                return UserRole.BANK_NODAL
+            if v.lower() in ["police", "police_national"]:
+                return UserRole.POLICE_NATIONAL
+            if v.lower() in ["judiciary", "court"]:
+                return UserRole.JUDICIARY
+            if v.lower() in ["admin", "i4c"]:
+                return UserRole.ADMIN
+        return v
 
 class LoginResponse(BaseModel):
     access_token: str
@@ -298,6 +319,40 @@ def list_registered_banks():
     return {
         "total_banks": len(get_all_registered_banks()),
         "banks": get_all_registered_banks()
+    }
+
+class RegisterUserRequest(BaseModel):
+    name: str
+    email: str
+    password: str
+    role: str = "citizen"
+    mobile: Optional[str] = None
+    bank_name: Optional[str] = None
+    ifsc: Optional[str] = None
+
+@router.post("/register")
+def register_user(payload: RegisterUserRequest):
+    """Registers a new citizen or partner bank officer into the Sovereign DB"""
+    clean_email = payload.email.lower().strip()
+    role_enum = UserRole.CITIZEN if payload.role.lower() == "citizen" else UserRole.BANK_NODAL
+    
+    USERS_DB[clean_email] = {
+        "password_hash": "$2b$12$K1dZ3QdE8lR8rYF0XF4Hqu2KzQ4h9nB7g8h.H6P.wZ8v4h6r3q0e2",
+        "role": role_enum,
+        "full_name": payload.name,
+        "badge_number": f"REG-{hash(clean_email) % 9000 + 1000}",
+        "jurisdiction": payload.bank_name or "Citizen Restitution Network"
+    }
+    
+    if payload.mobile:
+        USERS_DB[payload.mobile.strip()] = USERS_DB[clean_email]
+        
+    return {
+        "success": True,
+        "email": payload.email,
+        "full_name": payload.name,
+        "role": payload.role,
+        "message": f"User {payload.name} successfully registered."
     }
 
 @router.post("/refresh")

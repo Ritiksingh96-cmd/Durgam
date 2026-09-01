@@ -9,6 +9,7 @@ from backend.app.services.banking_switch import banking_switch
 from backend.app.services.geospatial_service import geospatial_service
 from backend.app.services.blockchain_service import blockchain_service
 from backend.app.services.db_service import db_service
+from backend.app.services.telegram_service import telegram_bot
 from ai_engine.nlp_parser import GrievanceParser1930
 from ai_engine.time_regressor_model import TimeToCashoutRegressor
 
@@ -156,6 +157,20 @@ def report_cybercrime_incident(payload: ComplaintCreate):
         target_id=case_id,
         details={"loss_amount": final_amount, "utr": clean_utr, "triggers": len(triggers_fired)}
     )
+
+    # 🔔 Telegram Notification — broadcast to I4C Command War Room
+    try:
+        telegram_bot.send_complaint_alert({
+            "ack_number": ack_number,
+            "victim_name": payload.victim_name,
+            "victim_mobile": payload.victim_phone,
+            "loss_amount": final_amount,
+            "to_account": terminal_node.get("account_id", "N/A"),
+            "fraud_type": str(payload.crime_category.value if hasattr(payload.crime_category, "value") else payload.crime_category),
+            "victim_state": payload.victim_state
+        })
+    except Exception:
+        pass  # Never let Telegram errors block the main pipeline
     
     return {
         "success": True,

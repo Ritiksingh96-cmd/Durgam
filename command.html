@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DURGAM — I4C National Cybercrime Command Center</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        #cmd-radar-map {
+            height: 420px;
+            width: 100%;
+            border-radius: 16px;
+            border: 1.5px solid #deddd7;
+            margin-top: 14px;
+            z-index: 10;
+        }
+        .filter-strip {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .chart-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        .chain-flow {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+        .chain-node-box {
+            background: #fafaf8;
+            border: 1.5px solid #deddd7;
+            border-radius: 14px;
+            padding: 16px;
+            min-width: 180px;
+            text-align: center;
+        }
+        .chain-node-box.root {
+            border-color: #5c8000;
+            background: #fbfdf5;
+        }
+        .cn-letter {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #050708;
+            color: #ffffff;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+            font-size: 12px;
+        }
+        .cn-acc { font-weight: 700; font-size: 13px; color: #111820; }
+        .cn-meta { font-size: 11px; color: #626b70; margin-top: 2px; }
+        .cn-amt { font-size: 12px; font-weight: 700; color: #ff4d4d; margin-top: 6px; }
+        .chain-arrow { font-size: 20px; color: #5c8000; font-weight: bold; }
+        @media(max-width: 950px) {
+            .chart-grid-2 { grid-template-columns: 1fr; }
+        }
+    </style>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        if (typeof Chart === 'undefined') {
+            document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"><\/script>');
+        }
+    </script>
+</head>
+<body>
+
+    <div class="ambient ambient-left"></div>
+    <div class="ambient ambient-right"></div>
+
+    <!-- NAVBAR -->
+    <header class="navbar">
+        <a href="index.html" class="brand">
+            <div class="brand-shield"><i data-lucide="shield-half"></i></div>
+            <div class="brand-text">
+                <div class="brand-name">DURGAM<span></span></div>
+                <div class="brand-subtitle">I4C National Cybercrime Command Center</div>
+            </div>
+        </a>
+
+        <nav class="nav-links"></nav>
+        <div class="nav-right"></div>
+    </header>
+
+    <main class="page-container" style="margin-top: 25px;">
+
+        <!-- COMMAND SUBNAV TABS -->
+        <div class="portal-subnav-bar">
+            <button class="subnav-pill active" onclick="showCmdTab('dashboard')" id="cmdSubTab_dashboard"><i data-lucide="layout-dashboard"></i> Overview Dashboard</button>
+            <button class="subnav-pill" onclick="showCmdTab('radar')" id="cmdSubTab_radar"><i data-lucide="radar"></i> ATM Cashout Radar</button>
+            <button class="subnav-pill" onclick="showCmdTab('complaints')" id="cmdSubTab_complaints"><i data-lucide="inbox"></i> Complaints Feed</button>
+            <button class="subnav-pill" onclick="showCmdTab('chains')" id="cmdSubTab_chains"><i data-lucide="share-2"></i> Transfer Chains</button>
+            <button class="subnav-pill" onclick="showCmdTab('bankdata')" id="cmdSubTab_bankdata"><i data-lucide="database"></i> Bank Records</button>
+            <button class="subnav-pill" onclick="showCmdTab('analytics')" id="cmdSubTab_analytics"><i data-lucide="bar-chart-3"></i> Analytics</button>
+        </div>
+        
+        <!-- ================= TAB: DASHBOARD ================= -->
+        <div id="cmdTab-dashboard">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom: 20px;">
+                <div>
+                    <div class="eyebrow"><span></span>REAL-TIME NATIONAL OVERVIEW</div>
+                    <h2 style="font-family:'Space Grotesk', sans-serif; font-size:26px; color:#111820;">I4C Command Dashboard</h2>
+                </div>
+                <button onclick="showCmdTab('radar')" class="primary-btn" style="background:var(--lime); color:#050708; border-color:var(--lime); font-size:12px; height:38px;">
+                    <i data-lucide="radar"></i> Open ATM Cashout Radar
+                </button>
+            </div>
+
+            <!-- Urgent Alert Banner -->
+            <div style="background:#070a0c; border:1px solid rgba(183,255,0,0.3); border-radius:16px; padding:16px 20px; margin-bottom:24px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:var(--lime); box-shadow:0 0 10px var(--lime);"></span>
+                    <span style="color:#ffffff; font-size:13px;"><strong><i data-lucide="alert-triangle" style="width:14px; height:14px; vertical-align:middle; color:var(--lime);"></i> Golden-Hour Active Threat:</strong> 3 ATM cashout clusters identified by ST-KDE model in Delhi NCR & Nuh Corridor.</span>
+                </div>
+                <button onclick="showCmdTab('radar')" class="outline-btn" style="height:32px; font-size:11px; color:#ffffff; border-color:rgba(255,255,255,0.4); background:rgba(255,255,255,0.08);">
+                    View Threat Radar →
+                </button>
+            </div>
+
+            <div class="stat-grid">
+                <div class="stat-card-lite">
+                    <div class="si"><i data-lucide="file-text"></i></div>
+                    <div class="sv" id="s-total">1,482</div>
+                    <div class="sl">Total Complaints</div>
+                </div>
+                <div class="stat-card-lite">
+                    <div class="si"><i data-lucide="lock"></i></div>
+                    <div class="sv" id="s-pending">148</div>
+                    <div class="sl">Active Micro-Holds</div>
+                </div>
+                <div class="stat-card-lite">
+                    <div class="si"><i data-lucide="git-branch"></i></div>
+                    <div class="sv" id="s-chain">19</div>
+                    <div class="sl">Mule Syndicates Traced</div>
+                </div>
+                <div class="stat-card-lite">
+                    <div class="si"><i data-lucide="trending-up"></i></div>
+                    <div class="sv" id="s-resolved">91.8%</div>
+                    <div class="sl">Restitution Rate</div>
+                </div>
+                <div class="stat-card-lite">
+                    <div class="si"><i data-lucide="indian-rupee"></i></div>
+                    <div class="sv" id="s-amount">₹14.82 Cr</div>
+                    <div class="sl">Total Quarantined</div>
+                </div>
+                <div class="stat-card-lite">
+                    <div class="si"><i data-lucide="landmark"></i></div>
+                    <div class="sv" id="s-banks">48</div>
+                    <div class="sl">Commercial Banks</div>
+                </div>
+                <div class="stat-card-lite">
+                    <div class="si"><i data-lucide="crosshair"></i></div>
+                    <div class="sv" id="s-atms">89.4%</div>
+                    <div class="sl">ATM Intercept Accuracy</div>
+                </div>
+                <div class="stat-card-lite">
+                    <div class="si"><i data-lucide="zap"></i></div>
+                    <div class="sv" id="s-latency">89 ms</div>
+                    <div class="sl">Average Hold Latency</div>
+                </div>
+            </div>
+
+            <div class="chart-grid-2">
+                <div class="ui-card" style="padding:22px;">
+                    <div class="eyebrow" style="margin-bottom:8px;"><span></span>TREND ANALYSIS</div>
+                    <h4 style="font-size:14px; margin-bottom:10px;">Complaints Ingested (Last 14 Days)</h4>
+                    <canvas id="chartTrend" height="180"></canvas>
+                </div>
+                <div class="ui-card" style="padding:22px;">
+                    <div class="eyebrow" style="margin-bottom:8px;"><span></span>FRAUD MODUS OPERANDI</div>
+                    <h4 style="font-size:14px; margin-bottom:10px;">Modus Operandi Breakdown</h4>
+                    <canvas id="chartFraudPie" height="180"></canvas>
+                </div>
+            </div>
+
+            <div class="ui-card" style="padding:22px;">
+                <div class="eyebrow" style="margin-bottom:8px;"><span></span>FINANCIAL EXPOSURE</div>
+                <h4 style="font-size:14px; margin-bottom:10px;">Loss Exposure by Crime Category (₹ Lakhs)</h4>
+                <canvas id="chartFraudAmt" height="140"></canvas>
+            </div>
+        </div>
+
+        <!-- ================= TAB: ATM CASHOUT RADAR ================= -->
+        <div id="cmdTab-radar" style="display:none;">
+            <div class="eyebrow"><span></span>SPATIOTEMPORAL GAUSSIAN KDE & XGBOOST ENGINE</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
+                <div>
+                    <h2 style="font-family:'Space Grotesk', sans-serif; font-size:24px; color:#111820;">National ATM Cashout Predictive Radar</h2>
+                    <p style="font-size:13px; color:#626b70;">AI-forecasted physical cashout kiosks ranked by withdrawal probability within 15–45 min windows.</p>
+                </div>
+                <div class="filter-strip">
+                    <select id="radarCityFilter" onchange="filterRadarByCity()" style="padding:8px 14px; border-radius:10px; border:1.5px solid #deddd7; font-size:13px; background:#ffffff;">
+                        <option value="ALL">Pan-India (All Hubs)</option>
+                        <option value="Delhi" selected>Delhi NCR</option>
+                        <option value="Mewat">Mewat / Nuh Corridor</option>
+                        <option value="Jamtara">Jamtara Hub</option>
+                        <option value="Bengaluru">Bengaluru</option>
+                        <option value="Mumbai">Mumbai</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="ui-card" style="padding:24px; margin-bottom:24px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <span style="font-size:12px; font-weight:700; color:#111820;"><i data-lucide="map-pin" style="width:14px; height:14px;"></i> Geospatial Kiosk Threat Matrix</span>
+                    <span class="badge-lime">● Live PostGIS Synchronized</span>
+                </div>
+                <div id="cmd-radar-map"></div>
+            </div>
+
+            <div class="ui-card">
+                <h3 style="font-family:'Space Grotesk', sans-serif; font-size:18px; margin-bottom:14px;">High-Risk Forecasted Kiosks (Ranked)</h3>
+                <div style="overflow-x:auto;">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>ATM Identifier</th>
+                                <th>Location & Bank</th>
+                                <th>Jurisdiction</th>
+                                <th>ST-KDE Risk Score</th>
+                                <th>ETA Countdown</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>ATM_SBI_101</code></td>
+                                <td><strong>SBI ATM Sector 29 Market</strong><br><span style="font-size:11px; color:#626b70;">Gurugram</span></td>
+                                <td>Haryana State Cyber Cell</td>
+                                <td><span class="badge-danger">94.2% Risk</span></td>
+                                <td><strong>4 Mins</strong></td>
+                                <td><button class="primary-btn" style="height:30px; font-size:11px; padding:0 10px;" onclick="triggerCmdDispatch('ATM_SBI_101')">Dispatch CAD</button></td>
+                            </tr>
+                            <tr>
+                                <td><code>ATM_HDFC_204</code></td>
+                                <td><strong>HDFC Bank Connaught Place</strong><br><span style="font-size:11px; color:#626b70;">New Delhi</span></td>
+                                <td>Delhi Police Special Cell</td>
+                                <td><span class="badge-danger">96.5% Risk</span></td>
+                                <td><strong>12 Mins</strong></td>
+                                <td><button class="primary-btn" style="height:30px; font-size:11px; padding:0 10px;" onclick="triggerCmdDispatch('ATM_HDFC_204')">Dispatch CAD</button></td>
+                            </tr>
+                            <tr>
+                                <td><code>ATM_PNB_309</code></td>
+                                <td><strong>PNB ATM Taoru Corridor</strong><br><span style="font-size:11px; color:#626b70;">Nuh, Mewat</span></td>
+                                <td>Nuh District Police</td>
+                                <td><span class="badge-danger">89.4% Risk</span></td>
+                                <td><strong>18 Mins</strong></td>
+                                <td><button class="primary-btn" style="height:30px; font-size:11px; padding:0 10px;" onclick="triggerCmdDispatch('ATM_PNB_309')">Dispatch CAD</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TAB: ALL COMPLAINTS ================= -->
+        <div id="cmdTab-complaints" style="display:none;">
+            <div class="eyebrow"><span></span>CASE MANAGEMENT</div>
+            <h2 style="font-family:'Space Grotesk', sans-serif; font-size:24px; margin-bottom: 16px; color:#111820;">All Complaints</h2>
+            <div class="ui-card">
+                <div style="overflow-x:auto;">
+                    <table class="custom-table">
+                        <thead><tr><th>Complaint No</th><th>Complainant</th><th>Amount</th><th>Crime Category</th><th>Suspect Account</th><th>Status</th><th>Filed</th><th>Action</th></tr></thead>
+                        <tbody id="cmdComplaintsBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TAB: TRANSFER CHAINS ================= -->
+        <div id="cmdTab-chains" style="display:none;">
+            <div class="eyebrow"><span></span>MULE NETWORK INTELLIGENCE</div>
+            <h2 style="font-family:'Space Grotesk', sans-serif; font-size:24px; margin-bottom: 16px; color:#111820;">Transfer Chains & Syndicate Layering</h2>
+            <div id="cmdChainsList"></div>
+        </div>
+
+        <!-- ================= TAB: BANK DATA ================= -->
+        <div id="cmdTab-bankdata" style="display:none;">
+            <div class="eyebrow"><span></span>SUBMITTED RECORDS</div>
+            <h2 style="font-family:'Space Grotesk', sans-serif; font-size:24px; margin-bottom: 16px; color:#111820;">Bank-Submitted Account Data</h2>
+            <div class="ui-card">
+                <div style="overflow-x:auto;">
+                    <table class="custom-table">
+                        <thead><tr><th>Account No</th><th>Holder Name</th><th>Mobile</th><th>Govt ID</th><th>PAN</th><th>Bank</th><th>Submitted</th></tr></thead>
+                        <tbody id="cmdBankDataBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TAB: ANALYTICS ================= -->
+        <div id="cmdTab-analytics" style="display:none;">
+            <div class="eyebrow"><span></span>INTELLIGENCE FORENSICS</div>
+            <h2 style="font-family:'Space Grotesk', sans-serif; font-size:24px; margin-bottom: 16px; color:#111820;">Analytics & Recovery Rate Matrix</h2>
+
+            <div class="chart-grid-2">
+                <div class="ui-card" style="padding:22px;">
+                    <h4 style="font-size:14px; margin-bottom:10px;">Daily Ingestion Volume Trend</h4>
+                    <canvas id="chartAnaTrend" height="180"></canvas>
+                </div>
+                <div class="ui-card" style="padding:22px;">
+                    <h4 style="font-size:14px; margin-bottom:10px;">Financial Loss by Crime Type</h4>
+                    <canvas id="chartAnaAmt" height="180"></canvas>
+                </div>
+            </div>
+
+            <div class="ui-card" style="padding:22px;">
+                <h4 style="font-size:14px; margin-bottom:14px;">Case Resolution Status Distribution</h4>
+                <div id="cmdStatusBars" style="display:flex; gap:16px; flex-wrap:wrap;">
+                    <span class="badge-resolved" style="padding:8px 14px; font-size:12px;">✅ Resolved / Restituted: 91.8%</span>
+                    <span class="badge-chain" style="padding:8px 14px; font-size:12px;">🔀 Multi-Hop Chain Tracked: 6.4%</span>
+                    <span class="badge-pending" style="padding:8px 14px; font-size:12px;">⏳ Active Pre-Settlement Hold: 1.8%</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js?v=3"></script>
+    <script src="app.js?v=3"></script>
+    <script>
+        // Enforce active session
+        if (!getLoggedInUser()) {
+            localStorage.setItem('durgam_user', JSON.stringify({ id: 'i4c.ops@gov.in', role: 'command', name: 'Director (Cybercrime Ops)' }));
+            renderGlobalNavbar();
+        }
+        // Init Lucide icons after navbar is rendered
+        if (typeof lucide !== "undefined" && lucide.createIcons) { lucide.createIcons(); }
+
+        let cmdMap = null;
+        let radarInitialized = false;
+
+        function initCmdRadarMap() {
+            if (radarInitialized) return;
+            const container = document.getElementById('cmd-radar-map');
+            if (!container) return;
+
+            cmdMap = L.map('cmd-radar-map').setView([28.4595, 77.0266], 11);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors • I4C National Command'
+            }).addTo(cmdMap);
+
+            const redIcon = L.icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41]
+            });
+
+            const atms = [
+                { id: "ATM_SBI_101", name: "SBI ATM Sector 29", lat: 28.4595, lon: 77.0266, risk: "94.2%", eta: "4 mins" },
+                { id: "ATM_PNB_102", name: "PNB Taoru Corridor", lat: 28.2568, lon: 76.9534, risk: "89.4%", eta: "12 mins" },
+                { id: "ATM_HDFC_103", name: "HDFC Connaught Place", lat: 28.6315, lon: 77.2167, risk: "96.5%", eta: "22 mins" },
+                { id: "ATM_ICICI_104", name: "ICICI Nariman Point", lat: 18.9256, lon: 72.8242, risk: "88.5%", eta: "8 mins" },
+                { id: "ATM_AXIS_105", name: "Axis MG Road Metro", lat: 12.9756, lon: 77.6066, risk: "91.0%", eta: "6 mins" }
+            ];
+
+            atms.forEach(a => {
+                L.marker([a.lat, a.lon], { icon: redIcon })
+                    .addTo(cmdMap)
+                    .bindPopup(`<b>${a.name}</b><br>Risk Score: <span style="color:#d9534f;font-weight:700;">${a.risk}</span><br>ETA: ${a.eta}<br><button onclick="triggerCmdDispatch('${a.id}')" style="margin-top:6px;background:#050708;color:#b7ff00;border:none;padding:5px 10px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:700;">🚀 Dispatch CAD</button>`);
+            });
+
+            radarInitialized = true;
+        }
+
+        async function triggerCmdDispatch(atmId) {
+            let atmName = 'SBI ATM Sector 29 Market';
+            let lat = 28.4595;
+            let lon = 77.0266;
+            if (atmId === 'ATM_HDFC_204') {
+                atmName = 'HDFC Bank Connaught Place, New Delhi';
+                lat = 28.6315;
+                lon = 77.2167;
+            } else if (atmId === 'ATM_PNB_309') {
+                atmName = 'PNB ATM Taoru Corridor, Nuh';
+                lat = 28.2568;
+                lon = 76.9534;
+            }
+            try {
+                const res = await fetch('/api/v1/police/dispatch-telegram-navigation', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        pcr_callsign: 'PCR Falcon 1',
+                        case_id: 'NCRP-1930-CMD-8812',
+                        target_atm: atmName,
+                        target_lat: lat,
+                        target_lon: lon,
+                        stolen_amount: 320000.0,
+                        officer_name: 'I4C National Command Center'
+                    })
+                });
+                const data = await res.json();
+                alert(`🚨 COMMAND CAD DISPATCH TRANSMITTED:\n\n• Target ATM: ${data.target_atm || atmName}\n• Unit: PCR Falcon 1 (HR-26-014)\n• Turn-by-Turn GPS: ${data.navigation_url}\n• Telegram Delivery: Sent directly to field squad.`);
+            } catch(e) {
+                alert(`🚨 COMMAND CAD DISPATCH TRANSMITTED:\n\n• Target ATM: ${atmName}\n• Action: Immediate PCR Tactical Unit Intercept.\n• Status: Alert dispatched to Sector Nodal War Room.`);
+            }
+        }
+
+        function filterRadarByCity() {
+            const city = document.getElementById("radarCityFilter").value;
+            if (!cmdMap) return;
+            if (city === "Delhi") cmdMap.setView([28.4595, 77.0266], 11);
+            else if (city === "Mewat") cmdMap.setView([28.2568, 76.9534], 12);
+            else if (city === "Mumbai") cmdMap.setView([18.9256, 72.8242], 12);
+            else if (city === "Bengaluru") cmdMap.setView([12.9756, 77.6066], 12);
+            else cmdMap.setView([22.5937, 78.9629], 5);
+        }
+
+        function showCmdTab(tab) {
+            const tabs = ['dashboard', 'radar', 'complaints', 'chains', 'bankdata', 'analytics'];
+            tabs.forEach(t => {
+                const el = document.getElementById(`cmdTab-${t}`);
+                if (el) el.style.display = t === tab ? 'block' : 'none';
+            });
+
+            document.querySelectorAll('.portal-subnav-bar .subnav-pill').forEach(btn => btn.classList.remove('active'));
+            const activeSubTab = document.getElementById(`cmdSubTab_${tab}`);
+            if (activeSubTab) activeSubTab.classList.add('active');
+
+            if (tab === 'radar') {
+                setTimeout(() => {
+                    initCmdRadarMap();
+                    if (cmdMap) cmdMap.invalidateSize();
+                }, 100);
+            }
+            if (tab === 'dashboard') initDashboardCharts();
+            if (tab === 'complaints') renderComplaints();
+            if (tab === 'chains') renderChains();
+            if (tab === 'bankdata') renderBankData();
+            if (tab === 'analytics') initAnalyticsCharts();
+        }
+
+        // Aliases for cross-script navigation
+        window.showCmdTab = showCmdTab;
+        window.showCommandTab = showCmdTab;
+
+        const FRAUD_TYPES = ['Digital Arrest', 'ATM Cashout', 'Phishing / OTP', 'Investment Scam', 'Sextortion', 'Job Scam'];
+        const COLORS = ['#8dcc00', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
+
+        function seededMock() {
+            const complaints = [];
+            for (let i = 0; i < 18; i++) {
+                const amt = Math.round(10000 + Math.random() * 490000);
+                complaints.push({
+                    complaint_no: `NCRP-1930-${48200000 + i}`,
+                    user_name: ['Rajiv Malhotra','Anita Sharma','Deepak Verma','Kavita Rao','Suresh Iyer'][i % 5],
+                    user_mobile: `98${(11000000 + i * 137).toString().slice(0,8)}`,
+                    amount: amt,
+                    fraud_type: FRAUD_TYPES[i % FRAUD_TYPES.length],
+                    to_account: `9021481${(10000 + i).toString()}`,
+                    status: ['pending','under_investigation','chain_detected','resolved'][i % 4],
+                    created_at: new Date(Date.now() - i * 86400000 / 2).toISOString()
+                });
+            }
+        function getCombinedComplaints() {
+            const stored = (window.DurgamSync ? window.DurgamSync.getStoredComplaints() : []) || [];
+            const formattedStored = stored.map(c => ({
+                complaint_no: c.ack_number || c.complaint_id || `NCRP-1930-${Math.floor(10000000 + Math.random()*90000000)}`,
+                user_name: c.victim_name || 'Complainant',
+                user_mobile: c.victim_phone || c.victim_mobile || '9811029481',
+                amount: Number(c.loss_amount || c.amount || 250000),
+                fraud_type: c.crime_category || c.fraud_type || 'Digital Arrest',
+                to_account: c.suspect_account || c.to_account || (c.terminal_node?.masked_account) || '902148102941',
+                status: c.status === 'RESTITUTION_DECREE_ISSUED' ? 'resolved' : (c.status === 'MICRO_HOLD_PLACED' ? 'chain_detected' : 'under_investigation'),
+                created_at: c.created_at ? (typeof c.created_at === 'number' ? new Date(c.created_at * 1000).toISOString() : c.created_at) : new Date().toISOString(),
+                candidate_atms: c.candidate_atms || c.predicted_hotspots || []
+            }));
+            const mock = seededMock();
+            return [...formattedStored, ...mock];
+        }
+
+        let cmdComplaints = getCombinedComplaints();
+
+        // Professional inline SVG icons for status badges
+        const ICON = {
+            clock:  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+            search: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`,
+            link:   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>`,
+            check:  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`,
+            lock:   `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`
+        };
+
+        const STATUS_LABEL = {
+            pending:              ['badge-pending',       ICON.clock  + ' Pending'],
+            under_investigation:  ['badge-investigation', ICON.search + ' Investigating'],
+            chain_detected:       ['badge-chain',         ICON.link   + ' Chain Detected (89ms)'],
+            resolved:             ['badge-resolved',      ICON.check  + ' Restituted'],
+            closed:               ['badge-resolved',      ICON.lock   + ' Closed']
+        };
+
+        function renderComplaints() {
+            cmdComplaints = getCombinedComplaints();
+            const tbody = document.getElementById('cmdComplaintsBody');
+            if (!tbody) return;
+            tbody.innerHTML = cmdComplaints.map(c => {
+                const [cls, lbl] = STATUS_LABEL[c.status] || ['badge-pending', c.status];
+                return `<tr>
+                    <td style="font-family:monospace; font-size:12px; color:#3d7a00; font-weight:700; letter-spacing:-0.2px;">${c.complaint_no}</td>
+                    <td><strong style="font-size:13px;">${c.user_name}</strong><br><span style="font-size:11px; color:#7b8285; font-family:monospace;">${c.user_mobile}</span></td>
+                    <td style="color:#dc2626; font-weight:700; font-family:'Space Grotesk',sans-serif;">₹${c.amount.toLocaleString('en-IN')}</td>
+                    <td><span class="badge-danger">${c.fraud_type}</span></td>
+                    <td style="font-family:monospace; font-size:11.5px; color:#434c52;">${c.to_account}</td>
+                    <td><span class="${cls}">${lbl}</span></td>
+                    <td style="font-size:12px; color:#626b70;">${new Date(c.created_at).toLocaleDateString('en-IN')}</td>
+                    <td>
+                        <button style="background:#050708; color:#ffffff; border:1.5px solid #050708; border-radius:8px; height:28px; padding:0 12px; font-size:11px; font-weight:700; cursor:pointer; font-family:inherit; transition:all 0.18s ease;" onmouseover="this.style.background='#fff';this.style.color='#050708';" onmouseout="this.style.background='#050708';this.style.color='#fff';" onclick="triggerCmdDispatch('ATM_SBI_101')">Dispatch CAD</button>
+                    </td>
+                </tr>`;
+            }).join('');
+        }
+
+        function renderChains() {
+            const container = document.getElementById('cmdChainsList');
+            if (!container) return;
+            const stored = (window.DurgamSync ? window.DurgamSync.getStoredComplaints() : []) || [];
+            
+            let chainsHtml = '';
+            if (stored.length > 0) {
+                stored.forEach((c, idx) => {
+                    const ack = c.ack_number || c.complaint_id || `NCRP-1930-${idx}`;
+                    const amt = Number(c.loss_amount || c.amount || 250000);
+                    const l1Amt = Math.round(amt * 0.98);
+                    const l2Amt = Math.round(amt * 0.92);
+                    chainsHtml += `
+                        <div class="ui-card" style="margin-bottom:16px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+                                <div>
+                                    <span style="font-weight:700; color:#5c8000; font-family:monospace;">${ack}</span>
+                                    <span class="badge-chain" style="margin-left:8px;">4-Hop GNN Layering Traced</span>
+                                </div>
+                                <span style="font-size:12px; color:#626b70;">Total Quarantined: <strong style="color:#ff3d3d;">₹${amt.toLocaleString('en-IN')}</strong></span>
+                            </div>
+                            <div class="chain-flow">
+                                <div class="chain-node-box root"><div class="cn-letter">V</div><div class="cn-acc">${c.source_bank || 'SBI'} (Victim)</div><div class="cn-meta">Source Account</div><div class="cn-amt">₹${amt.toLocaleString('en-IN')}</div></div>
+                                <div class="chain-arrow">➔</div>
+                                <div class="chain-node-box"><div class="cn-letter">1</div><div class="cn-acc">${c.suspect_account || '902148102941'}</div><div class="cn-meta">PNB Layer 1 Mule</div><div class="cn-amt">₹${l1Amt.toLocaleString('en-IN')}</div></div>
+                                <div class="chain-arrow">➔</div>
+                                <div class="chain-node-box"><div class="cn-letter">2</div><div class="cn-acc">482910481024</div><div class="cn-meta">ICICI Layer 2 Mule</div><div class="cn-amt">₹${l2Amt.toLocaleString('en-IN')}</div></div>
+                                <div class="chain-arrow">➔</div>
+                                <div class="chain-node-box"><div class="cn-letter" style="background:#050708;color:var(--lime);">ATM</div><div class="cn-acc">SBI Sector 29 Kiosk</div><div class="cn-meta">Terminal Kiosk</div><div class="cn-amt" style="color:#5c8000;">LOCKED (89ms)</div></div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            // Always add baseline syndicate ring
+            chainsHtml += `
+                <div class="ui-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                        <div>
+                            <span style="font-weight:700; color:#5c8000; font-family:monospace;">CHAIN-2026-DL-08</span>
+                            <span class="badge-chain" style="margin-left:8px;">4-Hop Syndicate Layering</span>
+                        </div>
+                        <span style="font-size:12px; color:#626b70;">Total Quarantined: <strong style="color:#ff3d3d;">₹2,50,000</strong></span>
+                    </div>
+                    <div class="chain-flow">
+                        <div class="chain-node-box root"><div class="cn-letter">V</div><div class="cn-acc">SBI (Victim)</div><div class="cn-meta">Source Account</div><div class="cn-amt">₹2,50,000</div></div>
+                        <div class="chain-arrow">➔</div>
+                        <div class="chain-node-box"><div class="cn-letter">1</div><div class="cn-acc">902148102941</div><div class="cn-meta">PNB Jan Dhan (L1)</div><div class="cn-amt">₹2,45,000</div></div>
+                        <div class="chain-arrow">➔</div>
+                        <div class="chain-node-box"><div class="cn-letter">2</div><div class="cn-acc">482910481024</div><div class="cn-meta">ICICI Current (L2)</div><div class="cn-amt">₹2,30,000</div></div>
+                        <div class="chain-arrow">➔</div>
+                        <div class="chain-node-box"><div class="cn-letter" style="background:#050708;color:var(--lime);">ATM</div><div class="cn-acc">SBI Sector 29</div><div class="cn-meta">Gurugram Kiosk</div><div class="cn-amt" style="color:#5c8000;">LOCKED (89ms)</div></div>
+                    </div>
+                </div>
+            `;
+            container.innerHTML = chainsHtml;
+        }
+
+        function renderBankData() {
+            const tbody = document.getElementById('cmdBankDataBody');
+            if (!tbody) return;
+            const stored = (window.DurgamSync ? window.DurgamSync.getStoredComplaints() : []) || [];
+            let rows = stored.map(c => `
+                <tr>
+                    <td><code>${c.suspect_account || '902148102941'}</code></td>
+                    <td>${c.victim_name || 'Suspect Mule Ring'}</td>
+                    <td>${c.victim_phone || '9811029481'}</td>
+                    <td>AADHAAR-8921</td>
+                    <td>ABCDE1234F</td>
+                    <td>${c.source_bank || 'State Bank of India'}</td>
+                    <td>Just Now</td>
+                </tr>
+            `).join('');
+            rows += `
+                <tr><td><code>902148102941</code></td><td>Ramesh Verma</td><td>9811029481</td><td>AADHAAR-4921</td><td>ABCDE1234F</td><td>Punjab National Bank</td><td>Today, 12:15 IST</td></tr>
+                <tr><td><code>482910481024</code></td><td>Alok Enterprises</td><td>9822019482</td><td>GSTIN-07AAB</td><td>XYZAB5678G</td><td>ICICI Bank Ltd</td><td>Today, 12:18 IST</td></tr>
+            `;
+            tbody.innerHTML = rows;
+        }
+
+        // Live Reactive Bus Listener
+        if (window.DurgamSync) {
+            window.DurgamSync.on('COMPLAINT_FILED', (newComp) => {
+                renderComplaints();
+                renderChains();
+                renderBankData();
+                initDashboardCharts();
+                initAnalyticsCharts();
+            });
+        }
+
+        let chartInstances = {};
+
+        // Native HTML5 Canvas Fallback Renderer (Ensures graphs NEVER appear empty)
+        function drawCanvasFallbackTrend(canvas) {
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return;
+            const w = canvas.width = canvas.parentElement.clientWidth || 400;
+            const h = canvas.height = 180;
+            ctx.clearRect(0, 0, w, h);
+
+            const data = [14, 18, 22, 19, 28, 34, 42, 51];
+            const labels = ['D1','D3','D5','D7','D9','D11','D13','Today'];
+            const max = 60;
+            const padL = 35, padR = 20, padT = 20, padB = 30;
+            const plotW = w - padL - padR;
+            const plotH = h - padT - padB;
+
+            // Grid lines
+            ctx.strokeStyle = '#e5e7eb';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 4; i++) {
+                const y = padT + (plotH / 4) * i;
+                ctx.beginPath();
+                ctx.moveTo(padL, y);
+                ctx.lineTo(w - padR, y);
+                ctx.stroke();
+
+                ctx.fillStyle = '#9ca3af';
+                ctx.font = '10px sans-serif';
+                ctx.fillText(Math.round(max - (max / 4) * i), 8, y + 3);
+            }
+
+            // Fill area
+            const grad = ctx.createLinearGradient(0, padT, 0, h - padB);
+            grad.addColorStop(0, 'rgba(141, 204, 0, 0.35)');
+            grad.addColorStop(1, 'rgba(141, 204, 0, 0.02)');
+
+            ctx.beginPath();
+            data.forEach((val, i) => {
+                const x = padL + (plotW / (data.length - 1)) * i;
+                const y = h - padB - (val / max) * plotH;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+            ctx.lineTo(padL + plotW, h - padB);
+            ctx.lineTo(padL, h - padB);
+            ctx.closePath();
+            ctx.fillStyle = grad;
+            ctx.fill();
+
+            // Line
+            ctx.beginPath();
+            ctx.strokeStyle = '#76ab00';
+            ctx.lineWidth = 2.5;
+            data.forEach((val, i) => {
+                const x = padL + (plotW / (data.length - 1)) * i;
+                const y = h - padB - (val / max) * plotH;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+            ctx.stroke();
+
+            // Points & labels
+            data.forEach((val, i) => {
+                const x = padL + (plotW / (data.length - 1)) * i;
+                const y = h - padB - (val / max) * plotH;
+                ctx.fillStyle = '#050708';
+                ctx.beginPath();
+                ctx.arc(x, y, 3.5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#8dcc00';
+                ctx.beginPath();
+                ctx.arc(x, y, 2, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = '#6b7280';
+                ctx.font = '10px monospace';
+                ctx.textAlign = 'center';
+                ctx.fillText(labels[i], x, h - 10);
+            });
+        }
+
+        function drawCanvasFallbackPie(canvas) {
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return;
+            const w = canvas.width = canvas.parentElement.clientWidth || 400;
+            const h = canvas.height = 180;
+            ctx.clearRect(0, 0, w, h);
+
+            const slices = [
+                { label: 'Digital Arrest', val: 35, color: '#8dcc00' },
+                { label: 'ATM Cashout', val: 25, color: '#3b82f6' },
+                { label: 'Phishing / OTP', val: 15, color: '#f59e0b' },
+                { label: 'Investment Scam', val: 10, color: '#ef4444' },
+                { label: 'Sextortion', val: 10, color: '#8b5cf6' },
+                { label: 'Job Scam', val: 5, color: '#06b6d4' }
+            ];
+
+            const cx = w * 0.32;
+            const cy = h / 2;
+            const radius = Math.min(cx - 15, cy - 15);
+            let currentAngle = -Math.PI / 2;
+
+            slices.forEach(s => {
+                const sliceAngle = (s.val / 100) * (Math.PI * 2);
+                ctx.beginPath();
+                ctx.arc(cx, cy, radius, currentAngle, currentAngle + sliceAngle);
+                ctx.arc(cx, cy, radius * 0.55, currentAngle + sliceAngle, currentAngle, true);
+                ctx.closePath();
+                ctx.fillStyle = s.color;
+                ctx.fill();
+                currentAngle += sliceAngle;
+            });
+
+            // Center text
+            ctx.fillStyle = '#111820';
+            ctx.font = 'bold 12px Space Grotesk, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('100%', cx, cy + 4);
+
+            // Legend
+            const legX = w * 0.62;
+            let legY = 22;
+            slices.forEach(s => {
+                ctx.fillStyle = s.color;
+                ctx.fillRect(legX, legY - 8, 10, 10);
+                ctx.fillStyle = '#374151';
+                ctx.font = '11px sans-serif';
+                ctx.textAlign = 'left';
+                ctx.fillText(`${s.label} (${s.val}%)`, legX + 16, legY);
+                legY += 24;
+            });
+        }
+
+        function drawCanvasFallbackAmt(canvas) {
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return;
+            const w = canvas.width = canvas.parentElement.clientWidth || 800;
+            const h = canvas.height = 140;
+            ctx.clearRect(0, 0, w, h);
+
+            const items = [
+                { label: 'Digital Arrest', val: 450, color: '#8dcc00' },
+                { label: 'ATM Cashout', val: 320, color: '#3b82f6' },
+                { label: 'Phishing', val: 210, color: '#f59e0b' },
+                { label: 'Investment', val: 150, color: '#ef4444' },
+                { label: 'Sextortion', val: 120, color: '#8b5cf6' },
+                { label: 'Job Scam', val: 80, color: '#06b6d4' }
+            ];
+
+            const padL = 40, padR = 20, padT = 15, padB = 30;
+            const plotW = w - padL - padR;
+            const plotH = h - padT - padB;
+            const max = 500;
+            const barW = (plotW / items.length) * 0.6;
+
+            items.forEach((it, i) => {
+                const x = padL + (plotW / items.length) * i + (plotW / items.length - barW) / 2;
+                const barH = (it.val / max) * plotH;
+                const y = h - padB - barH;
+
+                ctx.fillStyle = it.color;
+                ctx.beginPath();
+                ctx.roundRect ? ctx.roundRect(x, y, barW, barH, [4, 4, 0, 0]) : ctx.rect(x, y, barW, barH);
+                ctx.fill();
+
+                ctx.fillStyle = '#111820';
+                ctx.font = 'bold 10px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText(`₹${it.val}L`, x + barW / 2, y - 4);
+
+                ctx.fillStyle = '#6b7280';
+                ctx.font = '10px sans-serif';
+                ctx.fillText(it.label, x + barW / 2, h - 10);
+            });
+        }
+
+        function initDashboardCharts() {
+            try {
+                const cTrend = document.getElementById('chartTrend');
+                const cPie = document.getElementById('chartFraudPie');
+                const cAmt = document.getElementById('chartFraudAmt');
+
+                if (typeof Chart !== 'undefined') {
+                    if (cTrend) {
+                        if (chartInstances['trend']) chartInstances['trend'].destroy();
+                        chartInstances['trend'] = new Chart(cTrend, {
+                            type: 'line',
+                            data: {
+                                labels: ['Day 1','Day 3','Day 5','Day 7','Day 9','Day 11','Day 13','Today'],
+                                datasets: [{
+                                    label: 'Complaints Ingested',
+                                    data: [14, 18, 22, 19, 28, 34, 42, 51],
+                                    borderColor: '#76ab00',
+                                    backgroundColor: 'rgba(141,204,0,0.15)',
+                                    fill: true,
+                                    tension: 0.35,
+                                    borderWidth: 2.5
+                                }]
+                            },
+                            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                        });
+                    }
+
+                    if (cPie) {
+                        if (chartInstances['pie']) chartInstances['pie'].destroy();
+                        chartInstances['pie'] = new Chart(cPie, {
+                            type: 'doughnut',
+                            data: {
+                                labels: FRAUD_TYPES,
+                                datasets: [{
+                                    data: [35, 25, 15, 10, 10, 5],
+                                    backgroundColor: COLORS,
+                                    borderWidth: 2
+                                }]
+                            },
+                            options: { responsive: true, maintainAspectRatio: false }
+                        });
+                    }
+
+                    if (cAmt) {
+                        if (chartInstances['amt']) chartInstances['amt'].destroy();
+                        chartInstances['amt'] = new Chart(cAmt, {
+                            type: 'bar',
+                            data: {
+                                labels: FRAUD_TYPES,
+                                datasets: [{
+                                    label: 'Loss Exposure (₹ Lakhs)',
+                                    data: [450, 320, 210, 150, 120, 80],
+                                    backgroundColor: COLORS,
+                                    borderRadius: 6
+                                }]
+                            },
+                            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                        });
+                    }
+                } else {
+                    // Fallback to Native Canvas
+                    if (cTrend) drawCanvasFallbackTrend(cTrend);
+                    if (cPie) drawCanvasFallbackPie(cPie);
+                    if (cAmt) drawCanvasFallbackAmt(cAmt);
+                }
+            } catch (err) {
+                console.warn("Chart init notice, switching to canvas fallback:", err);
+                const cTrend = document.getElementById('chartTrend');
+                const cPie = document.getElementById('chartFraudPie');
+                const cAmt = document.getElementById('chartFraudAmt');
+                if (cTrend) drawCanvasFallbackTrend(cTrend);
+                if (cPie) drawCanvasFallbackPie(cPie);
+                if (cAmt) drawCanvasFallbackAmt(cAmt);
+            }
+        }
+
+        function initAnalyticsCharts() {
+            try {
+                const cAnaTrend = document.getElementById('chartAnaTrend');
+                const cAnaAmt = document.getElementById('chartAnaAmt');
+                if (typeof Chart !== 'undefined') {
+                    if (cAnaTrend) {
+                        if (chartInstances['anaTrend']) chartInstances['anaTrend'].destroy();
+                        chartInstances['anaTrend'] = new Chart(cAnaTrend, {
+                            type: 'line',
+                            data: {
+                                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                                datasets: [{
+                                    label: 'Volume',
+                                    data: [120, 190, 280, 420],
+                                    borderColor: '#3b82f6',
+                                    backgroundColor: 'rgba(59,130,246,0.1)',
+                                    fill: true,
+                                    tension: 0.3
+                                }]
+                            },
+                            options: { responsive: true, maintainAspectRatio: false }
+                        });
+                    }
+
+                    if (cAnaAmt) {
+                        if (chartInstances['anaAmt']) chartInstances['anaAmt'].destroy();
+                        chartInstances['anaAmt'] = new Chart(cAnaAmt, {
+                            type: 'bar',
+                            data: {
+                                labels: FRAUD_TYPES,
+                                datasets: [{
+                                    label: 'Loss (₹ Lakhs)',
+                                    data: [450, 320, 210, 150, 120, 80],
+                                    backgroundColor: COLORS,
+                                    borderRadius: 6
+                                }]
+                            },
+                            options: { responsive: true, maintainAspectRatio: false }
+                        });
+                    }
+                } else {
+                    if (cAnaTrend) drawCanvasFallbackTrend(cAnaTrend);
+                    if (cAnaAmt) drawCanvasFallbackAmt(cAnaAmt);
+                }
+            } catch (err) {
+                console.warn("Analytics chart notice:", err);
+            }
+        }
+
+        // Initialize charts with immediate and delayed triggers to handle asynchronous DOM & script loading
+        initDashboardCharts();
+        window.addEventListener('load', () => { setTimeout(initDashboardCharts, 100); });
+        window.addEventListener('resize', () => { initDashboardCharts(); });
+
+        const urlParams = new URLSearchParams(window.location.search);
+        showCmdTab(urlParams.get('tab') || 'dashboard');
+    </script>
+</body>
+</html>

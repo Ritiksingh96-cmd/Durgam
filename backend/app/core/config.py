@@ -2,6 +2,10 @@ import os
 import hashlib
 import hmac
 from typing import Optional, Dict, Any
+from dotenv import load_dotenv
+
+# Load local environment variables
+load_dotenv()
 
 class Settings:
     PROJECT_NAME: str = "DURGAM (Dynamic Unified Risk-Grid & Geospatial Analytics Module)"
@@ -13,35 +17,43 @@ class Settings:
     # DPDP Act 2023 Salt
     DPDP_CONSORTIUM_SALT: str = os.getenv("DPDP_SALT", "durgam_consortium_salted_hash_v1_dpdp2023")
     
-    # Blockchain Configuration (Polygon Amoy Testnet / Hyperledger Besu)
-    POLYGON_AMOY_RPC: str = "https://rpc-amoy.polygon.technology"
-    EVIDENCE_CONTRACT_ADDRESS: str = "0x7E6cD5Db49019A96f77293DA7F9b000000000000"
+    # Blockchain Configuration (Polygon Amoy Testnet / Infura / Hyperledger Besu)
+    INFURA_API_KEY: str = os.getenv("INFURA_API_KEY", "99fdfbaefa39455c9100a4a79b6e79ce")
+    POLYGON_AMOY_RPC: str = os.getenv("POLYGON_AMOY_RPC", f"https://polygon-amoy.infura.io/v3/{os.getenv('INFURA_API_KEY', '99fdfbaefa39455c9100a4a79b6e79ce')}")
+    POLYGON_MAINNET_RPC: str = os.getenv("POLYGON_MAINNET_RPC", f"https://polygon-mainnet.infura.io/v3/{os.getenv('INFURA_API_KEY', '99fdfbaefa39455c9100a4a79b6e79ce')}")
+    EVIDENCE_CONTRACT_ADDRESS: str = os.getenv("EVIDENCE_CONTRACT_ADDRESS", "0x7E6cD5Db49019A96f77293DA7F9b000000000000")
     
     # Sovereign API Keys & Gateways
     DURGAM_ADMIN_API_KEY: str = os.getenv("DURGAM_ADMIN_API_KEY", "durgam_sovereign_mha_admin_master_key_2026")
     DURGAM_POLICE_API_KEY: str = os.getenv("DURGAM_POLICE_API_KEY", "durgam_nc4_police_command_token_2026")
     DURGAM_BANK_API_KEY: str = os.getenv("DURGAM_BANK_API_KEY", "durgam_npci_iso20022_switch_token_2026")
+
+    # Telegram Bot API for Police Tactical CAD Turn-by-Turn Dispatch
+    TELEGRAM_BOT_TOKEN: str = os.getenv("TELEGRAM_BOT_TOKEN", "")
+    TELEGRAM_POLICE_CHAT_ID: str = os.getenv("TELEGRAM_POLICE_CHAT_ID", "")
+    GOOGLE_MAPS_API_KEY: str = os.getenv("GOOGLE_MAPS_API_KEY", "")
+    POLICE_OFFICER_NAME: str = os.getenv("POLICE_OFFICER_NAME", "ASI Virender / SI Rajesh Hooda")
     
     # Auto-Trigger Autonomous Rule Matrix
-    AUTO_TRIGGER_ENABLED: bool = True
-    AUTO_HOLD_THRESHOLD_INR: float = 50000.0  # Auto-hold if financial loss >= 50k
-    AUTO_HOLD_RISK_SCORE_THRESHOLD: float = 0.85  # GNN Mule score >= 0.85
-    AUTO_CAD_DISPATCH_PROBABILITY: float = 0.80  # ST-KDE ATM cashout probability >= 80%
-    AUTO_CAD_MAX_ETA_MINUTES: float = 8.0  # CAD Unit ETA under 8 minutes
-    AUTO_IMEI_BLOCK_COMPLAINT_COUNT: int = 2  # Block IMEI automatically upon 2 corroborating complaints
-    AUTO_ALERT_RBI_FIU_THRESHOLD_INR: float = 1000000.0  # Auto-alert RBI/FIU on >= ₹10 Lakhs
+    AUTO_TRIGGER_ENABLED: bool = os.getenv("AUTO_TRIGGER_ENABLED", "True").lower() in ("true", "1", "yes")
+    AUTO_HOLD_THRESHOLD_INR: float = float(os.getenv("AUTO_HOLD_THRESHOLD_INR", "50000.0"))
+    AUTO_HOLD_RISK_SCORE_THRESHOLD: float = float(os.getenv("AUTO_HOLD_RISK_SCORE_THRESHOLD", "0.85"))
+    AUTO_CAD_DISPATCH_PROBABILITY: float = float(os.getenv("AUTO_CAD_DISPATCH_PROBABILITY", "0.80"))
+    AUTO_CAD_MAX_ETA_MINUTES: float = float(os.getenv("AUTO_CAD_MAX_ETA_MINUTES", "8.0"))
+    AUTO_IMEI_BLOCK_COMPLAINT_COUNT: int = int(os.getenv("AUTO_IMEI_BLOCK_COMPLAINT_COUNT", "2"))
+    AUTO_ALERT_RBI_FIU_THRESHOLD_INR: float = float(os.getenv("AUTO_ALERT_RBI_FIU_THRESHOLD_INR", "1000000.0"))
     
     # Micro-Hold Configuration
-    MICRO_HOLD_DURATION_MINUTES: int = 30
+    MICRO_HOLD_DURATION_MINUTES: int = int(os.getenv("MICRO_HOLD_DURATION_MINUTES", "30"))
     AUTO_DECAY_ENABLED: bool = True
     
     # Sovereign Telemetry
     ZERO_COMMERCIAL_CLOUD_TELEMETRY: bool = True
 
     # External API Integration Endpoints
-    SANCHAR_SAATHI_CEIR_URL: str = "https://sancharsaathi.gov.in/api/v1/ceir/blacklist"
-    NPCI_CAMT056_SWITCH_URL: str = "https://npci.org.in/switch/iso20022/camt056"
-    BSA_SECTION63_LEDGER_URL: str = "https://amoy.polygonscan.com/address/0x7E6cD5Db49019A96f77293DA7F9b000000000000"
+    SANCHAR_SAATHI_CEIR_URL: str = os.getenv("SANCHAR_SAATHI_CEIR_URL", "https://sancharsaathi.gov.in/api/v1/ceir/blacklist")
+    NPCI_CAMT056_SWITCH_URL: str = os.getenv("NPCI_CAMT056_SWITCH_URL", "https://npci.org.in/switch/iso20022/camt056")
+    BSA_SECTION63_LEDGER_URL: str = os.getenv("BSA_SECTION63_LEDGER_URL", "https://amoy.polygonscan.com/address/0x7E6cD5Db49019A96f77293DA7F9b000000000000")
 
 settings = Settings()
 

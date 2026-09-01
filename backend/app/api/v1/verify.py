@@ -232,7 +232,7 @@ def verify_document_hash(payload: DocumentHashVerificationRequest):
     import time
     mock_cert_id = f"BSA63-CERT-{uuid.uuid4().hex[:10].upper()}"
     mock_tx = f"0x{uuid.uuid4().hex}{uuid.uuid4().hex[:32]}"
-    mock_root = f"0x{uuid.uuid4().hex}"
+    mock_root = f"0x7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069"
     
     return {
         "is_authentic": True,
@@ -241,7 +241,7 @@ def verify_document_hash(payload: DocumentHashVerificationRequest):
         "statutory_predecessor": "Section 65B, Indian Evidence Act 1872",
         "admissibility_status": "CERTIFIED_COURT_ADMISSIBLE",
         "certificate_id": mock_cert_id,
-        "case_id": payload.case_id or f"DURGAM-EVD-{uuid.uuid4().hex[:6].upper()}",
+        "case_id": payload.case_id or f"NCRP-1930-{uuid.uuid4().hex[:8].upper()}",
         "sha256_document_hash": clean_hash if clean_hash.startswith("0x") else f"0x{clean_hash}",
         "merkle_root": mock_root,
         "polygon_tx_hash": mock_tx,
@@ -253,6 +253,46 @@ def verify_document_hash(payload: DocumentHashVerificationRequest):
             "bit_flip_detected": False,
             "hash_chain_verified": True
         }
+    }
+
+@router.get("/blockchain-status")
+def get_blockchain_network_status():
+    """Returns live network health, contract address, block height, and validator nodes for Polygon Amoy Testnet"""
+    from backend.app.services.blockchain_service import blockchain_service
+    return blockchain_service.get_blockchain_status()
+
+@router.get("/blockchain-batches")
+def get_blockchain_sealed_batches():
+    """Returns all committed on-chain Merkle batches on Polygon Amoy"""
+    from backend.app.services.blockchain_service import blockchain_service
+    return {
+        "success": True,
+        "network": "Polygon Amoy Testnet (Chain ID 80002)",
+        "batches": blockchain_service.get_all_batches()
+    }
+
+@router.get("/merkle-tree-visual")
+def get_merkle_tree_visual_dag(case_id: str = Query(default="NCRP-1930-48291048")):
+    """Generates visual Merkle DAG tree with step-by-step cryptographic proof verification"""
+    from backend.app.services.blockchain_service import blockchain_service
+    return blockchain_service.get_merkle_tree_visual(case_id=case_id)
+
+class MerkleProofVerificationRequest(BaseModel):
+    leaf_hash: str
+    expected_root: str
+    proof: list
+
+@router.post("/validate-merkle-proof")
+def validate_merkle_proof_step(payload: MerkleProofVerificationRequest):
+    """Cryptographically validates a leaf hash against a root using Merkle proof siblings"""
+    from blockchain.merkle_tree import MerkleTree
+    is_valid = MerkleTree.verify_proof(payload.leaf_hash, payload.proof, payload.expected_root)
+    return {
+        "valid": is_valid,
+        "leaf_hash": payload.leaf_hash,
+        "expected_root": payload.expected_root,
+        "proof_steps_count": len(payload.proof),
+        "status": "VALID_MERKLE_INCLUSION_PROOF" if is_valid else "INVALID_PROOF_OR_TAMPERED_LEAF"
     }
 
 @router.post("/document-upload")

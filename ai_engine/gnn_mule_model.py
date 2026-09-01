@@ -56,10 +56,11 @@ def build_sparse_normalized_adj(edge_index: np.ndarray, num_nodes: int) -> torch
     deg[deg == 0] = 1.0
     
     # Values: 1 / deg[s]
-    vals = [1.0 / deg[s] for s in srcs if s < num_nodes and dsts[srcs.index(s)] < num_nodes]
+    values = [1.0 / deg[s] for s in srcs]
     
     indices = torch.tensor([srcs, dsts], dtype=torch.long)
-    values = torch.tensor([1.0 / deg[s] for s in srcs], dtype=torch.float32)
+    values_tensor = torch.tensor(values, dtype=torch.float32)
     
-    sparse_adj = torch.sparse_coo_tensor(indices, values, (num_nodes, num_nodes))
+    sparse_adj = torch.sparse_coo_tensor(indices, values_tensor, (num_nodes, num_nodes))
     return sparse_adj.coalesce()
+

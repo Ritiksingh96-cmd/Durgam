@@ -70,3 +70,4 @@ class Section63BSAExplainer:
         }
 
 section63_bsa_explainer = Section63BSAExplainer()
+XAIExplainer = Section63BSAExplainer
