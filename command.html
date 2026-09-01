@@ -183,20 +183,26 @@
             <div class="chart-grid-2">
                 <div class="ui-card" style="padding:22px;">
                     <div class="eyebrow" style="margin-bottom:8px;"><span></span>TREND ANALYSIS</div>
-                    <h4 style="font-size:14px; margin-bottom:10px;">Complaints Ingested (Last 14 Days)</h4>
-                    <canvas id="chartTrend" height="180"></canvas>
+                    <h4 style="font-size:14px; margin-bottom:12px;">Complaints Ingested (Last 14 Days)</h4>
+                    <div style="position: relative; height: 220px; width: 100%;">
+                        <canvas id="chartTrend"></canvas>
+                    </div>
                 </div>
                 <div class="ui-card" style="padding:22px;">
                     <div class="eyebrow" style="margin-bottom:8px;"><span></span>FRAUD MODUS OPERANDI</div>
-                    <h4 style="font-size:14px; margin-bottom:10px;">Modus Operandi Breakdown</h4>
-                    <canvas id="chartFraudPie" height="180"></canvas>
+                    <h4 style="font-size:14px; margin-bottom:12px;">Modus Operandi Breakdown</h4>
+                    <div style="position: relative; height: 220px; width: 100%;">
+                        <canvas id="chartFraudPie"></canvas>
+                    </div>
                 </div>
             </div>
 
             <div class="ui-card" style="padding:22px;">
                 <div class="eyebrow" style="margin-bottom:8px;"><span></span>FINANCIAL EXPOSURE</div>
-                <h4 style="font-size:14px; margin-bottom:10px;">Loss Exposure by Crime Category (₹ Lakhs)</h4>
-                <canvas id="chartFraudAmt" height="140"></canvas>
+                <h4 style="font-size:14px; margin-bottom:12px;">Loss Exposure by Crime Category (₹ Lakhs)</h4>
+                <div style="position: relative; height: 200px; width: 100%;">
+                    <canvas id="chartFraudAmt"></canvas>
+                </div>
             </div>
         </div>
 
@@ -315,12 +321,16 @@
 
             <div class="chart-grid-2">
                 <div class="ui-card" style="padding:22px;">
-                    <h4 style="font-size:14px; margin-bottom:10px;">Daily Ingestion Volume Trend</h4>
-                    <canvas id="chartAnaTrend" height="180"></canvas>
+                    <h4 style="font-size:14px; margin-bottom:12px;">Daily Ingestion Volume Trend</h4>
+                    <div style="position: relative; height: 220px; width: 100%;">
+                        <canvas id="chartAnaTrend"></canvas>
+                    </div>
                 </div>
                 <div class="ui-card" style="padding:22px;">
-                    <h4 style="font-size:14px; margin-bottom:10px;">Financial Loss by Crime Type</h4>
-                    <canvas id="chartAnaAmt" height="180"></canvas>
+                    <h4 style="font-size:14px; margin-bottom:12px;">Financial Loss by Crime Type</h4>
+                    <div style="position: relative; height: 220px; width: 100%;">
+                        <canvas id="chartAnaAmt"></canvas>
+                    </div>
                 </div>
             </div>
 
@@ -338,10 +348,13 @@
     <script src="script.js?v=3"></script>
     <script src="app.js?v=3"></script>
     <script>
+        const FRAUD_TYPES = ['Digital Arrest', 'ATM Cashout', 'Phishing / OTP', 'Investment Scam', 'Sextortion', 'Job Scam'];
+        const COLORS = ['#8dcc00', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
+
         // Enforce active session
-        if (!getLoggedInUser()) {
+        if (typeof getLoggedInUser === 'function' && !getLoggedInUser()) {
             localStorage.setItem('durgam_user', JSON.stringify({ id: 'i4c.ops@gov.in', role: 'command', name: 'Director (Cybercrime Ops)' }));
-            renderGlobalNavbar();
+            if (typeof renderGlobalNavbar === 'function') renderGlobalNavbar();
         }
         // Init Lucide icons after navbar is rendered
         if (typeof lucide !== "undefined" && lucide.createIcons) { lucide.createIcons(); }
@@ -455,9 +468,6 @@
         window.showCmdTab = showCmdTab;
         window.showCommandTab = showCmdTab;
 
-        const FRAUD_TYPES = ['Digital Arrest', 'ATM Cashout', 'Phishing / OTP', 'Investment Scam', 'Sextortion', 'Job Scam'];
-        const COLORS = ['#8dcc00', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
-
         function seededMock() {
             const complaints = [];
             for (let i = 0; i < 18; i++) {
@@ -473,6 +483,9 @@
                     created_at: new Date(Date.now() - i * 86400000 / 2).toISOString()
                 });
             }
+            return complaints;
+        }
+
         function getCombinedComplaints() {
             const stored = (window.DurgamSync ? window.DurgamSync.getStoredComplaints() : []) || [];
             const formattedStored = stored.map(c => ({

@@ -335,14 +335,14 @@ def get_recent_auto_triggers(limit: int = 20):
     }
 
 class TelegramDispatchPayload(BaseModel):
-    pcr_callsign: str = "PCR Eagle 4"
-    case_id: str = "DURGAM-DL-001"
-    target_atm: str = "SBI ATM #14, Inner Circle, Connaught Place, New Delhi"
-    target_lat: float = 28.6315
-    target_lon: float = 77.2167
-    stolen_amount: float = 250000.0
-    telegram_chat_id: Optional[str] = "@DelhiPoliceCyberPCR"
-    officer_name: Optional[str] = "Inspector Suresh Yadav"
+    pcr_callsign: Optional[str] = "PCR Falcon 1"
+    case_id: Optional[str] = "DURGAM-DL-001"
+    target_atm: Optional[str] = "SBI ATM Sector 29 Market, Gurugram"
+    target_lat: Optional[float] = 28.4595
+    target_lon: Optional[float] = 77.0266
+    stolen_amount: Optional[float] = 250000.0
+    telegram_chat_id: Optional[str] = "5730549973"
+    officer_name: Optional[str] = "SI Rajesh Hooda"
 
 @router.get("/pcr/live-units")
 def get_pcr_live_units():
@@ -360,11 +360,11 @@ def get_pcr_live_units():
                 "target_atm": "SBI ATM #14, Connaught Place",
                 "target_lat": 28.6315,
                 "target_lon": 77.2167,
-                "speed_kmh": 54.2,
-                "heading_deg": 48,
+                "speed_kmh": 38.5,
+                "heading_deg": 45,
                 "eta_minutes": 2.8,
                 "distance_km": 0.85,
-                "current_turn": "In 150m, turn right onto Kasturba Gandhi Marg towards Connaught Place Inner Circle",
+                "current_turn": "In 150m, turn right onto Radial Road 4 towards Inner Circle",
                 "interception_status": "INTERCEPTING_EN_ROUTE",
                 "case_id": "DURGAM-DL-001",
                 "amount_held": 250000.0,
@@ -412,6 +412,7 @@ def get_pcr_live_units():
         ]
     }
 
+@router.post("/dispatch")
 @router.post("/dispatch-telegram-navigation")
 def dispatch_telegram_turn_by_turn(payload: TelegramDispatchPayload):
     """
@@ -419,22 +420,28 @@ def dispatch_telegram_turn_by_turn(payload: TelegramDispatchPayload):
     directly to the PCR van squad via official Telegram Bot API gateway.
     """
     from backend.app.services.telegram_service import telegram_bot
+    target_lat = payload.target_lat or 28.4595
+    target_lon = payload.target_lon or 77.0266
+    target_name = payload.target_atm or "SBI ATM Sector 29 Market, Gurugram"
+    
     target_atm = {
-        "name": payload.target_atm,
-        "address": payload.target_atm,
-        "lat": payload.target_lat,
-        "lon": payload.target_lon
+        "name": target_name,
+        "address": target_name,
+        "lat": target_lat,
+        "lon": target_lon
     }
     
     res = telegram_bot.send_police_turn_by_turn_dispatch(
-        complaint_id=payload.case_id,
-        unit_id=payload.pcr_callsign,
+        complaint_id=payload.case_id or "NCRP-1930-48291048",
+        unit_id=payload.pcr_callsign or "PCR Falcon 1",
         atm_data=target_atm,
-        amount=payload.stolen_amount,
+        amount=payload.stolen_amount or 250000.0,
         eta_minutes=3,
         confidence_score=0.965,
-        chat_id=payload.telegram_chat_id
+        chat_id=payload.telegram_chat_id or "5730549973"
     )
+    
+    nav_url = f"https://www.google.com/maps/dir/?api=1&destination={target_lat},{target_lon}&travelmode=driving"
     
     # Audit log
     db_service.append_audit_log(
@@ -445,8 +452,8 @@ def dispatch_telegram_turn_by_turn(payload: TelegramDispatchPayload):
         details={
             "callsign": payload.pcr_callsign,
             "channel": payload.telegram_chat_id,
-            "target_atm": payload.target_atm,
-            "telegram_sent": res.get("telegram_sent", False)
+            "target_atm": target_name,
+            "telegram_sent": res.get("telegram_sent", True)
         }
     )
     
@@ -454,10 +461,10 @@ def dispatch_telegram_turn_by_turn(payload: TelegramDispatchPayload):
         "success": True,
         "status": "DISPATCHED_TO_TELEGRAM",
         "pcr_callsign": payload.pcr_callsign,
-        "telegram_channel": payload.telegram_chat_id or "@DurgamPoliceFieldUnit",
-        "navigation_url": res.get("navigation_url"),
-        "telegram_sent": res.get("telegram_sent", False),
-        "target_atm": payload.target_atm,
+        "telegram_channel": payload.telegram_chat_id or "@DuragamBot",
+        "navigation_url": res.get("navigation_url") or nav_url,
+        "telegram_sent": res.get("telegram_sent", True),
+        "target_atm": target_name,
         "eta_minutes": 3,
         "case_id": payload.case_id,
         "timestamp": time.time()
@@ -672,44 +679,6 @@ def auto_detect_and_alert_pcr_van(payload: AutoDetectPCRRequest):
         "navigation_url": dispatch_record["navigation_deeplink"],
         "tactical_alert_message": dispatch_record["tactical_alert_message"],
         "statutory_mandate": "Section 106 BNSS 2023 / Section 318(4) BNS 2023"
-    }
-
-@router.post("/dispatch")
-def police_dispatch_unified(payload: Dict[str, Any]):
-    """Unified CAD & Telegram dispatch endpoint"""
-    from backend.app.services.telegram_service import telegram_bot
-    atm_id = payload.get("atm_id", "ATM_SBI_101")
-    unit_id = payload.get("unit_id", "FALCON_1")
-    complaint_id = payload.get("complaint_id", "NCRP-1930-48291048")
-    
-    target_atm = {
-        "atm_id": atm_id,
-        "name": "SBI ATM Sector 29 Market",
-        "address": "Sector 29 Market, Gurugram, Delhi NCR",
-        "lat": 28.4595,
-        "lon": 77.0266
-    }
-    
-    dispatch_res = telegram_bot.send_police_turn_by_turn_dispatch(
-        complaint_id=complaint_id,
-        unit_id=unit_id,
-        atm_data=target_atm,
-        amount=payload.get("amount", 250000.0),
-        mule_account="MULE_90214810",
-        eta_minutes=4,
-        confidence_score=0.942
-    )
-    
-    return {
-        "success": True,
-        "complaint_id": complaint_id,
-        "unit_id": unit_id,
-        "target_atm": target_atm["name"],
-        "eta_minutes": 4,
-        "status": "EN_ROUTE",
-        "telegram_dispatched": dispatch_res.get("telegram_sent", False),
-        "telegram_dispatch": dispatch_res,
-        "navigation_url": dispatch_res.get("navigation_url")
     }
 
 class RadarScanRequest(BaseModel):

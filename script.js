@@ -187,12 +187,6 @@ function renderGlobalNavbar() {
         return;
     }
 
-        if (typeof lucide !== 'undefined' && lucide.createIcons) {
-            lucide.createIcons();
-        }
-        return;
-    }
-
     // 3. PUBLIC LANDING & INFORMATIONAL PAGES (index.html, about.html, resources.html, contact.html)
     if (currentPath === "index.html" || currentPath === "") {
         navLinks.innerHTML = `
