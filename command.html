@@ -76,12 +76,8 @@
     </style>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="chart.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        if (typeof Chart === 'undefined') {
-            document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"><\/script>');
-        }
-    </script>
 </head>
 <body>
 
@@ -638,17 +634,31 @@
         let chartInstances = {};
 
         // Native HTML5 Canvas Fallback Renderer (Ensures graphs NEVER appear empty)
-        function drawCanvasFallbackTrend(canvas) {
+        function setupHiDPICanvas(canvas, reqH = 220) {
             const ctx = canvas.getContext('2d');
-            if (!ctx) return;
-            const w = canvas.width = canvas.parentElement.clientWidth || 400;
-            const h = canvas.height = 180;
+            if (!ctx) return null;
+            const dpr = window.devicePixelRatio || 1;
+            const rect = canvas.parentElement ? canvas.parentElement.getBoundingClientRect() : { width: 500, height: reqH };
+            const w = Math.max(rect.width || 500, 300);
+            const h = reqH;
+            canvas.width = w * dpr;
+            canvas.height = h * dpr;
+            canvas.style.width = w + 'px';
+            canvas.style.height = h + 'px';
+            ctx.scale(dpr, dpr);
+            return { ctx, w, h };
+        }
+
+        function drawCanvasFallbackTrend(canvas) {
+            const res = setupHiDPICanvas(canvas, 220);
+            if (!res) return;
+            const { ctx, w, h } = res;
             ctx.clearRect(0, 0, w, h);
 
             const data = [14, 18, 22, 19, 28, 34, 42, 51];
-            const labels = ['D1','D3','D5','D7','D9','D11','D13','Today'];
+            const labels = ['Day 1','Day 3','Day 5','Day 7','Day 9','Day 11','Day 13','Today'];
             const max = 60;
-            const padL = 35, padR = 20, padT = 20, padB = 30;
+            const padL = 40, padR = 20, padT = 20, padB = 30;
             const plotW = w - padL - padR;
             const plotH = h - padT - padB;
 
@@ -664,12 +674,12 @@
 
                 ctx.fillStyle = '#9ca3af';
                 ctx.font = '10px sans-serif';
-                ctx.fillText(Math.round(max - (max / 4) * i), 8, y + 3);
+                ctx.fillText(Math.round(max - (max / 4) * i), 10, y + 3);
             }
 
             // Fill area
             const grad = ctx.createLinearGradient(0, padT, 0, h - padB);
-            grad.addColorStop(0, 'rgba(141, 204, 0, 0.35)');
+            grad.addColorStop(0, 'rgba(141, 204, 0, 0.4)');
             grad.addColorStop(1, 'rgba(141, 204, 0, 0.02)');
 
             ctx.beginPath();
@@ -703,25 +713,24 @@
                 const y = h - padB - (val / max) * plotH;
                 ctx.fillStyle = '#050708';
                 ctx.beginPath();
-                ctx.arc(x, y, 3.5, 0, Math.PI * 2);
+                ctx.arc(x, y, 4, 0, Math.PI * 2);
                 ctx.fill();
                 ctx.fillStyle = '#8dcc00';
                 ctx.beginPath();
-                ctx.arc(x, y, 2, 0, Math.PI * 2);
+                ctx.arc(x, y, 2.5, 0, Math.PI * 2);
                 ctx.fill();
 
                 ctx.fillStyle = '#6b7280';
-                ctx.font = '10px monospace';
+                ctx.font = '10.5px monospace';
                 ctx.textAlign = 'center';
-                ctx.fillText(labels[i], x, h - 10);
+                ctx.fillText(labels[i], x, h - 8);
             });
         }
 
         function drawCanvasFallbackPie(canvas) {
-            const ctx = canvas.getContext('2d');
-            if (!ctx) return;
-            const w = canvas.width = canvas.parentElement.clientWidth || 400;
-            const h = canvas.height = 180;
+            const res = setupHiDPICanvas(canvas, 220);
+            if (!res) return;
+            const { ctx, w, h } = res;
             ctx.clearRect(0, 0, w, h);
 
             const slices = [
@@ -751,13 +760,13 @@
 
             // Center text
             ctx.fillStyle = '#111820';
-            ctx.font = 'bold 12px Space Grotesk, sans-serif';
+            ctx.font = 'bold 13px Space Grotesk, sans-serif';
             ctx.textAlign = 'center';
             ctx.fillText('100%', cx, cy + 4);
 
             // Legend
-            const legX = w * 0.62;
-            let legY = 22;
+            const legX = w * 0.60;
+            let legY = 28;
             slices.forEach(s => {
                 ctx.fillStyle = s.color;
                 ctx.fillRect(legX, legY - 8, 10, 10);
@@ -765,15 +774,14 @@
                 ctx.font = '11px sans-serif';
                 ctx.textAlign = 'left';
                 ctx.fillText(`${s.label} (${s.val}%)`, legX + 16, legY);
-                legY += 24;
+                legY += 28;
             });
         }
 
         function drawCanvasFallbackAmt(canvas) {
-            const ctx = canvas.getContext('2d');
-            if (!ctx) return;
-            const w = canvas.width = canvas.parentElement.clientWidth || 800;
-            const h = canvas.height = 140;
+            const res = setupHiDPICanvas(canvas, 200);
+            if (!res) return;
+            const { ctx, w, h } = res;
             ctx.clearRect(0, 0, w, h);
 
             const items = [
@@ -789,7 +797,7 @@
             const plotW = w - padL - padR;
             const plotH = h - padT - padB;
             const max = 500;
-            const barW = (plotW / items.length) * 0.6;
+            const barW = (plotW / items.length) * 0.55;
 
             items.forEach((it, i) => {
                 const x = padL + (plotW / items.length) * i + (plotW / items.length - barW) / 2;
@@ -798,17 +806,18 @@
 
                 ctx.fillStyle = it.color;
                 ctx.beginPath();
-                ctx.roundRect ? ctx.roundRect(x, y, barW, barH, [4, 4, 0, 0]) : ctx.rect(x, y, barW, barH);
+                if (ctx.roundRect) ctx.roundRect(x, y, barW, barH, [4, 4, 0, 0]);
+                else ctx.rect(x, y, barW, barH);
                 ctx.fill();
 
                 ctx.fillStyle = '#111820';
-                ctx.font = 'bold 10px sans-serif';
+                ctx.font = 'bold 11px sans-serif';
                 ctx.textAlign = 'center';
                 ctx.fillText(`₹${it.val}L`, x + barW / 2, y - 4);
 
                 ctx.fillStyle = '#6b7280';
-                ctx.font = '10px sans-serif';
-                ctx.fillText(it.label, x + barW / 2, h - 10);
+                ctx.font = '10.5px sans-serif';
+                ctx.fillText(it.label, x + barW / 2, h - 8);
             });
         }
 
