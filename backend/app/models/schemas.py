@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 from typing import List, Dict, Optional, Any
 from enum import Enum
 import time
@@ -31,13 +31,27 @@ class ComplaintCreate(BaseModel):
     victim_phone: str = Field(..., example="9876543210")
     victim_city: str = Field(default="Delhi", example="Delhi")
     victim_state: str = Field(default="Delhi", example="Delhi")
-    utr_number: str = Field(..., example="UTR482910482910")
+    utr_number: str = Field(default="", example="UTR482910482910")
+    disputed_utr: Optional[str] = None
     source_bank: str = Field(default="State Bank of India", example="State Bank of India")
-    source_account: str = Field(..., example="40291048291")
+    source_account: str = Field(default="XXXX-XXXX-2948", example="40291048291")
     loss_amount: float = Field(..., example=250000.0)
     incident_date: Optional[str] = None
     crime_category: Optional[CrimeCategory] = CrimeCategory.DIGITAL_ARREST
     narrative: Optional[str] = None
+    time_elapsed_minutes: Optional[float] = 2.5
+
+    @model_validator(mode='before')
+    @classmethod
+    def normalize_aliases(cls, data: Any):
+        if isinstance(data, dict):
+            if not data.get('utr_number') and data.get('disputed_utr'):
+                data['utr_number'] = str(data['disputed_utr'])
+            elif not data.get('utr_number'):
+                data['utr_number'] = f"UTR{int(time.time()*1000)}"
+            if not data.get('source_account'):
+                data['source_account'] = "XXXX-XXXX-2948"
+        return data
 
 class MultiHopNode(BaseModel):
     account_id: str

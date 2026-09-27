@@ -174,7 +174,7 @@ async def infer_gnn_mule_account(req: GNNMuleInferenceRequest):
             "hop_level": req.hop_level,
             "cross_bank_zk_consortium_matches": req.cross_bank_zk_matches
         },
-        "recommended_authority_action": "DISPATCH_ISO20022_CAMT056_HOLD (< 140ms)" if is_mule else "ROUTINE_MONITORING"
+        "recommended_authority_action": "DISPATCH_SECTION_106_BNSS_ACCOUNT_FREEZE (< 140ms)" if is_mule else "ROUTINE_MONITORING"
     }
 
 

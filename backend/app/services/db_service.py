@@ -9,7 +9,9 @@ import time
 import os
 from typing import List, Dict, Any, Optional
 
-DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "durgam_sovereign.db")
+# DB lives in backend/durgam_sovereign.db
+# Path: backend/app/services/db_service.py → dirname×3 → backend/
+DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "durgam_sovereign.db")
 
 # 7 Authentic Pan-India Cyber Financial Fraud Case Studies
 PAN_INDIA_EMPIRICAL_CASES = [
@@ -260,9 +262,7 @@ def init_db():
     cursor.execute("PRAGMA cache_size = 10000;")
     cursor.execute("PRAGMA temp_store = MEMORY;")
 
-    # Drop old schema to apply upgraded schema with extra_data_json
-    cursor.execute("DROP TABLE IF EXISTS incidents")
-
+    # Create incidents table if not exists - do NOT drop to preserve citizen complaints
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS incidents (
         case_id TEXT PRIMARY KEY,
@@ -373,7 +373,7 @@ def init_db():
     # Re-seed with full Pan-India diverse cases
     for case in PAN_INDIA_EMPIRICAL_CASES:
         cursor.execute("""
-        INSERT OR REPLACE INTO incidents (
+        INSERT OR IGNORE INTO incidents (
             case_id, ack_number, victim_name, victim_phone, victim_city, victim_state,
             utr_number, source_bank, source_account, loss_amount, crime_category,
             narrative, status, execution_latency_ms, nodes_json, terminal_node_json, extra_data_json, created_at
@@ -568,7 +568,116 @@ def update_incident_status(case_id: str, new_status: str) -> bool:
     affected = cursor.rowcount
     conn.commit()
     conn.close()
+    _INCIDENTS_CACHE["data"] = None
     return affected > 0
+
+def update_case_remarks(case_id: str, remarks: str, actor: str = "Citizen Complainant") -> bool:
+    clean = case_id.strip()
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute("SELECT narrative, extra_data_json FROM incidents WHERE case_id = ? OR ack_number = ?", (clean, clean))
+    row = cursor.fetchone()
+    if not row:
+        conn.close()
+        return False
+    
+    old_narrative = row["narrative"] or ""
+    new_narrative = f"{old_narrative}\n[Update: {time.strftime('%Y-%m-%d %H:%M:%S')}]: {remarks}".strip()
+    
+    extra = {}
+    if row["extra_data_json"]:
+        try: extra = json.loads(row["extra_data_json"])
+        except Exception: extra = {}
+    if "remarks_history" not in extra:
+        extra["remarks_history"] = []
+    extra["remarks_history"].append({"timestamp": time.time(), "actor": actor, "remarks": remarks})
+    
+    cursor.execute("UPDATE incidents SET narrative = ?, extra_data_json = ? WHERE case_id = ? OR ack_number = ?",
+                   (new_narrative, json.dumps(extra), clean, clean))
+    affected = cursor.rowcount
+    conn.commit()
+    conn.close()
+    _INCIDENTS_CACHE["data"] = None
+    append_audit_log(actor, "CITIZEN", "CASE_REMARKS_UPDATED", clean, {"remarks": remarks})
+    return affected > 0
+
+def add_secondary_utr(case_id: str, secondary_utr: str, amount: float, actor: str = "Citizen Complainant") -> bool:
+    clean = case_id.strip()
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute("SELECT loss_amount, extra_data_json FROM incidents WHERE case_id = ? OR ack_number = ?", (clean, clean))
+    row = cursor.fetchone()
+    if not row:
+        conn.close()
+        return False
+    
+    old_amt = float(row["loss_amount"] or 0.0)
+    new_amt = old_amt + float(amount)
+    extra = {}
+    if row["extra_data_json"]:
+        try: extra = json.loads(row["extra_data_json"])
+        except Exception: extra = {}
+    if "secondary_utrs" not in extra:
+        extra["secondary_utrs"] = []
+    extra["secondary_utrs"].append({"utr": secondary_utr, "amount": amount, "added_at": time.time()})
+    
+    cursor.execute("UPDATE incidents SET loss_amount = ?, extra_data_json = ? WHERE case_id = ? OR ack_number = ?",
+                   (new_amt, json.dumps(extra), clean, clean))
+    affected = cursor.rowcount
+    conn.commit()
+    conn.close()
+    _INCIDENTS_CACHE["data"] = None
+    append_audit_log(actor, "CITIZEN", "SECONDARY_UTR_ADDED", clean, {"secondary_utr": secondary_utr, "amount": amount})
+    return affected > 0
+
+def void_incident(case_id: str, reason: str = "Citizen Cancelled", actor: str = "Citizen Complainant") -> bool:
+    clean = case_id.strip()
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("UPDATE incidents SET status = 'VOIDED_BY_CITIZEN' WHERE case_id = ? OR ack_number = ?", (clean, clean))
+    affected = cursor.rowcount
+    conn.commit()
+    conn.close()
+    _INCIDENTS_CACHE["data"] = None
+    append_audit_log(actor, "CITIZEN", "INCIDENT_VOIDED", clean, {"reason": reason})
+    return affected > 0
+
+def get_citizen_complaints(identifier: str) -> List[Dict[str, Any]]:
+    clean = identifier.strip().lower()
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute("""
+    SELECT * FROM incidents
+    WHERE LOWER(victim_phone) = ? OR LOWER(victim_name) LIKE ? OR LOWER(source_account) LIKE ? OR LOWER(ack_number) = ? OR LOWER(case_id) = ?
+    ORDER BY created_at DESC
+    """, (clean, f"%{clean}%", f"%{clean}%", clean, clean))
+    rows = cursor.fetchall()
+    conn.close()
+    results = []
+    for r in rows:
+        d = dict(r)
+        if d.get("nodes_json"):
+            try: d["nodes"] = json.loads(d["nodes_json"])
+            except Exception: d["nodes"] = []
+        if d.get("terminal_node_json"):
+            try: d["terminal_node"] = json.loads(d["terminal_node_json"])
+            except Exception: d["terminal_node"] = {}
+        if d.get("extra_data_json"):
+            try:
+                extra = json.loads(d["extra_data_json"])
+                for key in ("hold_details", "candidate_atms", "dispatch_details",
+                            "evidence_certificate", "mule_detection_matrix",
+                            "universal_docket", "golden_hour_countdown",
+                            "auto_triggers_executed", "remarks_history", "secondary_utrs"):
+                    if key in extra:
+                        d[key] = extra[key]
+            except Exception:
+                pass
+        results.append(d)
+    return results
 
 # --- Cryptographic Audit Trail ---
 def append_audit_log(actor: str, role: str, action: str, target_id: str, details: Dict[str, Any]) -> Dict[str, Any]:

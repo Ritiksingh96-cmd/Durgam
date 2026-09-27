@@ -1,9 +1,10 @@
 import time
 import os
+from typing import Optional
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from backend.app.core.config import settings
 from backend.app.api.v1.auth import router as auth_router
 from backend.app.api.v1.citizen import router as citizen_router
@@ -17,6 +18,7 @@ from backend.app.api.v1.verify import router as verify_router
 from backend.app.api.v1.telecom import router as telecom_router
 from backend.app.api.v1.fiu import router as fiu_router
 from backend.app.api.v1.telegram import router as telegram_router
+from backend.app.api.v1.android import router as android_router
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -96,13 +98,46 @@ app.include_router(verify_router, prefix=settings.API_V1_STR)
 app.include_router(telecom_router, prefix=settings.API_V1_STR)
 app.include_router(fiu_router, prefix=settings.API_V1_STR)
 app.include_router(telegram_router, prefix=settings.API_V1_STR)
+app.include_router(android_router, prefix=settings.API_V1_STR)
 
-# Static Files Directory
-static_dir = os.path.join(os.path.dirname(__file__), "static")
-if os.path.exists(static_dir):
-    app.mount("/static", StaticFiles(directory=static_dir), name="static")
+# ── Static File Serving (Production & Dev Compatible) ──────────────────────
+_this_file   = os.path.abspath(__file__)
+_app_dir     = os.path.dirname(_this_file)          # backend/app/
+_backend_dir = os.path.dirname(_app_dir)            # backend/
+_root_dir    = os.path.dirname(_backend_dir)        # project root
 
-docs_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "docs"))
+static_dir = os.path.join(_app_dir, "static")
+os.makedirs(static_dir, exist_ok=True)
+
+def _autosync_root_assets():
+    """Auto-copy root HTML/CSS/JS/images into backend/app/static for production serving."""
+    import shutil
+    _exts = ('.html', '.css', '.js')
+    for fname in os.listdir(_root_dir):
+        if fname.endswith(_exts):
+            src = os.path.join(_root_dir, fname)
+            dst = os.path.join(static_dir, fname)
+            if os.path.isfile(src) and (not os.path.exists(dst) or os.path.getmtime(src) > os.path.getmtime(dst)):
+                shutil.copy2(src, dst)
+    root_images = os.path.join(_root_dir, "images")
+    static_images = os.path.join(static_dir, "images")
+    if os.path.isdir(root_images):
+        os.makedirs(static_images, exist_ok=True)
+        for fname in os.listdir(root_images):
+            src = os.path.join(root_images, fname)
+            dst = os.path.join(static_images, fname)
+            if os.path.isfile(src) and (not os.path.exists(dst) or os.path.getmtime(src) > os.path.getmtime(dst)):
+                shutil.copy2(src, dst)
+
+try:
+    _autosync_root_assets()
+except Exception as _sync_err:
+    import logging
+    logging.getLogger("durgam").warning(f"Static auto-sync skipped: {_sync_err}")
+
+app.mount("/static", StaticFiles(directory=static_dir), name="static")
+
+docs_dir = os.path.abspath(os.path.join(_root_dir, "docs"))
 if os.path.exists(docs_dir):
     app.mount("/documents", StaticFiles(directory=docs_dir), name="documents")
 
@@ -225,31 +260,21 @@ def court_issue_decree_alias(complaint_id: str):
         "message": "Restitution Decree issued under Section 106 BNSS 2023."
     }
 
+@app.post(f"{settings.API_V1_STR}/court/verify-certificate")
+def court_verify_certificate_alias(payload: dict):
+    from backend.app.api.v1.verify import verify_document_hash, DocumentHashVerificationRequest
+    doc_hash = payload.get("document_hash") or payload.get("case_id") or "0x7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069"
+    req = DocumentHashVerificationRequest(
+        document_hash=doc_hash,
+        case_id=payload.get("case_id")
+    )
+    return verify_document_hash(req)
+
 @app.get(f"{settings.API_V1_STR}/bank/chains")
-def bank_chains_alias():
-    return {
-        "chains": [
-            {
-                "chain_id": "CHAIN-SBI-8921",
-                "root_complaint": "NCRP-1930-48291048",
-                "status": "ACTIVE_30_MIN_HOLD",
-                "nodes": [
-                    { "acc": "902148102941", "ifsc": "SBIN0001024", "amt": 250000, "hop": 0 },
-                    { "acc": "774102981234", "ifsc": "HDFC0000084", "amt": 210000, "hop": 1 },
-                    { "acc": "551029841923", "ifsc": "ICIC0000004", "amt": 180000, "hop": 2 }
-                ]
-            },
-            {
-                "chain_id": "CHAIN-SBI-8930",
-                "root_complaint": "NCRP-1930-48291102",
-                "status": "RESTITUTION_ORDERED",
-                "nodes": [
-                    { "acc": "661029481233", "ifsc": "PUNB0002", "amt": 95000, "hop": 0 },
-                    { "acc": "229481029344", "ifsc": "SBIN0001", "amt": 88000, "hop": 1 }
-                ]
-            }
-        ]
-    }
+def bank_chains_alias(bank_name: Optional[str] = None):
+    from backend.app.api.v1.bank import get_bank_transfer_chains
+    return get_bank_transfer_chains(bank_name=bank_name)
+
 
 # Compatibility Aliases for Police Hotspots & Dispatch
 @app.get(f"{settings.API_V1_STR}/police/hotspots")
@@ -341,22 +366,30 @@ def health_check():
         }
     }
 
-# Root Static Fallback Router
+# Root Static Fallback Router — serves every .html page & SPA fallback
 @app.get("/{file_path:path}")
 def serve_root_static_file(file_path: str):
-    # Ignore API calls
-    if file_path.startswith("api/") or file_path.startswith("docs") or file_path.startswith("redoc") or file_path.startswith("openapi.json"):
+    # Ignore API / docs / websocket paths
+    if file_path.startswith(("api/", "docs", "redoc", "openapi.json", "ws/")):
         return Response(status_code=404)
-    
-    # Check static directory
+
+    # 1. Check backend/app/static/ (primary production path)
     candidate = os.path.join(static_dir, file_path)
     if os.path.exists(candidate) and os.path.isfile(candidate):
         return FileResponse(candidate)
-    
-    # Check root workspace
-    root_candidate = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), file_path)
+
+    # 2. Check project root (dev path / fallback)
+    root_candidate = os.path.join(_root_dir, file_path)
     if os.path.exists(root_candidate) and os.path.isfile(root_candidate):
         return FileResponse(root_candidate)
-        
-    return Response(status_code=404)
+
+    # 3. SPA fallback — serve login page for unresolved paths
+    login_fallback = os.path.join(static_dir, "login.html")
+    if os.path.exists(login_fallback):
+        return FileResponse(login_fallback)
+
+    return JSONResponse(
+        status_code=404,
+        content={"error": "Resource not found", "platform": "DURGAM Sovereign Grid", "api_docs": "/api/docs"}
+    )
 

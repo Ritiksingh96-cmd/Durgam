@@ -9,7 +9,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    
     <link rel="stylesheet" href="style.css">
     
     <style>
@@ -132,18 +131,18 @@
 
         <!-- CITIZEN SERVICE SUBNAV TABS -->
         <div class="portal-subnav-bar">
-            <button class="subnav-pill active" onclick="showCitizenTab('report')" id="subTab_report"><i data-lucide="shield-alert"></i> Express Report (1930)</button>
-            <button class="subnav-pill" onclick="showCitizenTab('track')" id="subTab_track"><i data-lucide="radar"></i> Live 4-Hop Tracker</button>
+            <button class="subnav-pill active" onclick="showCitizenTab('report')" id="subTab_report"><i data-lucide="shield-alert"></i> Express Grievance (1930)</button>
+            <button class="subnav-pill" onclick="showCitizenTab('track')" id="subTab_track"><i data-lucide="radar"></i> Live Money Trail Tracker</button>
             <button class="subnav-pill" onclick="showCitizenTab('complaints')" id="subTab_complaints"><i data-lucide="file-text"></i> My Complaints</button>
-            <button class="subnav-pill" onclick="showCitizenTab('unblock')" id="subTab_unblock"><i data-lucide="unlock"></i> 1-Tap Unblock Desk</button>
+            <button class="subnav-pill" onclick="showCitizenTab('unblock')" id="subTab_unblock"><i data-lucide="unlock"></i> Account Unfreeze Desk</button>
         </div>
 
         <!-- ================= SECTION 0: MY COMPLAINTS LIST ================= -->
         <div id="tabComplaints" class="ui-card" style="display: none;">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 12px;">
                 <div>
-                    <div class="eyebrow"><span></span>YOUR CASE HISTORY</div>
-                    <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 24px;">My Complaints</h2>
+                    <div class="eyebrow"><span></span>GRIEVANCE DOCKET HISTORY</div>
+                    <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 24px;">My Registered Complaints</h2>
                 </div>
                 <button class="primary-btn" onclick="showCitizenTab('report')">
                     <i data-lucide="file-warning"></i> File New Complaint
@@ -154,10 +153,10 @@
 
         <!-- ================= SECTION 1: 60-SEC EXPRESS REPORTING WIZARD ================= -->
         <div id="tabReport" class="ui-card">
-            <div class="eyebrow"><span></span>EMERGENCY REPORTING WIZARD (1930 PROTOCOL)</div>
-            <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 26px; margin-bottom: 6px;">Report Cyber Fraud to Trigger Immediate Bank Hold</h2>
+            <div class="eyebrow"><span></span>CITIZEN FINANCIAL CYBER FRAUD REPORTING (CFCFRMS / 1930 HELPLINE)</div>
+            <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 26px; margin-bottom: 6px;">Report Cyber Fraud to Trigger Immediate Bank Account Freeze</h2>
             <p style="color: #626b70; font-size: 13.5px; margin-bottom: 20px;">
-                Enter transaction details below. The system automatically places an 89ms pre-settlement hold on the recipient's bank switch[cite: 3].
+                Enter transaction details below. An emergency account freeze and lien is initiated across recipient bank switches under Section 106 of Bharatiya Nagarik Suraksha Sanhita (BNSS) 2023 and RBI Customer Protection Directions.
             </p>
 
             <form id="citizenComplaintForm">
@@ -167,7 +166,7 @@
                         <input type="text" id="c-name" placeholder="Full legal name as per Aadhaar" required />
                     </div>
                     <div class="input-field">
-                        <label>Registered Contact Number *</label>
+                        <label>Registered Mobile Number *</label>
                         <input type="tel" id="c-mobile" maxlength="10" placeholder="10-digit mobile number" required />
                     </div>
                     <div class="input-field">
@@ -190,7 +189,7 @@
                     </div>
                     <div class="input-field">
                         <label>Fraud Recipient Account / UPI ID *</label>
-                        <input type="text" id="c-mule" value="902148102941" placeholder="Scammer's UPI or Account number" required />
+                        <input type="text" id="c-mule" value="902148102941" placeholder="Scammer's UPI ID or Bank Account Number" required />
                     </div>
                     <div class="input-field full">
                         <label>Incident Summary (Modus Operandi) *</label>
@@ -198,12 +197,20 @@
                     </div>
                 </div>
 
-                <div style="margin-top: 28px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+                <!-- STATUTORY LEGAL AFFIRMATION (SEC 217 BNS 2023 & SEC 106 BNSS 2023) -->
+                <div style="margin-top: 18px; padding: 14px 16px; background: #fafaf7; border: 1.5px solid #deddd7; border-radius: 12px; display: flex; align-items: flex-start; gap: 12px;">
+                    <input type="checkbox" id="legalDeclarationCheckbox" style="margin-top: 3px; width: 18px; height: 18px; cursor: pointer; accent-color: #050708;" checked required />
+                    <label for="legalDeclarationCheckbox" style="font-size: 12.5px; color: #363e42; line-height: 1.55; cursor: pointer;">
+                        <strong>Statutory Affirmation under Section 217 Bharatiya Nyaya Sanhita (BNS) 2023:</strong> I solemnly affirm that the transaction particulars supplied above are true, complete, and relate to an authentic cyber fraud occurrence. I request immediate emergency bank account freeze and lien marking under <strong>Section 106 Bharatiya Nagarik Suraksha Sanhita (BNSS) 2023</strong>.
+                    </label>
+                </div>
+
+                <div style="margin-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
                     <span style="font-size: 12px; color: #7b8285;">
-                        <i data-lucide="lock" class="icon-lucide"></i> Protected under RBI Master Direction Sec 8.2 & BNSS Sec 106[cite: 3]
+                        <i data-lucide="lock" class="icon-lucide"></i> Protected under RBI Master Direction Sec 8.2 & BNSS Sec 106
                     </span>
                     <button type="submit" class="primary-btn" id="submitBtn">
-                        <i data-lucide="zap"></i> Trigger 89ms Bank Hold & Intercept
+                        <i data-lucide="shield-alert"></i> Submit Grievance & Freeze Fraudulent Account
                     </button>
                 </div>
             </form>
@@ -213,32 +220,32 @@
         <div id="tabTrack" class="ui-card" style="display: none;">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 12px;">
                 <div>
-                    <div class="eyebrow"><span></span>LIVE DOCKET STATUS</div>
+                    <div class="eyebrow"><span></span>OFFICIAL CASE DOCKET STATUS</div>
                     <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 26px;" id="track-docket-id">Docket: NCRP-1930-48291048</h2>
                 </div>
-                <span class="badge-lime" id="track-hold-badge">● 100% Locked in Bank Escrow</span>
+                <span class="badge-sealed" id="track-hold-badge">🔒 100% Frozen under Section 106 BNSS</span>
             </div>
 
             <!-- 4-Stage Progress Stepper -->
             <div class="progress-stepper">
                 <div class="step-node completed">
-                    <div class="node-num">STEP 1</div>
-                    <div class="node-title">Grievance Ingested</div>
-                    <div class="node-time" id="step1-time">12:15:30 IST • Verified</div>
+                    <div class="node-num">STAGE 1</div>
+                    <div class="node-title">Grievance Registered</div>
+                    <div class="node-time" id="step1-time">1930 Helpline • Verified</div>
                 </div>
                 <div class="step-node completed">
-                    <div class="node-num">STEP 2</div>
-                    <div class="node-title">Bank Micro-Hold Active</div>
-                    <div class="node-time" id="step2-time">12:15:31 IST • ISO 20022</div>
+                    <div class="node-num">STAGE 2</div>
+                    <div class="node-title">Bank Account Frozen</div>
+                    <div class="node-time" id="step2-time">Sec 106 BNSS • Lien Placed</div>
                 </div>
                 <div class="step-node active">
-                    <div class="node-num">STEP 3</div>
-                    <div class="node-title">ATM Intercept Dispatched</div>
-                    <div class="node-time" id="step3-time">Falcon 1 ETA: 4 Mins</div>
+                    <div class="node-num">STAGE 3</div>
+                    <div class="node-title">Police Patrol Dispatched</div>
+                    <div class="node-time" id="step3-time">ERSS 112 / PCR • En Route</div>
                 </div>
                 <div class="step-node">
-                    <div class="node-num">STEP 4</div>
-                    <div class="node-title">Bank Restitution</div>
+                    <div class="node-num">STAGE 4</div>
+                    <div class="node-title">Court Restitution Decree</div>
                     <div class="node-time">Under RBI 3-7 Day SLA</div>
                 </div>
             </div>
@@ -246,18 +253,18 @@
             <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 24px; margin-top: 24px;">
                 <div>
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                        <h4 style="font-size: 13.5px; font-weight: 700; color: #111820;">Multi-Hop Stolen Fund Traversal</h4>
+                        <h4 style="font-size: 13.5px; font-weight: 700; color: #111820;">Multi-Layer Stolen Money Trail</h4>
                         <span class="badge-lime" style="font-size: 10px;">MONEY TRAIL GRAPH</span>
                     </div>
                     <canvas id="money-trail-canvas" style="width: 100%; height: 240px; background: #ffffff; border: 1.5px solid #deddd7; border-radius: 16px;"></canvas>
                     
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px;">
                         <div style="background:#ffffff; border:1px solid #deddd7; border-radius:12px; padding:12px;">
-                            <span style="font-size:11px; color:#626b70; display:block;">Disputed Amount</span>
+                            <span style="font-size:11px; color: #626b70; display:block;">Disputed Fraud Amount</span>
                             <strong style="font-size:16px; color:#ff3d3d;" id="track-amount">₹2,50,000.00</strong>
                         </div>
                         <div style="background:#ffffff; border:1px solid #deddd7; border-radius:12px; padding:12px;">
-                            <span style="font-size:11px; color:#626b70; display:block;">Predicted Cashout Target</span>
+                            <span style="font-size:11px; color: #626b70; display:block;">Suspected ATM Cashout Location</span>
                             <strong style="font-size:14px; color:#5c8000;" id="track-target-atm">SBI ATM Sector 29</strong>
                         </div>
                     </div>
@@ -265,21 +272,21 @@
                     <!-- Case Actions Toolbar -->
                     <div style="display: flex; gap: 10px; margin-top: 20px; padding-top: 16px; border-top: 1px solid #deddd7; flex-wrap: wrap;">
                         <button onclick="openEditModal()" class="outline-btn" style="height: 36px; font-size: 11.5px;">
-                            <i data-lucide="edit-3"></i> Edit Remarks
+                            <i data-lucide="edit-3"></i> Edit Statement Remarks
                         </button>
                         <button onclick="openAddUtrModal()" class="outline-btn" style="height: 36px; font-size: 11.5px;">
                             <i data-lucide="plus-circle"></i> Add Additional UTR
                         </button>
                         <button onclick="handleVoidCase()" class="outline-btn" style="height: 36px; font-size: 11.5px; color: #ff3d3d; border-color: rgba(255, 77, 77, 0.4);">
-                            <i data-lucide="trash-2"></i> Cancel / Void Case
+                            <i data-lucide="trash-2"></i> Cancel / Void Grievance
                         </button>
                     </div>
                 </div>
 
                 <div class="evidence-dossier-box">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-                        <span style="font-size: 11px; color: var(--lime); font-weight: 700;">LEGAL EVIDENCE CERTIFICATE</span>
-                        <span style="font-size: 10px; color: #9da4a7;">BSA 2023 SEC 63</span>
+                        <span style="font-size: 11px; color: var(--lime); font-weight: 700;">COURT EVIDENCE CERTIFICATE</span>
+                        <span style="font-size: 10px; color: #9da4a7;">SEC 63 BSA 2023</span>
                     </div>
 
                     <div class="dossier-row">
@@ -291,21 +298,21 @@
                         <span class="dossier-val" id="dossier-utr">482910482910</span>
                     </div>
                     <div class="dossier-row">
-                        <span class="dossier-label">Evidence SHA-256:</span>
+                        <span class="dossier-label">Evidence Hash:</span>
                         <span class="dossier-val" id="dossier-sha" style="font-size:10px; word-break:break-all;">0x7f83b165...a931</span>
                     </div>
                     <div class="dossier-row">
-                        <span class="dossier-label">Polygon Amoy Root:</span>
+                        <span class="dossier-label">Blockchain Anchor:</span>
                         <span class="dossier-val" id="dossier-tx" style="font-size:10px; word-break:break-all;">0x4a920194...Amoy</span>
                     </div>
                     <div class="dossier-row">
-                        <span class="dossier-label">Statutory Lien:</span>
-                        <span style="color:#ffffff; font-size:11px;">Section 106 BNSS (Active)</span>
+                        <span class="dossier-label">Statutory Status:</span>
+                        <span style="color:#ffffff; font-size:11px;">Section 106 BNSS (Frozen)</span>
                     </div>
 
                     <div style="margin-top: 18px;">
                         <button onclick="downloadCourtSlip()" class="primary-btn" style="width: 100%; justify-content: center; background: var(--lime); color: #050708; border-color: var(--lime); font-size: 12px; height: 42px;">
-                            <i data-lucide="download"></i> Download Section 63 Court Dispute Kit
+                            <i data-lucide="download"></i> Download Section 63 BSA Certificate
                         </button>
                     </div>
                 </div>
@@ -314,16 +321,16 @@
 
         <!-- ================= SECTION 3: 1-TAP ACCOUNT UNBLOCK DESK ================= -->
         <div id="tabUnblock" class="ui-card" style="display: none; max-width: 680px; margin: 0 auto;">
-            <div class="eyebrow"><span></span>FALSE-POSITIVE MITIGATION</div>
-            <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; margin-bottom: 8px;">1-Tap Account Unblock Desk</h2>
+            <div class="eyebrow"><span></span>BONA FIDE ACCOUNT UNFREEZE DESK</div>
+            <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; margin-bottom: 8px;">Bona Fide Account Unfreeze Desk</h2>
             <p style="color: #626b70; font-size: 13px; line-height: 1.6; margin-bottom: 20px;">
-                If your account received an automatic 30-minute security hold, enter your account number and verification OTP to release the hold instantly[cite: 3].
+                If your account was placed under an emergency 30-minute freeze due to an automated fraud alert, verify your identity via OTP to release the freeze immediately under Section 106 BNSS 2023.
             </p>
 
             <div style="display: flex; flex-direction: column; gap: 16px;">
                 <div class="input-field">
                     <label>Account Number / Registered UPI ID *</label>
-                    <input type="text" id="unblock-acc" value="902148102941" placeholder="Enter locked account number" required />
+                    <input type="text" id="unblock-acc" value="902148102941" placeholder="Enter frozen account number" required />
                 </div>
                 <div class="input-field">
                     <label>6-Digit Verification OTP (Demo OTP: 193026) *</label>
@@ -332,7 +339,7 @@
 
                 <div style="margin-top: 10px;">
                     <button onclick="handleCitizenUnblock()" class="primary-btn" style="width: 100%; justify-content: center;">
-                        <i data-lucide="unlock"></i> Verify Identity & Release Security Hold
+                        <i data-lucide="unlock"></i> Verify Identity & Release Account Freeze
                     </button>
                 </div>
             </div>
@@ -378,8 +385,6 @@
         </div>
     </div>
 
-    
-    
     <script src="script.js?v=3"></script>
     <script src="app.js?v=3"></script>
     <script>
@@ -397,6 +402,7 @@
         }
 
         function showCitizenTab(tab) {
+            if (tab === 'tracker') tab = 'track';
             document.getElementById('tabComplaints').style.display = tab === 'complaints' ? 'block' : 'none';
             document.getElementById('tabReport').style.display = tab === 'report' ? 'block' : 'none';
             document.getElementById('tabTrack').style.display = tab === 'track' ? 'block' : 'none';
@@ -414,31 +420,111 @@
             catch { return []; }
         }
 
-        function renderMyComplaints() {
-            const list = getMyComplaints();
+        async function renderMyComplaints() {
             const container = document.getElementById('myComplaintsList');
-            if (list.length === 0) {
+            if (!container) return;
+
+            let list = [];
+            try {
+                if (window.DurgamSync && typeof window.DurgamSync.syncWithBackend === 'function') {
+                    list = await window.DurgamSync.syncWithBackend();
+                } else {
+                    const res = await fetch(`${API_BASE_URL}/api/v1/citizen/cases-summary`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        list = data.cases || [];
+                    }
+                }
+            } catch (err) {
+                console.warn("Using local complaints fallback:", err);
+            }
+
+            if (!list || list.length === 0) {
+                list = getMyComplaints();
+            }
+
+            if (!list || list.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state-box">
                         <div class="esi">📋</div>
                         <h4>No Complaints Yet</h4>
-                        <p>File a complaint to get started tracking your cyber fraud case.</p>
+                        <p>File a complaint using Express Report to trigger an immediate bank hold.</p>
                     </div>`;
                 return;
             }
-            container.innerHTML = list.slice().reverse().map(c => `
-                <div class="mycomplaint-card">
+
+            container.innerHTML = list.map(c => {
+                const ack = c.ack_number || c.complaint_id || c.case_id || 'NCRP-1930';
+                const amt = Number(c.loss_amount || c.amount || 0);
+                const status = c.status || 'MICRO_HOLD_PLACED';
+                const utr = c.utr_number || 'N/A';
+                const victim = c.victim_name || 'Complainant';
+                let dateStr = 'Recently';
+                if (c.created_at) {
+                    const ts = typeof c.created_at === 'number' ? (c.created_at < 1e11 ? c.created_at * 1000 : c.created_at) : Date.parse(c.created_at);
+                    dateStr = new Date(ts).toLocaleString('en-IN');
+                } else if (c.filed_at) {
+                    dateStr = new Date(c.filed_at).toLocaleString('en-IN');
+                }
+
+                return `
+                <div class="mycomplaint-card" style="cursor: pointer;" onclick="loadCaseIntoTracker('${ack}')" title="Click to track live status">
                     <div class="mycomplaint-top">
-                        <span class="mycomplaint-no">${c.complaint_id}</span>
-                        <span class="badge-lime">${c.status || '<i data-lucide="search" class="icon-lucide"></i> Investigating'}</span>
+                        <span class="mycomplaint-no"><strong>${ack}</strong> • ${victim}</span>
+                        <span class="badge-lime">${status}</span>
                     </div>
-                    <div style="display:flex; gap:14px; flex-wrap:wrap; margin-bottom:6px;">
-                        <strong style="color:#ff3d3d; font-size:16px;">₹${Number(c.amount).toLocaleString('en-IN')}</strong>
-                        <span style="font-size:12px; color:#7b8285;">UTR: ${c.utr_number}</span>
+                    <div style="display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:6px;">
+                        <strong style="color:#ff3d3d; font-size:16px;">₹${amt.toLocaleString('en-IN', {minimumFractionDigits: 2})}</strong>
+                        <span style="font-size:12px; color:#7b8285;">UTR: ${utr}</span>
+                        <span style="font-size:11px; color:#5c8000; font-weight:600;"><i data-lucide="eye" style="width:12px;height:12px;vertical-align:middle;"></i> View Trail & Docket &rarr;</span>
                     </div>
-                    <div style="font-size:11px; color:#9da4a7;">Filed ${new Date(c.filed_at).toLocaleString('en-IN')}</div>
+                    <div style="font-size:11px; color:#9da4a7;">Recorded in Sovereign DB: ${dateStr}</div>
                 </div>
-            `).join('');
+                `;
+            }).join('');
+            if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+        }
+
+        function loadCaseIntoTracker(docketNo) {
+            const list = (window.DurgamSync ? window.DurgamSync.getStoredComplaints() : []) || [];
+            const found = list.find(c => c.ack_number === docketNo || c.complaint_id === docketNo || c.case_id === docketNo);
+            if (found) {
+                populateTracker(found);
+                showCitizenTab('track');
+            }
+        }
+
+        function populateTracker(data) {
+            const ackNo = data.ack_number || data.complaint_id || data.case_id || "NCRP-1930-48291048";
+            const amt = Number(data.loss_amount || data.amount || 250000);
+            const utr = data.utr_number || "482910482910";
+            const atmName = data.candidate_atms?.[0]?.name || data.terminal_node?.atm_name || "SBI ATM Sector 29 Market";
+            const sha = data.evidence_certificate?.sha256_case_hash || "0x7a8f9c1b2d3e4f5a...BSA2023";
+            const tx = data.evidence_certificate?.polygon_tx_hash || "0x4a920194810248a1...PolygonAmoy";
+
+            const trackDocket = document.getElementById("track-docket-id");
+            if (trackDocket) trackDocket.innerText = `Docket: ${ackNo}`;
+            const trackAmt = document.getElementById("track-amount");
+            if (trackAmt) trackAmt.innerText = `₹${amt.toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
+            const trackAtm = document.getElementById("track-target-atm");
+            if (trackAtm) trackAtm.innerText = atmName;
+
+            const dosDocket = document.getElementById("dossier-docket");
+            if (dosDocket) dosDocket.innerText = ackNo;
+            const dosUtr = document.getElementById("dossier-utr");
+            if (dosUtr) dosUtr.innerText = utr;
+            const dosSha = document.getElementById("dossier-sha");
+            if (dosSha) dosSha.innerText = sha;
+            const dosTx = document.getElementById("dossier-tx");
+            if (dosTx) dosTx.innerText = tx;
+
+            const badge = document.getElementById("track-hold-badge");
+            if (badge) badge.innerText = `● ${data.status || 'MICRO_HOLD_PLACED'} (Active)`;
+
+            // Draw money trail on canvas
+            if (typeof drawDynamicMoneyTrail === "function") {
+                drawDynamicMoneyTrail(data.source_bank || "State Bank of India", data.terminal_node?.masked_account || data.suspect_account || "902148102941", amt);
+            }
         }
 
         // ================= MODAL HANDLERS =================
@@ -512,5 +598,5 @@
         const urlParams = new URLSearchParams(window.location.search);
         showCitizenTab(urlParams.get('tab') || 'report');
     </script>
-    </body>
+</body>
 </html>

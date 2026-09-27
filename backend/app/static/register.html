@@ -18,14 +18,14 @@
             grid-template-columns: 1fr 1.25fr;
             background: #ffffff;
             border: 1px solid #deddd7;
-            border-radius: 26px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.06);
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
             overflow: hidden;
         }
 
         /* Left Assurance Panel */
         .register-hero-pane {
-            background: #070a0c;
+            background: #050708;
             color: #ffffff;
             padding: 44px 36px;
             display: flex;
@@ -39,7 +39,7 @@
             position: absolute;
             width: 300px;
             height: 300px;
-            background: radial-gradient(circle, rgba(183,255,0,0.12) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(0, 230, 118, 0.12) 0%, transparent 70%);
             top: -50px;
             left: -50px;
             pointer-events: none;
@@ -53,8 +53,8 @@
             letter-spacing: 0.8px;
             text-transform: uppercase;
             color: var(--lime);
-            background: rgba(183,255,0,0.1);
-            border: 1px solid rgba(183,255,0,0.25);
+            background: rgba(0, 230, 118, 0.12);
+            border: 1px solid rgba(0, 230, 118, 0.35);
             padding: 5px 12px;
             border-radius: 20px;
             margin-bottom: 20px;
@@ -64,6 +64,7 @@
             font-size: 26px;
             line-height: 1.2;
             margin-bottom: 14px;
+            color: #ffffff;
         }
         .pane-description {
             font-size: 13px;
@@ -104,7 +105,7 @@
         }
         .feature-bullet-text span {
             font-size: 11.5px;
-            color: #8c9498;
+            color: #94a89c;
             line-height: 1.4;
             display: block;
         }
@@ -114,7 +115,7 @@
             border-radius: 14px;
             padding: 14px 16px;
             font-size: 11px;
-            color: #8c9498;
+            color: #94a89c;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -124,15 +125,17 @@
         .register-form-pane {
             padding: 44px 40px;
             background: #ffffff;
+            color: #111820;
         }
         .segmented-role-bar {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            background: #f3f3ee;
+            background: #fbfbf9;
             border-radius: 12px;
             padding: 4px;
             gap: 4px;
             margin-bottom: 24px;
+            border: 1px solid #e5e4de;
         }
         .role-tab-btn {
             display: flex;
@@ -150,8 +153,12 @@
             cursor: pointer;
             transition: all 0.2s ease;
         }
+        .role-tab-btn:hover {
+            color: #111820;
+            background: #f7f6f1;
+        }
         .role-tab-btn.active {
-            background: #070a0c;
+            background: #050708;
             color: #ffffff;
             box-shadow: 0 4px 14px rgba(0,0,0,0.12);
         }
@@ -165,9 +172,11 @@
             margin-bottom: 16px;
         }
         .field-group label {
-            font-size: 12px;
+            font-size: 11.5px;
             font-weight: 700;
-            color: #111820;
+            color: #7b8285;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -180,7 +189,7 @@
         .input-wrap i.field-icon {
             position: absolute;
             left: 14px;
-            color: #8c9498;
+            color: #5c8000;
             width: 16px;
             height: 16px;
             pointer-events: none;
@@ -189,7 +198,7 @@
             width: 100%;
             height: 44px;
             padding: 0 14px 0 40px;
-            background: #fafaf8;
+            background: #ffffff;
             border: 1.5px solid #deddd7;
             border-radius: 11px;
             font-family: inherit;
@@ -199,9 +208,8 @@
         }
         .input-wrap input:focus {
             outline: none;
-            background: #ffffff;
-            border-color: #111820;
-            box-shadow: 0 0 0 3px rgba(183,255,0,0.2);
+            border-color: #00e676;
+            box-shadow: 0 0 0 3px rgba(0, 230, 118, 0.25);
         }
         .consent-checkbox-wrap {
             display: flex;
@@ -209,22 +217,22 @@
             gap: 10px;
             margin-bottom: 22px;
             font-size: 12px;
-            color: #626b70;
+            color: #475569;
             line-height: 1.45;
         }
         .consent-checkbox-wrap input {
             margin-top: 3px;
-            accent-color: #5c8000;
+            accent-color: #00e676;
             cursor: pointer;
         }
         .authority-notice-box {
             margin-top: 20px;
             padding: 12px 14px;
-            background: #fbfbf7;
-            border: 1px solid #e4e2dc;
+            background: #f8faf6;
+            border: 1px solid rgba(15, 20, 25, 0.08);
             border-radius: 12px;
-            font-size: 11px;
-            color: #626b70;
+            font-size: 11.5px;
+            color: #475569;
             line-height: 1.5;
             display: flex;
             align-items: center;
@@ -261,7 +269,7 @@
         </a>
 
         <nav class="nav-links">
-            <span style="font-size:11px; color:#5c8000; font-weight:700; display:flex; align-items:center; gap:6px; letter-spacing:0.5px;">
+            <span style="font-size:11px; color:#0b6b32; font-weight:700; display:flex; align-items:center; gap:6px; letter-spacing:0.5px; background:rgba(11,107,50,0.08); padding:5px 12px; border-radius:20px; border:1px solid rgba(11,107,50,0.2);">
                 <i data-lucide="lock" style="width:13px; height:13px;"></i> SECURE 256-BIT ENCRYPTED REGISTRATION
             </span>
         </nav>
@@ -293,29 +301,29 @@
                         <li class="feature-bullet">
                             <div class="feature-bullet-icon"><i data-lucide="zap"></i></div>
                             <div class="feature-bullet-text">
-                                <strong>89ms Pre-Settlement Hold</strong>
-                                <span>Freezes scammer accounts via direct ISO 20022 CBS interconnect before cashout.</span>
+                                <strong>Instant Account Freeze (Sec 106 BNSS)</strong>
+                                <span>Freezes scammer accounts via direct Core Banking CBS interconnect before cashout.</span>
                             </div>
                         </li>
                         <li class="feature-bullet">
                             <div class="feature-bullet-icon"><i data-lucide="git-branch"></i></div>
                             <div class="feature-bullet-text">
-                                <strong>Multi-Hop Money Trail</strong>
-                                <span>Automated graph algorithms trace Layer 1 & 2 mule accounts in real time.</span>
+                                <strong>Multi-Layer Stolen Fund Trail</strong>
+                                <span>Automated tracing of Layer 1 to Layer 5 mule accounts across all banks.</span>
                             </div>
                         </li>
                         <li class="feature-bullet">
                             <div class="feature-bullet-icon"><i data-lucide="scale"></i></div>
                             <div class="feature-bullet-text">
-                                <strong>Section 106 BNSS Decrees</strong>
-                                <span>Court-admissible restitution orders with Polygon Amoy on-chain Merkle proofs.</span>
+                                <strong>Court Restitution Decree (Sec 106 BNSS)</strong>
+                                <span>Court-admissible restitution orders with tamper-proof digital evidence certificates.</span>
                             </div>
                         </li>
                         <li class="feature-bullet">
                             <div class="feature-bullet-icon"><i data-lucide="shield"></i></div>
                             <div class="feature-bullet-text">
-                                <strong>1-Tap Aadhaar Unblock Desk</strong>
-                                <span>Immediate dual-factor OTP release for innocent citizens & merchant false-positives.</span>
+                                <strong>Bona Fide Account Unfreeze Desk</strong>
+                                <span>Aadhaar and OTP verification for innocent citizens and merchants.</span>
                             </div>
                         </li>
                     </ul>
@@ -336,10 +344,10 @@
                 <!-- Role Selector -->
                 <div class="segmented-role-bar" id="regRoleSwitch">
                     <button type="button" class="role-tab-btn active" data-role="citizen" onclick="selectRegRole('citizen')">
-                        <i data-lucide="user"></i> Citizen Restitution
+                        <i data-lucide="user"></i> Citizen Reporting Desk
                     </button>
                     <button type="button" class="role-tab-btn" data-role="bank" onclick="selectRegRole('bank')">
-                        <i data-lucide="landmark"></i> Partner Bank Node
+                        <i data-lucide="landmark"></i> Bank Nodal Officer
                     </button>
                 </div>
 
@@ -390,7 +398,7 @@
                         </div>
 
                         <div class="field-group">
-                            <label>Nodal FRM Officer Email Address *</label>
+                            <label>Nodal Cyber Fraud Officer Email Address *</label>
                             <div class="input-wrap">
                                 <i data-lucide="mail" class="field-icon"></i>
                                 <input type="email" id="reg-bankemail" placeholder="frm.nodal@bank.co.in" />
@@ -419,12 +427,12 @@
                 </form>
 
                 <div class="authority-notice-box">
-                    <i data-lucide="shield-alert" style="color:#5c8000; width:20px; height:20px; flex-shrink:0;"></i>
+                    <i data-lucide="shield-alert" style="color:#0b6b32; width:20px; height:20px; flex-shrink:0;"></i>
                     <span><strong>Official Authority Desk:</strong> Police PCR, Judicial Magistrates, and I4C Command accounts are pre-provisioned by MHA Nodal Administrators.</span>
                 </div>
 
-                <p style="text-align:center; font-size:13px; color:#626b70; margin-top:22px;">
-                    Already have an account? <a href="login.html" style="color:#5c8000; font-weight:700; text-decoration:none;">Sign in to your portal →</a>
+                <p style="text-align:center; font-size:13px; color:#64748b; margin-top:22px;">
+                    Already have an account? <a href="login.html" style="color:#008744; font-weight:700; text-decoration:none;">Sign in to your portal →</a>
                 </p>
             </div>
 
@@ -445,9 +453,9 @@
             document.getElementById('fields-citizen').style.display = isCitizen ? 'block' : 'none';
             document.getElementById('fields-bank').style.display = isCitizen ? 'none' : 'block';
 
-            document.getElementById('regTitle').innerText = isCitizen ? 'Create Citizen Account' : 'Register Partner Bank Node';
-            document.getElementById('regSubtitle').innerText = isCitizen ? 'Register to submit fraud reports and manage restitution cases.' : 'Connect your Core Banking Fraud Risk Management (FRM) node.';
-            document.getElementById('regBtnLabel').innerText = isCitizen ? 'Citizen Account' : 'Bank Node';
+            document.getElementById('regTitle').innerText = isCitizen ? 'Create Citizen Account' : 'Register Bank Nodal Officer';
+            document.getElementById('regSubtitle').innerText = isCitizen ? 'Register to submit fraud reports and manage restitution cases.' : 'Connect your Core Banking Fraud Monitoring and Freeze Desk.';
+            document.getElementById('regBtnLabel').innerText = isCitizen ? 'Citizen Account' : 'Bank Nodal Account';
 
             if (typeof lucide !== "undefined" && lucide.createIcons) { lucide.createIcons(); }
         }

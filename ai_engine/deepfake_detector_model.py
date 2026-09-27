@@ -5,7 +5,6 @@ Evaluates video stream frames during citizen Skype/WhatsApp impersonation calls:
 2. Eye Blink Frequency Anomaly
 3. Lip-Sync & Audio-Visual Phase Alignment
 """
-
 import math
 from typing import Dict, Any, List
 

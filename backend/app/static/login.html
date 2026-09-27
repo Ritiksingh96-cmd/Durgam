@@ -14,22 +14,25 @@
 
     <style>
         .auth-shell {
-            max-width: 480px;
+            max-width: 490px;
             margin: 40px auto 60px;
             background: #ffffff;
             border: 1px solid #deddd7;
             border-radius: 24px;
-            padding: 36px 32px;
-            box-shadow: 0 20px 45px rgba(0,0,0,0.04);
+            padding: 40px 36px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+            color: #111820;
+            position: relative;
         }
         /* Top Level Segmented Switcher */
         .tier-segmented-bar {
             display: flex;
-            background: #f1f0ea;
-            border-radius: 12px;
-            padding: 4px;
-            margin-bottom: 18px;
-            gap: 4px;
+            background: #fbfbf9;
+            border: 1px solid #e5e4de;
+            border-radius: 14px;
+            padding: 5px;
+            margin-bottom: 20px;
+            gap: 6px;
         }
         .tier-btn {
             flex: 1;
@@ -37,9 +40,9 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            padding: 10px;
-            border: none;
-            border-radius: 9px;
+            padding: 11px;
+            border: 1px solid transparent;
+            border-radius: 10px;
             font-size: 13px;
             font-weight: 700;
             color: #626b70;
@@ -47,10 +50,15 @@
             cursor: pointer;
             transition: all 0.2s ease;
         }
+        .tier-btn:hover {
+            color: #111820;
+            background: #f7f6f1;
+        }
         .tier-btn.active {
             background: #050708;
             color: #ffffff;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            border: 1px solid #050708;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
         }
         .tier-btn.active i {
             color: var(--lime);
@@ -60,16 +68,16 @@
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 6px;
-            margin-bottom: 20px;
-            background: #faf9f5;
+            margin-bottom: 22px;
+            background: #fbfbf9;
             padding: 6px;
-            border-radius: 12px;
-            border: 1px solid #e7e5de;
+            border-radius: 14px;
+            border: 1px solid #e5e4de;
         }
         .subrole-btn {
-            padding: 8px 2px;
+            padding: 10px 4px;
             border: 1px solid transparent;
-            border-radius: 8px;
+            border-radius: 10px;
             background: transparent;
             font-size: 11px;
             font-weight: 700;
@@ -78,23 +86,27 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
-            transition: 0.2s;
+            gap: 6px;
+            transition: all 0.2s ease;
             text-align: center;
         }
-        .subrole-btn.active {
-            background: #ffffff;
-            border-color: #deddd7;
+        .subrole-btn:hover {
             color: #111820;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+            background: #f7f6f1;
+        }
+        .subrole-btn.active {
+            background: #050708;
+            border-color: #050708;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
         }
         .subrole-btn i {
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             color: #7b8285;
         }
         .subrole-btn.active i {
-            color: #5c8000;
+            color: var(--lime);
         }
     </style>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -114,8 +126,8 @@
         </a>
 
         <nav class="nav-links">
-            <span style="font-size:11px; color:#5c8000; font-weight:700; display:flex; align-items:center; gap:6px; letter-spacing:0.5px;">
-                <i data-lucide="lock" style="width:13px; height:13px;"></i> SECURE 256-BIT ENCRYPTED AUTHENTICATION GATEWAY
+            <span style="font-size:11px; color:#0b6b32; font-weight:700; display:flex; align-items:center; gap:6px; letter-spacing:0.5px;">
+                <i data-lucide="lock" style="width:13px; height:13px;"></i> SECURE 256-BIT ENCRYPTED SOVEREIGN GATEWAY
             </span>
         </nav>
         <div class="nav-right">
@@ -128,8 +140,8 @@
     <main class="page-container">
         <div class="auth-shell">
             <div class="eyebrow" style="justify-content:center;"><span></span>PORTAL ACCESS</div>
-            <h2 id="loginHeading" style="font-family:'Space Grotesk', sans-serif; font-size:22px; text-align:center; margin-bottom: 4px;">Sign In to Citizen Desk</h2>
-            <p id="loginSubheading" style="font-size:12px; color:#626b70; text-align:center; margin-bottom: 20px;">Report cyber fraud & trigger 89ms bank holds.</p>
+            <h2 id="loginHeading" style="font-family:'Space Grotesk', sans-serif; font-size:24px; text-align:center; margin-bottom: 6px; color:#111820;">Sign In to Citizen Desk</h2>
+            <p id="loginSubheading" style="font-size:13px; color:#626b70; text-align:center; margin-bottom: 22px;">Report cyber fraud & trigger instant account freeze under Sec 106 BNSS.</p>
 
             <!-- Tier 1: Main Category Switch (Citizen vs Official Portal) -->
             <div class="tier-segmented-bar">
@@ -147,17 +159,17 @@
                     <i data-lucide="landmark"></i>
                     <span>Bank Nodal</span>
                 </button>
-                <button type="button" class="subrole-btn" id="subRoleI4C" onclick="setSubRole('i4c')">
-                    <i data-lucide="shield-half"></i>
-                    <span>I4C Center</span>
-                </button>
                 <button type="button" class="subrole-btn" id="subRolePolice" onclick="setSubRole('police')">
                     <i data-lucide="shield-alert"></i>
-                    <span>Police PCR</span>
+                    <span>Police Cyber</span>
                 </button>
                 <button type="button" class="subrole-btn" id="subRoleCourt" onclick="setSubRole('judiciary')">
                     <i data-lucide="scale"></i>
-                    <span>Judiciary</span>
+                    <span>Cyber Bench</span>
+                </button>
+                <button type="button" class="subrole-btn" id="subRoleI4C" onclick="setSubRole('i4c')">
+                    <i data-lucide="shield-half"></i>
+                    <span>I4C Command</span>
                 </button>
             </div>
 
@@ -179,8 +191,8 @@
                 </button>
             </form>
 
-            <p id="regPrompt" style="text-align:center; font-size:12.5px; color:#626b70; margin-top:20px;">
-                New to DURGAM? <a id="regLink" href="register.html?role=citizen" style="color:#5c8000; font-weight:700; text-decoration:none;">Create an account</a>
+            <p id="regPrompt" style="text-align:center; font-size:13px; color:#7b8285; margin-top:22px;">
+                New to DURGAM? <a id="regLink" href="register.html?role=citizen" style="color:#0b6b32; font-weight:700; text-decoration:none;">Create an account</a>
             </p>
         </div>
     </main>
@@ -196,52 +208,52 @@
 
         const ROLE_CONFIGS = {
             citizen: {
-                heading: "Sign In to Citizen Desk",
-                subheading: "Report cyber fraud & trigger 89ms bank holds.",
+                heading: "Citizen Portal Sign In",
+                subheading: "Report cyber fraud & trigger instant account freeze under Sec 106 BNSS.",
                 fieldLabel: "Registered Mobile Number or Email *",
                 fieldPlaceholder: "e.g. 9811029481 or user@email.com",
                 defaultValue: "9811029481",
-                submitText: "Citizen Portal",
+                submitText: "Citizen Desk",
                 destination: "citizen.html",
                 allowRegister: true
             },
             bank: {
-                heading: "Bank Nodal Security Gateway",
-                subheading: "Inter-bank mule registry & Section 106 BNSS hold management.",
+                heading: "Bank Nodal Desk Sign In",
+                subheading: "Interbank mule registry & Section 106 BNSS account freeze management.",
                 fieldLabel: "Bank Nodal Officer Email / IFSC Code *",
                 fieldPlaceholder: "frm@sbi.co.in",
                 defaultValue: "frm@sbi.co.in",
-                submitText: "Bank Switch",
+                submitText: "Bank Nodal Desk",
                 destination: "bank.html",
                 allowRegister: true
             },
             i4c: {
-                heading: "I4C National Command Center",
+                heading: "I4C Cybercrime Command Center Sign In",
                 subheading: "Command intelligence dashboard for multi-hop money trails.",
                 fieldLabel: "Officer Email / Badge ID *",
                 fieldPlaceholder: "i4c.ops@gov.in",
                 defaultValue: "i4c.ops@gov.in",
-                submitText: "Command Center",
+                submitText: "I4C Command",
                 destination: "command.html",
                 allowRegister: false
             },
             police: {
-                heading: "Police Tactical Command Room",
+                heading: "State Police Cyber Command Sign In",
                 subheading: "AI-forecasted ATM cashout hotspots & CAD patrol dispatch.",
                 fieldLabel: "PCR Unit Call Sign / Officer ID *",
                 fieldPlaceholder: "pcr.falcon1@police.gov.in",
                 defaultValue: "pcr.falcon1@police.gov.in",
-                submitText: "Police War Room",
+                submitText: "Police Cyber Command",
                 destination: "police.html",
                 allowRegister: false
             },
             judiciary: {
-                heading: "Special Cyber Court & Evidence Bench",
+                heading: "Judicial Magistrate Bench Sign In",
                 subheading: "Section 63 BSA evidence dossiers & restitution decrees.",
                 fieldLabel: "Judicial Officer / Bench Reference *",
                 fieldPlaceholder: "bench1@court.gov.in",
                 defaultValue: "bench1@court.gov.in",
-                submitText: "Legal Vault",
+                submitText: "Judicial Bench",
                 destination: "judiciary.html",
                 allowRegister: false
             }
@@ -287,10 +299,10 @@
             const regPrompt = document.getElementById('regPrompt');
             if (cfg.allowRegister) {
                 regPrompt.style.display = 'block';
-                regPrompt.innerHTML = `New to DURGAM? <a href="register.html?role=${role}" style="color:#5c8000; font-weight:700; text-decoration:none;">Create an account</a>`;
+                regPrompt.innerHTML = `New to DURGAM? <a href="register.html?role=${role}" style="color:var(--lime); font-weight:700; text-decoration:none;">Create an account</a>`;
             } else {
                 regPrompt.style.display = 'block';
-                regPrompt.innerHTML = `<span style="font-size:11px; color:#9da4a7;"><i data-lucide="lock" class="icon-lucide"></i> Official agency credentials are provisioned by nodal administrators.</span>`;
+                regPrompt.innerHTML = `<span style="font-size:11px; color:#64748b;"><i data-lucide="lock" class="icon-lucide"></i> Official agency credentials are provisioned by nodal administrators.</span>`;
             }
 
             if (typeof lucide !== "undefined" && lucide.createIcons) { lucide.createIcons(); }

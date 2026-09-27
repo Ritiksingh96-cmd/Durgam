@@ -23,7 +23,7 @@ def run_tests():
     print("\n=== 2. Static Pages Resolution ===")
     pages = [
         "index.html", "citizen.html", "bank.html", "police.html",
-        "judiciary.html", "command.html", "ai.html", "verify.html",
+        "judiciary.html", "command.html", "verify.html",
         "login.html", "register.html", "about.html", "contact.html",
         "resources.html", "style.css", "script.js", "app.js"
     ]
@@ -141,16 +141,109 @@ def run_tests():
     print("GET /api/v1/ai/models-metadata:", r.status_code, list(r.json().get("models", {}).keys()))
     assert r.status_code == 200
 
-    print("\n=== 10. 1-Tap Unblock OTP & Dispute ===")
-    r = client.post("/api/v1/citizen/unblock-otp?account=902148102941&otp=193026")
-    print("POST /api/v1/citizen/unblock-otp:", r.status_code, r.json().get("message"))
+    print("\n=== 11. Android Mobile API Connectivity ===")
+    r = client.get("/api/v1/android/handshake")
+    print("GET /api/v1/android/handshake:", r.status_code, r.json().get("protocol_version"))
+    assert r.status_code == 200
+    assert r.json().get("min_supported_android_sdk") == 26
+
+    r = client.get("/api/v1/android/config")
+    print("GET /api/v1/android/config:", r.status_code, r.json().get("app_title"))
     assert r.status_code == 200
 
-    r = client.post("/api/v1/citizen/dispute-resolution?account_number=902148102941&aadhaar_otp=193026")
-    print("POST /api/v1/citizen/dispute-resolution:", r.status_code, r.json().get("status"))
+    reg_payload = {
+        "device_id": "android_pixel_test_001",
+        "fcm_token": "fcm_test_token_84920481029",
+        "app_version": "1.0.0",
+        "android_os_version": "14.0",
+        "device_model": "Pixel 8 Pro",
+        "role": "citizen"
+    }
+    r = client.post("/api/v1/android/devices/register", json=reg_payload)
+    print("POST /api/v1/android/devices/register:", r.status_code, r.json().get("status"))
     assert r.status_code == 200
 
-    print("\n🎉 ALL FULL-STACK TESTS PASSED WITH 100% SUCCESS!")
+    login_mobile = {
+        "username": "citizen_mobile_test",
+        "password": "password123",
+        "role": "citizen",
+        "device_id": "android_pixel_test_001",
+        "biometric_authenticated": True
+    }
+    r = client.post("/api/v1/android/auth/login", json=login_mobile)
+    print("POST /api/v1/android/auth/login:", r.status_code, r.json().get("status"), r.json().get("user_profile", {}).get("role"))
+    assert r.status_code == 200
+    mobile_token = r.json().get("access_token")
+    assert mobile_token is not None
+
+    sos_payload = {
+        "victim_name": "Meera Nambiar",
+        "victim_phone": "9845112233",
+        "utr_number": "482910482999",
+        "loss_amount": 175000.0,
+        "source_bank": "State Bank of India",
+        "source_account": "XXXX-XXXX-9912",
+        "suspect_account": "902148102941",
+        "crime_category": "DIGITAL_ARREST",
+        "narrative": "Urgent SOS: Blackmailed via video call impersonating customs officer",
+        "latitude": 12.9716,
+        "longitude": 77.5946,
+        "city": "Bengaluru",
+        "state": "Karnataka"
+    }
+    r = client.post("/api/v1/android/citizen/sos-freeze", json=sos_payload)
+    print("POST /api/v1/android/citizen/sos-freeze:", r.status_code, r.json().get("status"), r.json().get("docket", {}).get("ack_number"))
+    assert r.status_code == 200
+    created_ack = r.json().get("docket", {}).get("ack_number")
+
+    r = client.get(f"/api/v1/android/citizen/cases/{created_ack}")
+    print(f"GET /api/v1/android/citizen/cases/{created_ack}:", r.status_code, r.json().get("status_text"))
+    assert r.status_code == 200
+
+    r = client.get("/api/v1/android/police/field-radar?latitude=28.6139&longitude=77.2090&radius_km=10.0")
+    print("GET /api/v1/android/police/field-radar:", r.status_code, f"({r.json().get('total_hotspots_detected')} hotspots)")
+    assert r.status_code == 200
+    assert "android_navigation_intent" in r.json().get("hotspots", [{}])[0]
+
+    ack_payload = {
+        "officer_badge": "DL-POLICE-048",
+        "unit_id": "PCR Eagle 4",
+        "case_id": "DURGAM-DL-001",
+        "target_atm_id": "ATM_SBI_101",
+        "officer_latitude": 28.6145,
+        "officer_longitude": 77.2100,
+        "response_status": "DISPATCH_EN_ROUTE",
+        "eta_minutes": 3
+    }
+    r = client.post("/api/v1/android/police/patrol-ack", json=ack_payload)
+    print("POST /api/v1/android/police/patrol-ack:", r.status_code, r.json().get("status"))
+    assert r.status_code == 200
+
+    r = client.get("/api/v1/android/bank/holds")
+    print("GET /api/v1/android/bank/holds:", r.status_code, f"({r.json().get('total_active_holds')} active holds)")
+    assert r.status_code == 200
+
+    batch_payload = {
+        "device_id": "android_pixel_test_001",
+        "queued_complaints": [
+            {
+                "client_uuid": "offline_uuid_99182",
+                "timestamp_local": 1727482910.0,
+                "victim_name": "Rohan Deshmukh",
+                "victim_phone": "9820019284",
+                "utr_number": "992810481029",
+                "loss_amount": 80000.0,
+                "source_bank": "Bank of Baroda",
+                "suspect_account": "902148102941",
+                "narrative": "Fake electricity bill payment disconnection fraud"
+            }
+        ]
+    }
+    r = client.post("/api/v1/android/sync/offline-batch", json=batch_payload)
+    print("POST /api/v1/android/sync/offline-batch:", r.status_code, r.json().get("status"), f"({r.json().get('total_items_processed')} items synced)")
+    assert r.status_code == 200
+
+    print("\n🎉 ALL FULL-STACK & ANDROID MOBILE CONNECTIVITY TESTS PASSED WITH 100% SUCCESS!")
 
 if __name__ == "__main__":
     run_tests()

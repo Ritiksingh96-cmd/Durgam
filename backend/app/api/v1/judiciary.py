@@ -8,6 +8,7 @@ from pydantic import BaseModel
 from backend.app.services.db_service import db_service
 from backend.app.services.blockchain_service import blockchain_service
 from backend.app.services.telegram_service import telegram_bot
+from blockchain.merkle_tree import MerkleTree
 
 router = APIRouter(prefix="/judiciary", tags=["Judiciary & Section 63 BSA Digital Evidence Vault"])
 
@@ -94,17 +95,80 @@ def get_bsa_evidence_certificate(case_id: str):
 
 @router.post("/verify-merkle")
 def verify_merkle_certificate(payload: MerkleVerifyRequest):
-    """Cryptographically verify Section 63 BSA electronic evidence hash against Polygon Amoy on-chain block"""
-    root = payload.merkle_root.strip()
-    is_valid = len(root) >= 16
+    """
+    Cryptographically verify a Section 63 BSA evidence hash.
+    First checks against in-memory sealed certificates (exact match).
+    If not found, falls back to structural Merkle inclusion proof via stored batch roots.
+    """
+    root = payload.merkle_root.strip().lower().replace("0x", "")
+    case_id = payload.case_id
+
+    # --- Path 1: Exact match against in-memory sealed certificates ---
+    cert = blockchain_service.get_certificate(case_id or "")
+    if cert:
+        cert_root = cert.merkle_root.lower().replace("0x", "")
+        is_valid = (root == cert_root) or (root == cert.sha256_case_hash.lower().replace("0x", ""))
+        return {
+            "valid": is_valid,
+            "case_id": case_id,
+            "merkle_root": "0x" + root,
+            "on_chain_status": "SEALED_AND_VERIFIED" if is_valid else "HASH_MISMATCH",
+            "certificate_id": cert.certificate_id,
+            "blockchain_network": "Polygon Amoy Testnet (Public Sovereign Notary)",
+            "block_number": cert.batch_id,
+            "statutory_compliance": "Section 63 BSA 2023 — Admissible Digital Evidence",
+            "verified_at": time.time()
+        }
+
+    # --- Path 2: Verify against committed Merkle batch roots ---
+    batches = blockchain_service.get_all_batches()
+    matched_batch = None
+    for batch in batches:
+        stored_root = batch.get("merkle_root", "").lower().replace("0x", "")
+        if root == stored_root:
+            matched_batch = batch
+            break
+
+    if matched_batch:
+        return {
+            "valid": True,
+            "case_id": case_id,
+            "merkle_root": "0x" + root,
+            "on_chain_status": "SEALED_AND_VERIFIED",
+            "blockchain_network": "Polygon Amoy Testnet (Public Sovereign Notary)",
+            "block_number": matched_batch.get("block_number", 4920194),
+            "polygon_tx_hash": matched_batch.get("polygon_tx_hash"),
+            "batch_id": matched_batch.get("batch_id"),
+            "statutory_compliance": "Section 63 BSA 2023 — Admissible Digital Evidence",
+            "verified_at": time.time()
+        }
+
+    # --- Path 3: Hash is present but no exact root match — check leaf-level with stored batch leaves ---
+    # Build a MerkleTree from known case hashes and verify
+    known_hashes = []
+    for case in db_service.get_all_incidents(50):
+        cid = case.get("case_id", "")
+        utr = case.get("utr_number", "")
+        amt = str(case.get("loss_amount", 0))
+        leaf = hashlib.sha256(f"{cid}-{utr}-{amt}".encode()).hexdigest()
+        known_hashes.append(leaf)
+
+    is_leaf_match = root in known_hashes
+    if known_hashes:
+        mt = MerkleTree(known_hashes)
+        computed_root = mt.root
+        is_valid = is_leaf_match or (root == computed_root)
+    else:
+        is_valid = False
+
     return {
         "valid": is_valid,
-        "case_id": payload.case_id,
-        "merkle_root": root,
-        "on_chain_status": "SEALED_AND_VERIFIED" if is_valid else "INVALID_HASH",
+        "case_id": case_id,
+        "merkle_root": "0x" + root,
+        "on_chain_status": "SEALED_AND_VERIFIED" if is_valid else "HASH_NOT_FOUND_ON_LEDGER",
         "blockchain_network": "Polygon Amoy Testnet (Public Sovereign Notary)",
         "block_number": 4920194,
-        "statutory_compliance": "Section 63 BSA 2023 (Admissible Electronic Evidence in Court)",
+        "statutory_compliance": "Section 63 BSA 2023 — Admissible Digital Evidence",
         "verified_at": time.time()
     }
 
