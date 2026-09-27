@@ -123,6 +123,8 @@ def report_cybercrime_incident(payload: ComplaintCreate):
         "candidate_atms": candidate_atms,
         "dispatch_details": dispatch_record,
         "evidence_certificate": cert.dict(),
+        "nodes": graph_data.get("nodes", []),
+        "edges": graph_data.get("edges", []),
         "mule_detection_matrix": {
             "dormant_spike_detected": True,
             "flow_through_retention_rate": "0.18%",

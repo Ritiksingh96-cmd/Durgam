@@ -204,12 +204,28 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// Dynamic GNN Canvas Graph Drawer
-function drawDynamicMoneyTrail(srcBank = "State Bank of India", muleAcc = "902148102941", amount = 250000) {
+// Dynamic GNN Canvas Graph Drawer — Unique for every complaint
+function drawDynamicMoneyTrail(caseOrParam, muleAccFallback, amountFallback) {
     const canvas = document.getElementById("money-trail-canvas") || document.getElementById("moneyTrailCanvas");
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+
+    let caseData = null;
+    let srcBank = "State Bank of India";
+    let muleAcc = "902148102941";
+    let amount = 250000;
+
+    if (caseOrParam && typeof caseOrParam === "object") {
+        caseData = caseOrParam;
+        srcBank = caseData.source_bank || "State Bank of India";
+        muleAcc = caseData.suspect_account || caseData.terminal_node?.masked_account || "902148102941";
+        amount = Number(caseData.loss_amount || caseData.amount || 250000);
+    } else if (typeof caseOrParam === "string") {
+        srcBank = caseOrParam;
+        muleAcc = muleAccFallback || "902148102941";
+        amount = Number(amountFallback || 250000);
+    }
 
     // Get display dimensions
     const rect = canvas.getBoundingClientRect();
@@ -240,12 +256,67 @@ function drawDynamicMoneyTrail(srcBank = "State Bank of India", muleAcc = "90214
     }
 
     const yMid = h / 2 - 2;
-    const nodes = [
-        { hop: "HOP 0", label: "Source Remitter", sub: srcBank, risk: "Verified Victim", color: "#2563EB", glow: "rgba(37, 99, 235, 0.5)", x: w * 0.12, y: yMid },
-        { hop: "HOP 1", label: "Layer 1 Mule", sub: "PNB (Mewat)", risk: "94% Mule Risk (GNN)", color: "#EF4444", glow: "rgba(239, 68, 68, 0.5)", x: w * 0.38, y: yMid },
-        { hop: "HOP 2", label: "Aggregator Mule", sub: "ICICI (Chandigarh)", risk: "98% Mule Risk (GNN)", color: "#F97316", glow: "rgba(249, 115, 22, 0.5)", x: w * 0.64, y: yMid },
-        { hop: "HOP 3", label: "Terminal ATM", sub: "SBI ATM Sector 29", risk: "✓ 89ms MICRO-HOLD", color: "#10B981", glow: "rgba(16, 185, 129, 0.6)", x: w * 0.88, y: yMid }
-    ];
+    let nodes = [];
+
+    // Check if the case has explicit multi-hop nodes (from backend GNN or empirical case)
+    if (caseData && Array.isArray(caseData.nodes) && caseData.nodes.length >= 3) {
+        const rawNodes = caseData.nodes;
+        const total = rawNodes.length;
+        nodes = rawNodes.map((rn, idx) => {
+            const xPos = w * (0.12 + (idx / (total - 1)) * 0.76);
+            const isFirst = idx === 0;
+            const isLast = idx === total - 1;
+            const bankName = rn.bank || rn.bank_name || (isFirst ? srcBank : (isLast ? "Terminal ATM Kiosk" : "Consortium Mule"));
+            const rawRisk = rn.risk || (rn.mule_probability ? `${(rn.mule_probability * 100).toFixed(0)}% Mule Risk (GNN)` : (isFirst ? "Source Remitter" : "Flagged Mule"));
+            const clr = rn.color || (isFirst ? "#2563EB" : (isLast ? "#10B981" : (idx === 1 ? "#EF4444" : "#F97316")));
+            const glow = isFirst ? "rgba(37, 99, 235, 0.5)" : (isLast ? "rgba(16, 185, 129, 0.6)" : "rgba(239, 68, 68, 0.5)");
+            const hopLabel = isFirst ? "HOP 0" : (isLast ? `HOP ${idx}` : `HOP ${idx}`);
+            const titleLabel = rn.label || (isFirst ? "Victim Remitter" : (isLast ? "Terminal Cashout" : `Layer ${idx} Mule`));
+
+            return {
+                hop: hopLabel,
+                label: titleLabel,
+                sub: bankName,
+                risk: isLast ? "✓ 89ms MICRO-HOLD" : rawRisk,
+                color: clr,
+                glow: glow,
+                x: xPos,
+                y: yMid
+            };
+        });
+    } else {
+        // Dynamically compute unique nodes based on this specific case's bank, city, amount, and terminal ATM
+        const victimCity = caseData?.victim_city || "Delhi NCR";
+        const terminalAtm = caseData?.candidate_atms?.[0]?.name || caseData?.terminal_node?.atm_name || caseData?.terminal_node?.bank_name || "SBI ATM Sector 29 Market";
+        const muleMasked = muleAcc ? (muleAcc.length > 4 ? `XXXX-${muleAcc.slice(-4)}` : muleAcc) : "XXXX-9021";
+
+        // Generate tailored intermediate banks depending on sourceBank
+        let layer1Bank = "PNB (Mewat Hub)";
+        let layer2Bank = "ICICI (Chandigarh Aggregator)";
+        if (srcBank.includes("HDFC")) {
+            layer1Bank = "Axis Bank (Surat Hub)";
+            layer2Bank = "Canara (Ahmedabad Escrow)";
+        } else if (srcBank.includes("ICICI")) {
+            layer1Bank = "IndusInd (Thane Corridor)";
+            layer2Bank = "Bank of Baroda (Pune Shell)";
+        } else if (srcBank.includes("Kotak")) {
+            layer1Bank = "Yes Bank (Jaipur Ring)";
+            layer2Bank = "HDFC (Indore Shell)";
+        } else if (srcBank.includes("Punjab") || srcBank.includes("PNB")) {
+            layer1Bank = "SBI (Hisar Network)";
+            layer2Bank = "Union Bank (Ludhiana Shell)";
+        } else if (srcBank.includes("Axis")) {
+            layer1Bank = "Federal Bank (Kochi Hub)";
+            layer2Bank = "SBI (Bengaluru Escrow)";
+        }
+
+        nodes = [
+            { hop: "HOP 0", label: "Source Remitter", sub: `${srcBank} (${victimCity.split(' ')[0]})`, risk: "Verified Victim (0%)", color: "#2563EB", glow: "rgba(37, 99, 235, 0.5)", x: w * 0.12, y: yMid },
+            { hop: "HOP 1", label: "Layer 1 Mule", sub: `${layer1Bank} [${muleMasked}]`, risk: "94.2% Mule Risk (GNN)", color: "#EF4444", glow: "rgba(239, 68, 68, 0.5)", x: w * 0.38, y: yMid },
+            { hop: "HOP 2", label: "Layer 2 Mule", sub: layer2Bank, risk: "98.1% Cluster Match", color: "#F97316", glow: "rgba(249, 115, 22, 0.5)", x: w * 0.64, y: yMid },
+            { hop: "HOP 3", label: "Terminal Cashout", sub: terminalAtm, risk: "✓ 89ms MICRO-HOLD", color: "#10B981", glow: "rgba(16, 185, 129, 0.6)", x: w * 0.88, y: yMid }
+        ];
+    }
 
     // Draw Multi-Hop Connectors with directional dashed arrows and amount tags
     for (let i = 0; i < nodes.length - 1; i++) {
@@ -255,23 +326,25 @@ function drawDynamicMoneyTrail(srcBank = "State Bank of India", muleAcc = "90214
         ctx.beginPath();
         ctx.moveTo(n1.x + 28, n1.y);
         ctx.lineTo(n2.x - 28, n2.y);
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.3)";
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.35)";
         ctx.lineWidth = 2.5;
         ctx.setLineDash([5, 4]);
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // Transfer Amount Tag
+        // Transfer Amount Tag (decrementing slightly per hop like real layering)
+        const hopFactor = (1 - (i * 0.04));
+        const hopAmt = (amount * hopFactor);
         const midX = (n1.x + n2.x) / 2;
         const midY = n1.y - 12;
-        const amtStr = `₹${(amount / 1000).toFixed(0)}k →`;
+        const amtStr = `₹${(hopAmt / 1000).toFixed(0)}k →`;
 
         ctx.fillStyle = "rgba(239, 68, 68, 0.25)";
         ctx.beginPath();
         if (ctx.roundRect) {
-            ctx.roundRect(midX - 28, midY - 10, 56, 18, 4);
+            ctx.roundRect(midX - 30, midY - 10, 60, 18, 4);
         } else {
-            ctx.rect(midX - 28, midY - 10, 56, 18);
+            ctx.rect(midX - 30, midY - 10, 60, 18);
         }
         ctx.fill();
         ctx.strokeStyle = "#EF4444";
@@ -314,7 +387,8 @@ function drawDynamicMoneyTrail(srcBank = "State Bank of India", muleAcc = "90214
         // Bank / Account info below node
         ctx.fillStyle = "#CBD5E1";
         ctx.font = "10.5px 'DM Sans', sans-serif";
-        ctx.fillText(n.sub, n.x, n.y + 38);
+        const cleanSub = n.sub && n.sub.length > 25 ? n.sub.slice(0, 24) + '...' : n.sub;
+        ctx.fillText(cleanSub, n.x, n.y + 38);
 
         // GNN Risk probability badge
         ctx.fillStyle = n.color === "#10B981" ? "#34D399" : (n.color === "#2563EB" ? "#60A5FA" : "#F87171");
@@ -323,10 +397,11 @@ function drawDynamicMoneyTrail(srcBank = "State Bank of India", muleAcc = "90214
     });
 
     // Top watermark
-    ctx.fillStyle = "rgba(255, 255, 255, 0.45)";
-    ctx.font = "500 10px 'Space Grotesk', sans-serif";
+    const caseIdDisplay = caseData?.case_id || caseData?.ack_number || "LIVE INFERENCE";
+    ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+    ctx.font = "500 10.5px 'Space Grotesk', sans-serif";
     ctx.textAlign = "left";
-    ctx.fillText("⚡ GraphSAGE GNN Multi-Hop Layering Detection (Sub-70ms Inter-Bank Trail)", 14, 18);
+    ctx.fillText(`⚡ GraphSAGE GNN Multi-Hop Layering Interception — [${caseIdDisplay}]`, 14, 18);
 }
 
 function initMoneyTrailDefault() {

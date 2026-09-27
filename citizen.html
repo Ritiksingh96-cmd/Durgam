@@ -380,8 +380,8 @@
 
     
     
-    <script src="script.js?v=5"></script>
-    <script src="app.js?v=5"></script>
+    <script src="script.js?v=6"></script>
+    <script src="app.js?v=6"></script>
     <script>
         if (typeof lucide !== "undefined" && lucide.createIcons) { lucide.createIcons(); }
 
@@ -395,6 +395,8 @@
             localStorage.setItem('durgam_user', JSON.stringify({ id: 'citizen@user.in', role: 'citizen', name: 'Citizen User', mobile: '9811029481' }));
             renderGlobalNavbar();
         }
+
+        let currentActiveCase = null;
 
         function showCitizenTab(tab) {
             if (tab === 'tracker') tab = 'track';
@@ -410,10 +412,8 @@
             if (tab === 'complaints') renderMyComplaints();
             if (tab === 'track') {
                 setTimeout(() => {
-                    const amtText = document.getElementById("track-amount")?.innerText || "250000";
-                    const cleanAmt = parseFloat(amtText.replace(/[^0-9.]/g, '')) || 250000;
                     if (typeof drawDynamicMoneyTrail === "function") {
-                        drawDynamicMoneyTrail("State Bank of India", "902148102941", cleanAmt);
+                        drawDynamicMoneyTrail(currentActiveCase || "State Bank of India");
                     }
                 }, 60);
             }
@@ -525,10 +525,12 @@
             const badge = document.getElementById("track-hold-badge");
             if (badge) badge.innerText = `● ${data.status || 'MICRO_HOLD_PLACED'} (Active)`;
 
+            currentActiveCase = data;
+
             // Draw money trail on canvas
             if (typeof drawDynamicMoneyTrail === "function") {
                 setTimeout(() => {
-                    drawDynamicMoneyTrail(data.source_bank || "State Bank of India", data.terminal_node?.masked_account || data.suspect_account || "902148102941", amt);
+                    drawDynamicMoneyTrail(data);
                 }, 60);
             }
         }
