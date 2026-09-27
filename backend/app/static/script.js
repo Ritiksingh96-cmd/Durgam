@@ -345,6 +345,12 @@ class DurgamSyncBus {
                     longitude: 77.0266,
                     atm_name: "SBI ATM Sector 29 Market"
                 },
+                nodes: [
+                    { id: "0", label: "Hop 0: Victim Remitter", bank: "State Bank of India (Delhi)", account: "XXXX-XXXX-2948", risk: "Verified Complainant (0.1% Risk)", color: "#2563EB", hop_level: 0 },
+                    { id: "1", label: "Hop 1: Layer 1 Mule", bank: "PNB Taoru Cyber Corridor [Mewat (Nuh)]", account: "902148102941", risk: "96.4% Mule Score (GraphSAGE GNN)", color: "#EF4444", hop_level: 1 },
+                    { id: "2", label: "Hop 2: Aggregator Mule", bank: "ICICI Sector 17 Aggregator [Chandigarh]", account: "481902847192", risk: "92.8% Mule Score (GraphSAGE GNN)", color: "#F97316", hop_level: 2 },
+                    { id: "3", label: "Hop 3: Terminal Cashout Kiosk", bank: "SBI ATM Sector 29 Market", account: "902148102941", risk: "✓ 89ms ISO 20022 MICRO-HOLD", color: "#10B981", hop_level: 3 }
+                ],
                 evidence_certificate: {
                     sha256_case_hash: "0x7a8f9c1b2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f90",
                     merkle_root: "0x7a8f9c1b2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f90",
@@ -375,19 +381,25 @@ class DurgamSyncBus {
                 filed_at: new Date(Date.now() - 1000 * 60 * 35).toISOString(),
                 created_at: new Date(Date.now() - 1000 * 60 * 35).toISOString(),
                 candidate_atms: [
-                    { name: "HDFC Bank ATM Laxmi Nagar", bank_name: "HDFC ATM Laxmi Nagar", address: "Laxmi Nagar Metro, New Delhi", lat: 28.6304, lon: 77.2773, eta_minutes: 5, risk_score: "94.2%" }
+                    { name: "Axis Bank ATM Indiranagar 100ft", bank_name: "Axis Bank ATM", address: "100ft Road, Indiranagar, Bengaluru", lat: 12.9784, lon: 77.6408, eta_minutes: 5, risk_score: "94.2%" }
                 ],
                 terminal_node: {
                     account_id: "ACC_MULE_4829",
                     masked_account: "482910481024",
-                    bank_name: "ICICI Bank Ltd",
-                    ifsc: "ICIC0002941",
-                    region: "Laxmi Nagar, Delhi",
-                    state: "Delhi",
-                    latitude: 28.6304,
-                    longitude: 77.2773,
-                    atm_name: "HDFC Bank ATM Laxmi Nagar"
+                    bank_name: "Axis Bank Ltd",
+                    ifsc: "UTIB0000068",
+                    region: "Indiranagar, Bengaluru",
+                    state: "Karnataka",
+                    latitude: 12.9784,
+                    longitude: 77.6408,
+                    atm_name: "Axis Bank ATM Indiranagar 100ft"
                 },
+                nodes: [
+                    { id: "0", label: "Hop 0: Victim Remitter", bank: "HDFC Bank (Haryana)", account: "XXXX-XXXX-8812", risk: "Verified Complainant (0.1% Risk)", color: "#2563EB", hop_level: 0 },
+                    { id: "1", label: "Hop 1: Layer 1 Mule", bank: "Federal Marine Drive Escrow [Kochi]", account: "482910481024", risk: "95.1% Mule Score (GraphSAGE GNN)", color: "#EF4444", hop_level: 1 },
+                    { id: "2", label: "Hop 2: Aggregator Mule", bank: "HDFC Koramangala Shell [Bengaluru]", account: "772194810294", risk: "91.3% Mule Score (GraphSAGE GNN)", color: "#F97316", hop_level: 2 },
+                    { id: "3", label: "Hop 3: Terminal Cashout Kiosk", bank: "Axis Bank ATM Indiranagar 100ft", account: "482910481024", risk: "✓ 89ms ISO 20022 MICRO-HOLD", color: "#10B981", hop_level: 3 }
+                ],
                 evidence_certificate: {
                     sha256_case_hash: "0x6b8c2d1a4e3f5a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b",
                     merkle_root: "0x6b8c2d1a4e3f5a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b",
@@ -418,19 +430,25 @@ class DurgamSyncBus {
                 filed_at: new Date(Date.now() - 1000 * 60 * 55).toISOString(),
                 created_at: new Date(Date.now() - 1000 * 60 * 55).toISOString(),
                 candidate_atms: [
-                    { name: "Axis Bank ATM Indiranagar", bank_name: "Axis Bank ATM", address: "100ft Road, Indiranagar, Bengaluru", lat: 12.9784, lon: 77.6408, eta_minutes: 6, risk_score: "91.8%" }
+                    { name: "ICICI Bank ATM Nariman Point", bank_name: "ICICI ATM Nariman Point", address: "Nariman Point, South Mumbai", lat: 18.9256, lon: 72.8242, eta_minutes: 6, risk_score: "91.8%" }
                 ],
                 terminal_node: {
                     account_id: "ACC_MULE_5510",
                     masked_account: "551029841923",
-                    bank_name: "Canara Bank",
-                    ifsc: "CNRB0008819",
-                    region: "Indiranagar, Bengaluru",
-                    state: "Karnataka",
-                    latitude: 12.9784,
-                    longitude: 77.6408,
-                    atm_name: "Axis Bank ATM Indiranagar"
+                    bank_name: "ICICI Bank Ltd",
+                    ifsc: "ICIC0000004",
+                    region: "Nariman Point, Mumbai",
+                    state: "Maharashtra",
+                    latitude: 18.9256,
+                    longitude: 72.8242,
+                    atm_name: "ICICI Bank ATM Nariman Point"
                 },
+                nodes: [
+                    { id: "0", label: "Hop 0: Victim Remitter", bank: "ICICI Bank (Karnataka)", account: "XXXX-XXXX-3341", risk: "Verified Complainant (0.1% Risk)", color: "#2563EB", hop_level: 0 },
+                    { id: "1", label: "Hop 1: Layer 1 Mule", bank: "IndusInd Wagle Estate [Thane]", account: "551029841923", risk: "97.2% Mule Score (GraphSAGE GNN)", color: "#EF4444", hop_level: 1 },
+                    { id: "2", label: "Hop 2: Aggregator Mule", bank: "BOB Vijay Nagar Shell [Indore]", account: "319481029481", risk: "94.6% Mule Score (GraphSAGE GNN)", color: "#F97316", hop_level: 2 },
+                    { id: "3", label: "Hop 3: Terminal Cashout Kiosk", bank: "ICICI Bank ATM Nariman Point", account: "551029841923", risk: "✓ 89ms ISO 20022 MICRO-HOLD", color: "#10B981", hop_level: 3 }
+                ],
                 evidence_certificate: {
                     sha256_case_hash: "0x5c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d",
                     merkle_root: "0x5c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d",
@@ -461,19 +479,25 @@ class DurgamSyncBus {
                 filed_at: new Date(Date.now() - 1000 * 60 * 75).toISOString(),
                 created_at: new Date(Date.now() - 1000 * 60 * 75).toISOString(),
                 candidate_atms: [
-                    { name: "ICICI Bank ATM Nariman Point", bank_name: "ICICI ATM Nariman Point", address: "Nariman Point, South Mumbai", lat: 18.9256, lon: 72.8242, eta_minutes: 4, risk_score: "95.0%" }
+                    { name: "SBI ATM Connaught Place Inner Circle", bank_name: "SBI ATM Connaught Place", address: "Connaught Place, New Delhi", lat: 28.6315, lon: 77.2167, eta_minutes: 4, risk_score: "95.0%" }
                 ],
                 terminal_node: {
                     account_id: "ACC_MULE_8820",
                     masked_account: "882019481022",
-                    bank_name: "Bank of Baroda",
-                    ifsc: "BARB0NARIMA",
-                    region: "Nariman Point, Mumbai",
-                    state: "Maharashtra",
-                    latitude: 18.9256,
-                    longitude: 72.8242,
-                    atm_name: "ICICI Bank ATM Nariman Point"
+                    bank_name: "State Bank of India",
+                    ifsc: "SBIN0001024",
+                    region: "Connaught Place, New Delhi",
+                    state: "Delhi",
+                    latitude: 28.6315,
+                    longitude: 77.2167,
+                    atm_name: "SBI ATM Connaught Place Inner Circle"
                 },
+                nodes: [
+                    { id: "0", label: "Hop 0: Victim Remitter", bank: "Punjab National Bank (Maharashtra)", account: "XXXX-XXXX-9901", risk: "Verified Complainant (0.1% Risk)", color: "#2563EB", hop_level: 0 },
+                    { id: "1", label: "Hop 1: Layer 1 Mule", bank: "Yes Bank C-Scheme [Jaipur]", account: "882019481022", risk: "98.4% Mule Score (GraphSAGE GNN)", color: "#EF4444", hop_level: 1 },
+                    { id: "2", label: "Hop 2: Aggregator Mule", bank: "UBI Bhiwadi RIICO Escrow [Alwar]", account: "661294810294", risk: "93.9% Mule Score (GraphSAGE GNN)", color: "#F97316", hop_level: 2 },
+                    { id: "3", label: "Hop 3: Terminal Cashout Kiosk", bank: "SBI ATM Connaught Place Inner Circle", account: "882019481022", risk: "✓ 89ms ISO 20022 MICRO-HOLD", color: "#10B981", hop_level: 3 }
+                ],
                 evidence_certificate: {
                     sha256_case_hash: "0x4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d6e8f0a2b4c6d8e0f2a4b6c",
                     merkle_root: "0x4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d4e6f8a0b2c4d6e8f0a2b4c6d8e0f2a4b6c",
@@ -504,19 +528,25 @@ class DurgamSyncBus {
                 filed_at: new Date(Date.now() - 1000 * 60 * 95).toISOString(),
                 created_at: new Date(Date.now() - 1000 * 60 * 95).toISOString(),
                 candidate_atms: [
-                    { name: "J&K Bank ATM Residency Road", bank_name: "J&K Bank ATM", address: "Residency Road, Jammu", lat: 32.7266, lon: 74.8570, eta_minutes: 3, risk_score: "97.4%" }
+                    { name: "Kotak Mahindra ATM Ashram Road", bank_name: "Kotak ATM Ashram Road", address: "Ashram Road, Ahmedabad", lat: 23.0300, lon: 72.5800, eta_minutes: 3, risk_score: "97.4%" }
                 ],
                 terminal_node: {
                     account_id: "ACC_MULE_7710",
                     masked_account: "771029481944",
-                    bank_name: "J&K Bank Ltd",
-                    ifsc: "JAKO0RESIDN",
-                    region: "Residency Road, Jammu",
-                    state: "Jammu & Kashmir",
-                    latitude: 32.7266,
-                    longitude: 74.8570,
-                    atm_name: "J&K Bank ATM Residency Road"
+                    bank_name: "Kotak Mahindra Bank",
+                    ifsc: "KKBK0000811",
+                    region: "Ashram Road, Ahmedabad",
+                    state: "Gujarat",
+                    latitude: 23.0300,
+                    longitude: 72.5800,
+                    atm_name: "Kotak Mahindra ATM Ashram Road"
                 },
+                nodes: [
+                    { id: "0", label: "Hop 0: Victim Remitter", bank: "Axis Bank (Jammu & Kashmir)", account: "XXXX-XXXX-6623", risk: "Verified Complainant (0.1% Risk)", color: "#2563EB", hop_level: 0 },
+                    { id: "1", label: "Hop 1: Layer 1 Mule", bank: "Axis Textile Ring Road [Surat]", account: "771029481944", risk: "96.8% Mule Score (GraphSAGE GNN)", color: "#EF4444", hop_level: 1 },
+                    { id: "2", label: "Hop 2: Aggregator Mule", bank: "Canara Navrangpura Shell [Ahmedabad]", account: "442194810294", risk: "95.3% Mule Score (GraphSAGE GNN)", color: "#F97316", hop_level: 2 },
+                    { id: "3", label: "Hop 3: Terminal Cashout Kiosk", bank: "Kotak Mahindra ATM Ashram Road", account: "771029481944", risk: "✓ 89ms ISO 20022 MICRO-HOLD", color: "#10B981", hop_level: 3 }
+                ],
                 evidence_certificate: {
                     sha256_case_hash: "0x3a5b7c9d1e3f5a7b9c1d3e5f7a9b1c3d5e7f9a1b3c5d7e9f1a3b5c7d9e1f3a5b",
                     merkle_root: "0x3a5b7c9d1e3f5a7b9c1d3e5f7a9b1c3d5e7f9a1b3c5d7e9f1a3b5c7d9e1f3a5b",
@@ -529,11 +559,13 @@ class DurgamSyncBus {
         try {
             const raw = localStorage.getItem("durgam_complaints");
             let list = raw ? JSON.parse(raw) : [];
-            // Merge defaults if not present
+            // Merge defaults and upgrade existing items if their nodes are missing or outdated
             DEFAULT_5_COMPLAINTS.forEach(def => {
-                const exists = list.some(item => item.ack_number === def.ack_number || item.case_id === def.case_id);
-                if (!exists) {
+                const idx = list.findIndex(item => item.ack_number === def.ack_number || item.case_id === def.case_id);
+                if (idx === -1) {
                     list.push(def);
+                } else if (!list[idx].nodes || list[idx].nodes.length < 4 || (list[idx].nodes[1]?.bank?.includes("Mewat") && !def.source_bank.includes("State Bank"))) {
+                    list[idx] = { ...list[idx], ...def };
                 }
             });
             localStorage.setItem("durgam_complaints", JSON.stringify(list));
@@ -559,6 +591,7 @@ class DurgamSyncBus {
                             ack_number: ack,
                             amount: dbCase.loss_amount || dbCase.amount,
                             loss_amount: dbCase.loss_amount || dbCase.amount,
+                            nodes: dbCase.nodes || [],
                             filed_at: dbCase.created_at ? (typeof dbCase.created_at === 'number' ? (dbCase.created_at < 1e11 ? dbCase.created_at * 1000 : dbCase.created_at) : dbCase.created_at) : Date.now()
                         };
                         if (idx >= 0) {

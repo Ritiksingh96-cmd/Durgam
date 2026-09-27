@@ -496,6 +496,15 @@
                 populateTracker(found);
                 showCitizenTab('track');
             }
+            // Asynchronously fetch fresh live record from backend to guarantee exact GNN nodes
+            fetch(`${API_BASE_URL}/api/v1/citizen/track/${encodeURIComponent(docketNo)}`)
+                .then(r => r.json())
+                .then(liveData => {
+                    if (liveData && (liveData.case_id || liveData.ack_number)) {
+                        populateTracker(liveData);
+                        if (!found) showCitizenTab('track');
+                    }
+                }).catch(() => {});
         }
 
         function populateTracker(data) {

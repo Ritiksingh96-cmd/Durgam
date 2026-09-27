@@ -38,6 +38,7 @@ class ComplaintCreate(BaseModel):
     incident_date: Optional[str] = None
     crime_category: Optional[CrimeCategory] = CrimeCategory.DIGITAL_ARREST
     narrative: Optional[str] = None
+    suspect_account: Optional[str] = None
 
 class MultiHopNode(BaseModel):
     account_id: str

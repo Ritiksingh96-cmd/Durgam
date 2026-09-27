@@ -42,7 +42,8 @@ def report_cybercrime_incident(payload: ComplaintCreate):
         source_bank=payload.source_bank,
         amount=final_amount,
         victim_state=payload.victim_state,
-        target_terminal_city="Jammu" if payload.victim_state != "Jammu & Kashmir" else "Bengaluru"
+        target_terminal_city="Jammu" if payload.victim_state != "Jammu & Kashmir" else "Bengaluru",
+        suspect_account=payload.suspect_account
     )
     
     terminal_node = graph_data["terminal_account"]
