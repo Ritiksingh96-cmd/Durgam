@@ -543,6 +543,40 @@ class DurgamSyncBus {
         }
     }
 
+    async syncWithBackend() {
+        try {
+            const res = await fetch(`${API_BASE_URL}/api/v1/citizen/cases-summary`);
+            if (res.ok) {
+                const data = await res.json();
+                if (data && data.cases && data.cases.length > 0) {
+                    const list = this.getStoredComplaints();
+                    data.cases.forEach(dbCase => {
+                        const ack = dbCase.ack_number || dbCase.complaint_id || dbCase.case_id;
+                        const idx = list.findIndex(item => item.ack_number === ack || item.case_id === ack || item.complaint_id === ack);
+                        const normalized = {
+                            ...dbCase,
+                            complaint_id: ack,
+                            ack_number: ack,
+                            amount: dbCase.loss_amount || dbCase.amount,
+                            loss_amount: dbCase.loss_amount || dbCase.amount,
+                            filed_at: dbCase.created_at ? (typeof dbCase.created_at === 'number' ? (dbCase.created_at < 1e11 ? dbCase.created_at * 1000 : dbCase.created_at) : dbCase.created_at) : Date.now()
+                        };
+                        if (idx >= 0) {
+                            list[idx] = { ...list[idx], ...normalized };
+                        } else {
+                            list.unshift(normalized);
+                        }
+                    });
+                    localStorage.setItem("durgam_complaints", JSON.stringify(list));
+                    return list;
+                }
+            }
+        } catch (e) {
+            console.warn("Backend sync fallback active:", e);
+        }
+        return this.getStoredComplaints();
+    }
+
     saveComplaint(complaint) {
         const list = this.getStoredComplaints();
         const existingIdx = list.findIndex(c => c.ack_number === complaint.ack_number || c.complaint_id === complaint.complaint_id);
@@ -571,4 +605,7 @@ window.DurgamSync = new DurgamSyncBus();
 
 document.addEventListener('DOMContentLoaded', () => {
     renderGlobalNavbar();
+    if (window.DurgamSync) {
+        window.DurgamSync.syncWithBackend();
+    }
 });

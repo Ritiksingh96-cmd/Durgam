@@ -397,6 +397,7 @@
         }
 
         function showCitizenTab(tab) {
+            if (tab === 'tracker') tab = 'track';
             document.getElementById('tabComplaints').style.display = tab === 'complaints' ? 'block' : 'none';
             document.getElementById('tabReport').style.display = tab === 'report' ? 'block' : 'none';
             document.getElementById('tabTrack').style.display = tab === 'track' ? 'block' : 'none';
@@ -414,31 +415,111 @@
             catch { return []; }
         }
 
-        function renderMyComplaints() {
-            const list = getMyComplaints();
+        async function renderMyComplaints() {
             const container = document.getElementById('myComplaintsList');
-            if (list.length === 0) {
+            if (!container) return;
+
+            let list = [];
+            try {
+                if (window.DurgamSync && typeof window.DurgamSync.syncWithBackend === 'function') {
+                    list = await window.DurgamSync.syncWithBackend();
+                } else {
+                    const res = await fetch(`${API_BASE_URL}/api/v1/citizen/cases-summary`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        list = data.cases || [];
+                    }
+                }
+            } catch (err) {
+                console.warn("Using local complaints fallback:", err);
+            }
+
+            if (!list || list.length === 0) {
+                list = getMyComplaints();
+            }
+
+            if (!list || list.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state-box">
                         <div class="esi">📋</div>
                         <h4>No Complaints Yet</h4>
-                        <p>File a complaint to get started tracking your cyber fraud case.</p>
+                        <p>File a complaint using Express Report to trigger an immediate bank hold.</p>
                     </div>`;
                 return;
             }
-            container.innerHTML = list.slice().reverse().map(c => `
-                <div class="mycomplaint-card">
+
+            container.innerHTML = list.map(c => {
+                const ack = c.ack_number || c.complaint_id || c.case_id || 'NCRP-1930';
+                const amt = Number(c.loss_amount || c.amount || 0);
+                const status = c.status || 'MICRO_HOLD_PLACED';
+                const utr = c.utr_number || 'N/A';
+                const victim = c.victim_name || 'Complainant';
+                let dateStr = 'Recently';
+                if (c.created_at) {
+                    const ts = typeof c.created_at === 'number' ? (c.created_at < 1e11 ? c.created_at * 1000 : c.created_at) : Date.parse(c.created_at);
+                    dateStr = new Date(ts).toLocaleString('en-IN');
+                } else if (c.filed_at) {
+                    dateStr = new Date(c.filed_at).toLocaleString('en-IN');
+                }
+
+                return `
+                <div class="mycomplaint-card" style="cursor: pointer;" onclick="loadCaseIntoTracker('${ack}')" title="Click to track live status">
                     <div class="mycomplaint-top">
-                        <span class="mycomplaint-no">${c.complaint_id}</span>
-                        <span class="badge-lime">${c.status || '<i data-lucide="search" class="icon-lucide"></i> Investigating'}</span>
+                        <span class="mycomplaint-no"><strong>${ack}</strong> • ${victim}</span>
+                        <span class="badge-lime">${status}</span>
                     </div>
-                    <div style="display:flex; gap:14px; flex-wrap:wrap; margin-bottom:6px;">
-                        <strong style="color:#ff3d3d; font-size:16px;">₹${Number(c.amount).toLocaleString('en-IN')}</strong>
-                        <span style="font-size:12px; color:#7b8285;">UTR: ${c.utr_number}</span>
+                    <div style="display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:6px;">
+                        <strong style="color:#ff3d3d; font-size:16px;">₹${amt.toLocaleString('en-IN', {minimumFractionDigits: 2})}</strong>
+                        <span style="font-size:12px; color:#7b8285;">UTR: ${utr}</span>
+                        <span style="font-size:11px; color:#5c8000; font-weight:600;"><i data-lucide="eye" style="width:12px;height:12px;vertical-align:middle;"></i> View Trail & Docket &rarr;</span>
                     </div>
-                    <div style="font-size:11px; color:#9da4a7;">Filed ${new Date(c.filed_at).toLocaleString('en-IN')}</div>
+                    <div style="font-size:11px; color:#9da4a7;">Recorded in Sovereign DB: ${dateStr}</div>
                 </div>
-            `).join('');
+                `;
+            }).join('');
+            if (typeof lucide !== "undefined" && lucide.createIcons) lucide.createIcons();
+        }
+
+        function loadCaseIntoTracker(docketNo) {
+            const list = (window.DurgamSync ? window.DurgamSync.getStoredComplaints() : []) || [];
+            const found = list.find(c => c.ack_number === docketNo || c.complaint_id === docketNo || c.case_id === docketNo);
+            if (found) {
+                populateTracker(found);
+                showCitizenTab('track');
+            }
+        }
+
+        function populateTracker(data) {
+            const ackNo = data.ack_number || data.complaint_id || data.case_id || "NCRP-1930-48291048";
+            const amt = Number(data.loss_amount || data.amount || 250000);
+            const utr = data.utr_number || "482910482910";
+            const atmName = data.candidate_atms?.[0]?.name || data.terminal_node?.atm_name || "SBI ATM Sector 29 Market";
+            const sha = data.evidence_certificate?.sha256_case_hash || "0x7a8f9c1b2d3e4f5a...BSA2023";
+            const tx = data.evidence_certificate?.polygon_tx_hash || "0x4a920194810248a1...PolygonAmoy";
+
+            const trackDocket = document.getElementById("track-docket-id");
+            if (trackDocket) trackDocket.innerText = `Docket: ${ackNo}`;
+            const trackAmt = document.getElementById("track-amount");
+            if (trackAmt) trackAmt.innerText = `₹${amt.toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
+            const trackAtm = document.getElementById("track-target-atm");
+            if (trackAtm) trackAtm.innerText = atmName;
+
+            const dosDocket = document.getElementById("dossier-docket");
+            if (dosDocket) dosDocket.innerText = ackNo;
+            const dosUtr = document.getElementById("dossier-utr");
+            if (dosUtr) dosUtr.innerText = utr;
+            const dosSha = document.getElementById("dossier-sha");
+            if (dosSha) dosSha.innerText = sha;
+            const dosTx = document.getElementById("dossier-tx");
+            if (dosTx) dosTx.innerText = tx;
+
+            const badge = document.getElementById("track-hold-badge");
+            if (badge) badge.innerText = `● ${data.status || 'MICRO_HOLD_PLACED'} (Active)`;
+
+            // Draw money trail on canvas
+            if (typeof drawDynamicMoneyTrail === "function") {
+                drawDynamicMoneyTrail(data.source_bank || "State Bank of India", data.terminal_node?.masked_account || data.suspect_account || "902148102941", amt);
+            }
         }
 
         // ================= MODAL HANDLERS =================

@@ -100,6 +100,7 @@ def report_cybercrime_incident(payload: ComplaintCreate):
     
     incident_record = {
         "ack_number": ack_number,
+        "complaint_id": ack_number,
         "case_id": case_id,
         "utr_number": clean_utr,
         "victim_name": payload.victim_name,
@@ -109,9 +110,11 @@ def report_cybercrime_incident(payload: ComplaintCreate):
         "source_bank": payload.source_bank,
         "source_account": payload.source_account,
         "loss_amount": final_amount,
+        "amount": final_amount,
         "crime_category": payload.crime_category.value if hasattr(payload.crime_category, "value") else str(payload.crime_category or "DIGITAL_ARREST"),
         "narrative": payload.narrative,
         "created_at": time.time(),
+        "filed_at": time.time(),
         "status": "MICRO_HOLD_PLACED",
         "execution_latency_ms": total_execution_ms,
         "golden_hour_countdown": t_rem,

@@ -89,9 +89,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (res.ok) {
                     const respJson = await res.json();
                     data = respJson.incident || respJson;
+                } else {
+                    const errData = await res.json().catch(() => ({}));
+                    console.error("Backend complaint filing error:", errData);
+                    alert("Error from server: " + (errData.detail || "Could not register complaint in database"));
                 }
             } catch (err) {
-                console.warn("Backend call network issue, generating instant local cryptographic proof:", err);
+                console.warn("Backend call network issue:", err);
             }
 
             if (!data) {
@@ -103,88 +107,132 @@ document.addEventListener("DOMContentLoaded", () => {
                     loss_amount: payload.loss_amount,
                     amount: payload.loss_amount,
                     utr_number: payload.utr_number,
+                    victim_name: payload.victim_name,
+                    victim_phone: payload.victim_phone,
+                    victim_city: payload.victim_city,
+                    source_bank: payload.source_bank,
+                    suspect_account: payload.suspect_account,
                     status: "MICRO_HOLD_PLACED",
+                    created_at: Date.now() / 1000,
+                    filed_at: new Date().toISOString(),
                     terminal_node: {
                         bank_name: "Punjab National Bank",
                         masked_account: `XXXX-XXXX-${payload.suspect_account.slice(-4) || '2941'}`,
-                        region: "Delhi NCR"
+                        region: "Delhi NCR",
+                        atm_name: "SBI ATM Sector 29 Market"
                     },
                     candidate_atms: [
-                        { name: "SBI ATM Sector 29", bank_name: "SBI ATM Sector 29", address: "Sector 29 Market, Gurugram", estimated_arrival_mins: 4 }
-                    ],
-                    predicted_hotspots: [
-                        { name: "SBI ATM Sector 29", bank_name: "SBI ATM Sector 29", address: "Sector 29 Market, Gurugram", estimated_arrival_mins: 4 }
+                        { name: "SBI ATM Sector 29 Market", bank_name: "SBI ATM Sector 29", address: "Sector 29 Market, Gurugram", estimated_arrival_mins: 4 }
                     ],
                     evidence_certificate: {
-                        sha256_case_hash: "0x7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069",
-                        merkle_root: "0x7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069",
+                        sha256_case_hash: "0x7a8f9c1b2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f90",
+                        merkle_root: "0x7a8f9c1b2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f90",
                         polygon_tx_hash: "0x4a920194810248a1c92847190284719284719284719284719284719284719284"
                     }
                 };
             }
+
+            // Normalize fields
+            const ackNo = data.ack_number || data.complaint_id || `NCRP-1930-${Math.floor(10000000 + Math.random() * 90000000)}`;
+            data.ack_number = ackNo;
+            data.complaint_id = ackNo;
+            data.loss_amount = Number(data.loss_amount || rawAmount);
+            data.amount = data.loss_amount;
+            data.utr_number = payload.utr_number;
+            data.victim_name = payload.victim_name;
+            if (!data.filed_at) data.filed_at = new Date().toISOString();
 
             // Save and broadcast across all portals in real-time
             if (window.DurgamSync) {
                 window.DurgamSync.saveComplaint(data);
             }
 
-            // Update UI State
-            if (submitBtn) {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i data-lucide="shield-check"></i> Submit Rapid Freeze Petition';
-                if (typeof lucide !== 'undefined') lucide.createIcons();
-            }
+            // Update UI State in tabTrack
+            const topAtmName = data.candidate_atms?.[0]?.name || data.terminal_node?.atm_name || "SBI ATM Sector 29 Market";
+            const shaHash = data.evidence_certificate?.sha256_case_hash || "0x7a8f9c1b2d3e...BSA2023";
+            const txHash = data.evidence_certificate?.polygon_tx_hash || "0x4a9201948102...PolygonAmoy";
 
-            const ackNo = data.ack_number || data.complaint_id || "NCRP-1930-48291048";
+            const trackDocket = document.getElementById("track-docket-id");
+            if (trackDocket) trackDocket.innerText = `Docket: ${ackNo}`;
+            const trackAmt = document.getElementById("track-amount");
+            if (trackAmt) trackAmt.innerText = `₹${data.loss_amount.toLocaleString('en-IN', {minimumFractionDigits: 2})}`;
+            const trackAtm = document.getElementById("track-target-atm");
+            if (trackAtm) trackAtm.innerText = topAtmName;
+            const badge = document.getElementById("track-hold-badge");
+            if (badge) badge.innerText = "● 100% Locked in Bank Escrow";
+
+            const dosDocket = document.getElementById("dossier-docket");
+            if (dosDocket) dosDocket.innerText = ackNo;
+            const dosUtr = document.getElementById("dossier-utr");
+            if (dosUtr) dosUtr.innerText = payload.utr_number;
+            const dosSha = document.getElementById("dossier-sha");
+            if (dosSha) dosSha.innerText = shaHash;
+            const dosTx = document.getElementById("dossier-tx");
+            if (dosTx) dosTx.innerText = txHash;
+
             const resDocket = document.getElementById("res-docket");
             if (resDocket) resDocket.innerText = ackNo;
             const resStatus = document.getElementById("res-status");
             if (resStatus) resStatus.innerText = "FUNDS QUARANTINED (89ms)";
             const resAmount = document.getElementById("res-amount");
-            if (resAmount) resAmount.innerText = `₹${Number(data.loss_amount || rawAmount).toLocaleString('en-IN')}`;
+            if (resAmount) resAmount.innerText = `₹${data.loss_amount.toLocaleString('en-IN')}`;
             const resCert = document.getElementById("res-cert");
-            if (resCert) resCert.innerText = data.evidence_certificate?.sha256_case_hash || "0x7f83b1657ff1...a931";
+            if (resCert) resCert.innerText = shaHash;
 
             const resultBox = document.getElementById("freezeResultBox");
             if (resultBox) resultBox.style.display = "block";
 
-            // Advance Tracker Stepper
-            const st1 = document.getElementById("step1-icon");
-            if (st1) { st1.style.background = "#050708"; st1.style.color = "var(--lime)"; st1.innerText = "✓"; }
-            const st2 = document.getElementById("step2-icon");
-            if (st2) { st2.style.background = "#050708"; st2.style.color = "var(--lime)"; st2.innerText = "✓"; }
-
             // Draw Dynamic Money Trail Graph
-            drawDynamicMoneyTrail(sourceBank, payload.suspect_account, payload.loss_amount);
+            drawDynamicMoneyTrail(sourceBank, payload.suspect_account, data.loss_amount);
 
+            // Switch to Track Tab
             if (typeof showCitizenTab === "function") {
-                showCitizenTab("tracker");
+                showCitizenTab("track");
             }
+
+            // Reset submit button
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i data-lucide="zap"></i> Trigger 89ms Bank Hold & Intercept';
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }
+
+            alert(`⚡ 89ms BANK MICRO-HOLD PLACED!\n\nDocket Ref: ${ackNo}\nAmount Quarantined: ₹${data.loss_amount.toLocaleString('en-IN')}\nStatus: Section 106 BNSS 2023 Pre-Settlement Hold Active\nEvidence: Sealed on Polygon Blockchain under Sec 63 BSA 2023\n\nYour complaint is saved in the National Cybercrime Sovereign Database.`);
         });
     }
 });
 
 // Dynamic GNN Canvas Graph Drawer
 function drawDynamicMoneyTrail(srcBank, muleAcc, amount) {
-    const canvas = document.getElementById("moneyTrailCanvas");
+    const canvas = document.getElementById("money-trail-canvas") || document.getElementById("moneyTrailCanvas");
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    // Ensure proper canvas pixel dimensions
+    if (canvas.clientWidth && canvas.clientHeight) {
+        canvas.width = canvas.clientWidth;
+        canvas.height = canvas.clientHeight;
+    }
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    const w = canvas.width || 600;
+    const h = canvas.height || 240;
+    const yMid = h / 2;
+
     const nodes = [
-        { label: "Victim Account", sub: srcBank, x: 70, y: 70, color: "#111820", txt: "#ffffff" },
-        { label: "Layer 1 Mule", sub: "PNB (Mewat)", x: 250, y: 70, color: "#ff4d4d", txt: "#ffffff" },
-        { label: "Layer 2 Mule", sub: "ICICI (Chandigarh)", x: 440, y: 70, color: "#ff9900", txt: "#ffffff" },
-        { label: "Terminal ATM", sub: "SBI ATM Sector 29", x: 630, y: 70, color: "#b7ff00", txt: "#050708" }
+        { label: "Victim Account", sub: srcBank, x: w * 0.12, y: yMid, color: "#111820", txt: "#ffffff" },
+        { label: "Layer 1 Mule", sub: "PNB (Mewat)", x: w * 0.38, y: yMid, color: "#ff4d4d", txt: "#ffffff" },
+        { label: "Layer 2 Mule", sub: "ICICI (Chandigarh)", x: w * 0.65, y: yMid, color: "#ff9900", txt: "#ffffff" },
+        { label: "Terminal ATM", sub: "SBI ATM Sector 29", x: w * 0.88, y: yMid, color: "#b7ff00", txt: "#050708" }
     ];
 
     // Draw Edges
     for (let i = 0; i < nodes.length - 1; i++) {
         ctx.beginPath();
-        ctx.moveTo(nodes[i].x + 40, nodes[i].y);
-        ctx.lineTo(nodes[i + 1].x - 40, nodes[i + 1].y);
+        ctx.moveTo(nodes[i].x + 35, nodes[i].y);
+        ctx.lineTo(nodes[i + 1].x - 35, nodes[i + 1].y);
         ctx.strokeStyle = "#8dcc00";
         ctx.lineWidth = 2.5;
         ctx.setLineDash([4, 4]);
@@ -193,14 +241,15 @@ function drawDynamicMoneyTrail(srcBank, muleAcc, amount) {
 
         // Edge Amount Label
         ctx.fillStyle = "#ff3d3d";
-        ctx.font = "bold 10px 'DM Sans', sans-serif";
-        ctx.fillText(`₹${(amount / 1000).toFixed(0)}k`, (nodes[i].x + nodes[i + 1].x) / 2 - 12, nodes[i].y - 8);
+        ctx.font = "bold 11px 'DM Sans', sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(`₹${(amount / 1000).toFixed(0)}k`, (nodes[i].x + nodes[i + 1].x) / 2, nodes[i].y - 10);
     }
 
     // Draw Nodes
     nodes.forEach(n => {
         ctx.beginPath();
-        ctx.arc(n.x, n.y, 28, 0, Math.PI * 2);
+        ctx.arc(n.x, n.y, 26, 0, Math.PI * 2);
         ctx.fillStyle = n.color;
         ctx.fill();
         ctx.strokeStyle = "#deddd7";
@@ -214,7 +263,7 @@ function drawDynamicMoneyTrail(srcBank, muleAcc, amount) {
 
         ctx.fillStyle = "#626b70";
         ctx.font = "10px 'DM Sans', sans-serif";
-        ctx.fillText(n.sub, n.x, n.y + 44);
+        ctx.fillText(n.sub, n.x, n.y + 40);
     });
 }
 

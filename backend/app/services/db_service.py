@@ -369,10 +369,11 @@ def init_db():
 
     conn.commit()
 
-    # Re-seed with full Pan-India diverse cases
+    # Seed default Pan-India cases if not already present
+    default_base_time = time.time() - 86400 * 2
     for case in PAN_INDIA_EMPIRICAL_CASES:
         cursor.execute("""
-        INSERT OR REPLACE INTO incidents (
+        INSERT OR IGNORE INTO incidents (
             case_id, ack_number, victim_name, victim_phone, victim_city, victim_state,
             utr_number, source_bank, source_account, loss_amount, crime_category,
             narrative, status, execution_latency_ms, nodes_json, terminal_node_json, extra_data_json, created_at
@@ -395,7 +396,7 @@ def init_db():
             json.dumps(case.get("nodes", [])),
             json.dumps(case.get("terminal_node", {})),
             json.dumps({}),
-            time.time()
+            default_base_time
         ))
     conn.commit()
 
