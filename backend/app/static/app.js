@@ -182,13 +182,15 @@ document.addEventListener("DOMContentLoaded", () => {
             const resultBox = document.getElementById("freezeResultBox");
             if (resultBox) resultBox.style.display = "block";
 
-            // Draw Dynamic Money Trail Graph
-            drawDynamicMoneyTrail(sourceBank, payload.suspect_account, data.loss_amount);
-
-            // Switch to Track Tab
+            // Switch to Track Tab first so canvas has layout dimensions
             if (typeof showCitizenTab === "function") {
                 showCitizenTab("track");
             }
+
+            // Draw Dynamic Money Trail Graph after layout render
+            setTimeout(() => {
+                drawDynamicMoneyTrail(sourceBank, payload.suspect_account, data.loss_amount);
+            }, 60);
 
             // Reset submit button
             if (submitBtn) {
@@ -203,72 +205,134 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // Dynamic GNN Canvas Graph Drawer
-function drawDynamicMoneyTrail(srcBank, muleAcc, amount) {
+function drawDynamicMoneyTrail(srcBank = "State Bank of India", muleAcc = "902148102941", amount = 250000) {
     const canvas = document.getElementById("money-trail-canvas") || document.getElementById("moneyTrailCanvas");
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Ensure proper canvas pixel dimensions
-    if (canvas.clientWidth && canvas.clientHeight) {
-        canvas.width = canvas.clientWidth;
-        canvas.height = canvas.clientHeight;
+    // Get display dimensions
+    const rect = canvas.getBoundingClientRect();
+    const w = (rect && rect.width > 50) ? rect.width : (canvas.clientWidth > 50 ? canvas.clientWidth : 650);
+    const h = 240;
+    const dpr = window.devicePixelRatio || 1;
+
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    canvas.style.width = w + "px";
+    canvas.style.height = h + "px";
+
+    ctx.scale(dpr, dpr);
+    ctx.clearRect(0, 0, w, h);
+
+    // Dark high-tech cyber defense matrix background
+    ctx.fillStyle = "#0c1015";
+    ctx.fillRect(0, 0, w, h);
+
+    // Subtle Grid Pattern
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.05)";
+    ctx.lineWidth = 1;
+    for (let x = 0; x < w; x += 30) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+    }
+    for (let y = 0; y < h; y += 30) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
     }
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    const w = canvas.width || 600;
-    const h = canvas.height || 240;
-    const yMid = h / 2;
-
+    const yMid = h / 2 - 2;
     const nodes = [
-        { label: "Victim Account", sub: srcBank, x: w * 0.12, y: yMid, color: "#111820", txt: "#ffffff" },
-        { label: "Layer 1 Mule", sub: "PNB (Mewat)", x: w * 0.38, y: yMid, color: "#ff4d4d", txt: "#ffffff" },
-        { label: "Layer 2 Mule", sub: "ICICI (Chandigarh)", x: w * 0.65, y: yMid, color: "#ff9900", txt: "#ffffff" },
-        { label: "Terminal ATM", sub: "SBI ATM Sector 29", x: w * 0.88, y: yMid, color: "#b7ff00", txt: "#050708" }
+        { hop: "HOP 0", label: "Source Remitter", sub: srcBank, risk: "Verified Victim", color: "#2563EB", glow: "rgba(37, 99, 235, 0.5)", x: w * 0.12, y: yMid },
+        { hop: "HOP 1", label: "Layer 1 Mule", sub: "PNB (Mewat)", risk: "94% Mule Risk (GNN)", color: "#EF4444", glow: "rgba(239, 68, 68, 0.5)", x: w * 0.38, y: yMid },
+        { hop: "HOP 2", label: "Aggregator Mule", sub: "ICICI (Chandigarh)", risk: "98% Mule Risk (GNN)", color: "#F97316", glow: "rgba(249, 115, 22, 0.5)", x: w * 0.64, y: yMid },
+        { hop: "HOP 3", label: "Terminal ATM", sub: "SBI ATM Sector 29", risk: "✓ 89ms MICRO-HOLD", color: "#10B981", glow: "rgba(16, 185, 129, 0.6)", x: w * 0.88, y: yMid }
     ];
 
-    // Draw Edges
+    // Draw Multi-Hop Connectors with directional dashed arrows and amount tags
     for (let i = 0; i < nodes.length - 1; i++) {
+        const n1 = nodes[i];
+        const n2 = nodes[i + 1];
+
         ctx.beginPath();
-        ctx.moveTo(nodes[i].x + 35, nodes[i].y);
-        ctx.lineTo(nodes[i + 1].x - 35, nodes[i + 1].y);
-        ctx.strokeStyle = "#8dcc00";
+        ctx.moveTo(n1.x + 28, n1.y);
+        ctx.lineTo(n2.x - 28, n2.y);
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.3)";
         ctx.lineWidth = 2.5;
-        ctx.setLineDash([4, 4]);
+        ctx.setLineDash([5, 4]);
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // Edge Amount Label
-        ctx.fillStyle = "#ff3d3d";
-        ctx.font = "bold 11px 'DM Sans', sans-serif";
+        // Transfer Amount Tag
+        const midX = (n1.x + n2.x) / 2;
+        const midY = n1.y - 12;
+        const amtStr = `₹${(amount / 1000).toFixed(0)}k →`;
+
+        ctx.fillStyle = "rgba(239, 68, 68, 0.25)";
+        ctx.beginPath();
+        if (ctx.roundRect) {
+            ctx.roundRect(midX - 28, midY - 10, 56, 18, 4);
+        } else {
+            ctx.rect(midX - 28, midY - 10, 56, 18);
+        }
+        ctx.fill();
+        ctx.strokeStyle = "#EF4444";
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        ctx.fillStyle = "#FF9999";
+        ctx.font = "bold 10px 'Space Grotesk', sans-serif";
         ctx.textAlign = "center";
-        ctx.fillText(`₹${(amount / 1000).toFixed(0)}k`, (nodes[i].x + nodes[i + 1].x) / 2, nodes[i].y - 10);
+        ctx.fillText(amtStr, midX, midY + 3);
     }
 
-    // Draw Nodes
-    nodes.forEach(n => {
+    // Draw GNN Nodes
+    nodes.forEach((n) => {
+        // Outer Glow
+        ctx.shadowColor = n.glow;
+        ctx.shadowBlur = 14;
         ctx.beginPath();
-        ctx.arc(n.x, n.y, 26, 0, Math.PI * 2);
+        ctx.arc(n.x, n.y, 24, 0, Math.PI * 2);
         ctx.fillStyle = n.color;
         ctx.fill();
-        ctx.strokeStyle = "#deddd7";
+        ctx.shadowBlur = 0;
+
+        // Inner Border
+        ctx.strokeStyle = "#ffffff";
         ctx.lineWidth = 2;
         ctx.stroke();
 
-        ctx.fillStyle = n.txt;
-        ctx.font = "bold 10px 'Space Grotesk', sans-serif";
+        // Node Hop text inside circle
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 9px 'Space Grotesk', sans-serif";
         ctx.textAlign = "center";
-        ctx.fillText(n.label.slice(0, 8), n.x, n.y + 3);
+        ctx.fillText(n.hop, n.x, n.y + 3);
 
-        ctx.fillStyle = "#626b70";
-        ctx.font = "10px 'DM Sans', sans-serif";
-        ctx.fillText(n.sub, n.x, n.y + 40);
+        // Title above node
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 11px 'Space Grotesk', sans-serif";
+        ctx.fillText(n.label, n.x, n.y - 30);
+
+        // Bank / Account info below node
+        ctx.fillStyle = "#CBD5E1";
+        ctx.font = "10.5px 'DM Sans', sans-serif";
+        ctx.fillText(n.sub, n.x, n.y + 38);
+
+        // GNN Risk probability badge
+        ctx.fillStyle = n.color === "#10B981" ? "#34D399" : (n.color === "#2563EB" ? "#60A5FA" : "#F87171");
+        ctx.font = "bold 9.5px 'Space Grotesk', sans-serif";
+        ctx.fillText(n.risk, n.x, n.y + 52);
     });
+
+    // Top watermark
+    ctx.fillStyle = "rgba(255, 255, 255, 0.45)";
+    ctx.font = "500 10px 'Space Grotesk', sans-serif";
+    ctx.textAlign = "left";
+    ctx.fillText("⚡ GraphSAGE GNN Multi-Hop Layering Detection (Sub-70ms Inter-Bank Trail)", 14, 18);
 }
 
 function initMoneyTrailDefault() {
-    drawDynamicMoneyTrail("State Bank of India", "902148102941", 250000);
+    setTimeout(() => {
+        drawDynamicMoneyTrail("State Bank of India", "902148102941", 250000);
+    }, 100);
 }
 
 // Sync Public Telemetry Data

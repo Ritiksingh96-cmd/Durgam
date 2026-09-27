@@ -380,8 +380,8 @@
 
     
     
-    <script src="script.js?v=3"></script>
-    <script src="app.js?v=3"></script>
+    <script src="script.js?v=5"></script>
+    <script src="app.js?v=5"></script>
     <script>
         if (typeof lucide !== "undefined" && lucide.createIcons) { lucide.createIcons(); }
 
@@ -408,6 +408,15 @@
             if (activeSubTab) activeSubTab.classList.add('active');
 
             if (tab === 'complaints') renderMyComplaints();
+            if (tab === 'track') {
+                setTimeout(() => {
+                    const amtText = document.getElementById("track-amount")?.innerText || "250000";
+                    const cleanAmt = parseFloat(amtText.replace(/[^0-9.]/g, '')) || 250000;
+                    if (typeof drawDynamicMoneyTrail === "function") {
+                        drawDynamicMoneyTrail("State Bank of India", "902148102941", cleanAmt);
+                    }
+                }, 60);
+            }
         }
 
         function getMyComplaints() {
@@ -518,7 +527,9 @@
 
             // Draw money trail on canvas
             if (typeof drawDynamicMoneyTrail === "function") {
-                drawDynamicMoneyTrail(data.source_bank || "State Bank of India", data.terminal_node?.masked_account || data.suspect_account || "902148102941", amt);
+                setTimeout(() => {
+                    drawDynamicMoneyTrail(data.source_bank || "State Bank of India", data.terminal_node?.masked_account || data.suspect_account || "902148102941", amt);
+                }, 60);
             }
         }
 
