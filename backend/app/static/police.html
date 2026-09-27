@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DURGAM — Police Tactical CAD & ATM Hotspot Radar</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        .grid-police {
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 24px;
+        }
+        #police-map {
+            height: 420px;
+            width: 100%;
+            border-radius: 16px;
+            border: 1.5px solid #deddd7;
+            margin-top: 14px;
+            z-index: 10;
+        }
+        .cad-unit-card {
+            background: #ffffff;
+            border: 1.5px solid #deddd7;
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+        .cad-unit-card:hover {
+            border-color: #111820;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+        }
+        .hotspot-stat-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+            background: #fafaf7;
+            border: 1px solid #e4e2dc;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+        .progress-bar-bg {
+            background: #e4e2dc;
+            height: 6px;
+            border-radius: 4px;
+            overflow: hidden;
+            width: 100px;
+            margin: 0 10px;
+        }
+        .progress-bar-fill {
+            background: #ff4d4d;
+            height: 100%;
+            border-radius: 4px;
+        }
+        @media(max-width: 1050px) {
+            .grid-police { grid-template-columns: 1fr; }
+        }
+    </style>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+
+    <div class="ambient ambient-left"></div>
+    <div class="ambient ambient-right"></div>
+
+    <!-- NAVBAR (Unified Global Top Navigation) -->
+    <header class="navbar">
+        <a href="index.html" class="brand">
+            <div class="brand-shield"><i data-lucide="shield-alert"></i></div>
+            <div class="brand-text">
+                <div class="brand-name">DURGAM<span></span></div>
+                <div class="brand-subtitle">Police Tactical Cyber Command & CAD Dispatch</div>
+            </div>
+        </a>
+
+        <nav class="nav-links"></nav>
+        <div class="nav-right"></div>
+    </header>
+
+    <main class="page-container grid-police">
+        
+        <!-- LEFT: ATM THREAT MAP RADAR & INTERCEPT ENGINE -->
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+            <div class="ui-card" id="radarSection">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <div class="eyebrow"><span></span>NATIONAL ATM CASHOUT PREDICTIVE RADAR</div>
+                        <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 24px; color: #111820;">Forecasted Cashout Hotspots</h2>
+                    </div>
+                    <span class="badge-lime">● Threat Intelligence Live</span>
+                </div>
+                <p style="font-size: 13px; color: #626b70; margin-top: 4px;">
+                    Pinpoints highest probability ATM cashout kiosks within 15–45 minute withdrawal windows using real-time spatial threat intelligence.
+                </p>
+
+                <!-- Live Radar Input & Prediction Filter -->
+                <div style="background: #fafaf7; border: 1.5px solid #deddd7; border-radius: 12px; padding: 14px; margin-top: 14px; display: grid; grid-template-columns: 1.2fr 1fr auto; gap: 10px; align-items: flex-end;">
+                    <div>
+                        <label style="font-size: 11px; font-weight: 700; color: #626b70; display: block; margin-bottom: 4px;">TARGET SECTOR / REGION</label>
+                        <select id="radar-city-select" onchange="runRadarScan()" style="width: 100%; height: 38px; border-radius: 8px; border: 1.5px solid #deddd7; padding: 0 10px; font-size: 13px; font-family: inherit; background: #ffffff;">
+                            <option value="Delhi NCR">Delhi NCR & Central</option>
+                            <option value="Jammu">Jammu & Kashmir (Terminal Hub)</option>
+                            <option value="Mewat">Nuh / Mewat Hotspot Hub</option>
+                            <option value="Mumbai">Mumbai & MMR Region</option>
+                            <option value="Bengaluru">Bengaluru Cyber Zone</option>
+                            <option value="Hyderabad">Hyderabad Cyberabad</option>
+                            <option value="Jaipur">Jaipur / Rajasthan Corridor</option>
+                            <option value="Chandigarh">Chandigarh / Tri-City</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-size: 11px; font-weight: 700; color: #626b70; display: block; margin-bottom: 4px;">COERCED FRAUD AMOUNT (₹)</label>
+                        <input type="number" id="radar-amount-input" value="250000" style="width: 100%; height: 38px; border-radius: 8px; border: 1.5px solid #deddd7; padding: 0 10px; font-size: 13px; font-family: inherit; background: #ffffff;" />
+                    </div>
+                    <button onclick="runRadarScan()" class="primary-btn" style="height: 38px; font-size: 12px; padding: 0 14px; white-space: nowrap;">
+                        <i data-lucide="crosshair"></i> Run Kiosk Threat Scan
+                    </button>
+                </div>
+
+                <div id="police-map"></div>
+
+                <!-- Hotspot Probability Breakdown -->
+                <div style="margin-top: 20px;">
+                    <h4 style="font-size: 13px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between;">
+                        <span style="display: flex; align-items: center; gap: 6px;">
+                            <i data-lucide="activity" style="color:var(--lime-dark); width:16px; height:16px;"></i> High-Risk ATM Cashout Queue (Threat Ranked)
+                        </span>
+                        <span id="radar-count-badge" class="badge-lime" style="font-size: 10.5px;">Scanned 300+ ATMs</span>
+                    </h4>
+                    <div id="hotspotListContainer">
+                        <!-- Populated dynamically by runRadarScan() -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT: DISPATCH DOCKET, PCR FLEET & TACTICAL ACTIONS -->
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            
+            <!-- Active Intercept Docket -->
+            <div class="ui-card" style="background: #070a0c; color: #ffffff; border-color: rgba(255,255,255,0.1);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <span style="color: var(--lime); font-size: 11px; font-weight: 700; display:flex; align-items:center; gap:6px;">
+                        <i data-lucide="alert-triangle" style="width:14px; height:14px;"></i> GOLDEN-HOUR ACTIVE INTERCEPT
+                    </span>
+                    <span id="top-lead-time" style="font-size: 11px; color: #9da4a7;">Lead Time: 18 Mins</span>
+                </div>
+                <h3 id="top-atm-title" style="font-family: 'Space Grotesk', sans-serif; font-size: 20px; margin-bottom: 6px;">SBI ATM, Sector 29 Market</h3>
+                <p id="top-atm-desc" style="font-size: 12.5px; color: #9da4a7; line-height: 1.5; margin-bottom: 16px;">
+                    Target Mule: <code style="color:var(--lime); background:rgba(255,255,255,0.08); padding:2px 6px; border-radius:4px;">MULE_90214810</code> • Quarantined Amount: ₹2,50,000 • Risk: <strong id="top-risk-pct" style="color:#ff4d4d;">96.5%</strong>
+                </p>
+                
+                <div style="display: flex; gap: 10px;">
+                    <button id="main-dispatch-btn" onclick="triggerPatrolDispatch('ATM_SBI_101')" class="primary-btn" style="flex: 1; justify-content: center; background: var(--lime); color: #050708; border-color: var(--lime); font-weight: 700;">
+                        <i data-lucide="send"></i> Dispatch Falcon 1 (CAD + Telegram)
+                    </button>
+                    <a id="main-nav-link" href="https://www.google.com/maps/dir/?api=1&destination=28.4595,77.0266" target="_blank" class="outline-btn" style="color: #ffffff; border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.06);">
+                        <i data-lucide="navigation"></i> GPS
+                    </a>
+                </div>
+            </div>
+
+            <!-- Field Patrol Fleet Status -->
+            <div class="ui-card">
+                <div class="eyebrow"><span></span>FIELD CAD UNITS</div>
+                <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: 18px; margin-bottom: 14px;">Assigned Sector PCR Vans</h3>
+
+                <div class="cad-unit-card">
+                    <div>
+                        <strong style="font-size: 13.5px; display: block;">PCR Falcon 1 (HR-26-014)</strong>
+                        <span style="font-size: 11.5px; color: #626b70;">SI Rajesh Hooda • Distance: 1.4 km (4 mins)</span>
+                    </div>
+                    <span class="badge-lime" id="falcon-status">READY</span>
+                </div>
+
+                <div class="cad-unit-card">
+                    <div>
+                        <strong style="font-size: 13.5px; display: block;">PCR Eagle 4 (DL-01-442)</strong>
+                        <span style="font-size: 11.5px; color: #626b70;">Dr. Vikram Rao, IPS • Central Control</span>
+                    </div>
+                    <span class="badge-lime">STANDBY</span>
+                </div>
+            </div>
+
+            <!-- Sovereign Tactical Action Strip -->
+            <div class="ui-card" style="padding: 22px;">
+                <div class="eyebrow"><span></span>INVESTIGATIVE POWERS</div>
+                <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: 16px; margin-bottom: 12px;">Sovereign Tactical Actions</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <button onclick="openCeirModal()" class="outline-btn" style="font-size: 11.5px; justify-content: center; height: 40px;">
+                        <i data-lucide="smartphone"></i> Block IMEI / SIM
+                    </button>
+                    <button onclick="openBnssNoticeModal()" class="outline-btn" style="font-size: 11.5px; justify-content: center; height: 40px;">
+                        <i data-lucide="file-text"></i> Sec 94 BNSS Notice
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- MODAL: CEIR IMEI / SIM FREEZE -->
+    <div id="ceirModal" class="modal-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:1000; align-items:center; justify-content:center;">
+        <div class="ui-card" style="width:480px; max-width:90%; padding:28px; margin:auto;">
+            <div class="eyebrow"><span></span>TELECOM REGISTRY BROADCAST</div>
+            <h3 style="font-family:'Space Grotesk', sans-serif; font-size:20px; margin-bottom:8px;">Block Suspect Handset & SIM</h3>
+            <p style="font-size:12.5px; color:#626b70; margin-bottom:16px;">Issues emergency blacklisting broadcast to Sanchar Saathi CEIR and DoT gateway.</p>
+            <div class="input-field" style="margin-bottom:12px;">
+                <label>Suspect IMEI (15-Digit) *</label>
+                <input type="text" id="ceir-imei" value="864209048291048" placeholder="Enter 15-digit IMEI" />
+            </div>
+            <div class="input-field" style="margin-bottom:18px;">
+                <label>Suspect Mobile Number *</label>
+                <input type="tel" id="ceir-mobile" value="9821049281" placeholder="10-digit mobile" />
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button type="button" class="outline-btn" style="height:36px;" onclick="closeModal('ceirModal')">Cancel</button>
+                <button type="button" class="primary-btn" style="height:36px;" onclick="broadcastCeirFreeze()">Broadcast Blacklist</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: SECTION 94 BNSS NOTICE -->
+    <div id="bnssModal" class="modal-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:1000; align-items:center; justify-content:center;">
+        <div class="ui-card" style="width:520px; max-width:90%; padding:28px; margin:auto;">
+            <div class="eyebrow"><span></span>SECTION 94 BNSS 2023</div>
+            <h3 style="font-family:'Space Grotesk', sans-serif; font-size:20px; margin-bottom:8px;">Generate Bank Production Order</h3>
+            <p style="font-size:12.5px; color:#626b70; margin-bottom:16px;">Legal summons to Bank Nodal Manager to produce KYC and statement logs within 2 hours.</p>
+            <div class="input-field" style="margin-bottom:12px;">
+                <label>Target Financial Institution *</label>
+                <input type="text" id="bnss-bank" value="State Bank of India — Nodal Operations" />
+            </div>
+            <div class="input-field" style="margin-bottom:18px;">
+                <label>Beneficiary Account Number *</label>
+                <input type="text" id="bnss-acc" value="902148102941" />
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button type="button" class="outline-btn" style="height:36px;" onclick="closeModal('bnssModal')">Cancel</button>
+                <button type="button" class="primary-btn" style="height:36px;" onclick="generateBnssOrder()">Issue Digital Order</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js?v=3"></script>
+    <script src="app.js?v=3"></script>
+    <script>
+        if (typeof lucide !== "undefined" && lucide.createIcons) { lucide.createIcons(); }
+
+        // Enforce active police session
+        if (!getLoggedInUser()) {
+            localStorage.setItem('durgam_user', JSON.stringify({ id: 'pcr.falcon1@police.gov.in', role: 'police', name: 'SI Rajesh Hooda' }));
+            renderGlobalNavbar();
+        }
+
+        // Initialize OpenStreetMap Leaflet Map
+        const map = L.map('police-map').setView([28.4595, 77.0266], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors • DURGAM Sovereign AI Matrix'
+        }).addTo(map);
+
+        const redIcon = L.icon({
+            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34]
+        });
+
+        let activeMarkers = [];
+        let radarPulseCircle = null;
+
+        async function runRadarScan() {
+            const city = document.getElementById('radar-city-select')?.value || 'Delhi NCR';
+            const amount = parseFloat(document.getElementById('radar-amount-input')?.value) || 250000;
+            const container = document.getElementById('hotspotListContainer');
+            if (container) {
+                container.innerHTML = '<div style="padding:16px; text-align:center; color:#626b70;">⏳ Executing threat assessment across 300+ geocoded ATM kiosks...</div>';
+            }
+
+            try {
+                const res = await fetch('/api/v1/police/radar-scan', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ city, amount, limit: 6 })
+                });
+                const data = await res.json();
+                renderHotspots(data.hotspots || [], city);
+            } catch (err) {
+                console.error("Radar scan fallback:", err);
+            }
+        }
+
+        function renderHotspots(hotspots, city) {
+            // Clear previous markers
+            activeMarkers.forEach(m => map.removeLayer(m));
+            activeMarkers = [];
+            if (radarPulseCircle) map.removeLayer(radarPulseCircle);
+
+            const container = document.getElementById('hotspotListContainer');
+            if (!hotspots || hotspots.length === 0) {
+                if (container) container.innerHTML = '<div style="padding:14px; text-align:center; color:#626b70;">No ATMs found in this sector.</div>';
+                return;
+            }
+
+            // Re-center map to top predicted ATM
+            const top = hotspots[0];
+            map.setView([top.latitude, top.longitude], 13);
+
+            // Add radar pulsing circle around top hotspot
+            radarPulseCircle = L.circle([top.latitude, top.longitude], {
+                color: '#ff3d3d',
+                fillColor: '#ff4d4d',
+                fillOpacity: 0.22,
+                radius: 1200
+            }).addTo(map);
+
+            // Update Top Intercept Docket
+            document.getElementById('top-atm-title').innerText = top.bank_name;
+            document.getElementById('top-risk-pct').innerText = `${(top.base_kde_density * 100).toFixed(1)}%`;
+            document.getElementById('top-lead-time').innerText = `ETA: ${top.eta_minutes} Mins`;
+            document.getElementById('main-nav-link').href = top.navigation_url;
+            document.getElementById('main-dispatch-btn').setAttribute('onclick', `triggerPatrolDispatch('${top.atm_id}', '${top.bank_name}', ${top.latitude}, ${top.longitude})`);
+
+            let html = '';
+            hotspots.forEach((atm, index) => {
+                const marker = L.marker([atm.latitude, atm.longitude], { icon: redIcon })
+                    .addTo(map)
+                    .bindPopup(`
+                        <div style="font-family:'DM Sans', sans-serif; font-size:12px; line-height:1.4;">
+                            <strong>${atm.bank_name}</strong><br>
+                            <span style="font-size:11px; color:#555;">${atm.address}</span><br>
+                            <strong style="color:#d9534f;">Risk Score: ${(atm.base_kde_density * 100).toFixed(1)}%</strong> • ETA: ${atm.eta_minutes}m<br>
+                            <div style="margin-top:8px; display:flex; gap:6px;">
+                                <button onclick="triggerPatrolDispatch('${atm.atm_id}', '${atm.bank_name}', ${atm.latitude}, ${atm.longitude})" style="background:#070a0c; color:#b7ff00; border:none; padding:5px 8px; border-radius:6px; font-size:11px; cursor:pointer; font-weight:700;">🚀 Dispatch</button>
+                                <a href="${atm.navigation_url}" target="_blank" style="background:#f0f0ed; color:#111; border:1px solid #ccc; padding:5px 8px; border-radius:6px; font-size:11px; text-decoration:none; font-weight:600;">🗺️ GPS</a>
+                            </div>
+                        </div>
+                    `);
+                activeMarkers.push(marker);
+
+                if (index === 0) marker.openPopup();
+
+                const riskPct = (atm.base_kde_density * 100).toFixed(1);
+                html += `
+                    <div class="hotspot-stat-row">
+                        <div>
+                            <strong>${atm.bank_name}</strong><br>
+                            <span style="color:#626b70; font-size:11px;">${atm.address} • [${atm.latitude.toFixed(4)}, ${atm.longitude.toFixed(4)}]</span>
+                        </div>
+                        <div style="display:flex; align-items:center;">
+                            <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: ${riskPct}%;"></div></div>
+                            <strong style="color:#d9534f; width:45px; text-align:right;">${riskPct}%</strong>
+                        </div>
+                        <div style="display:flex; gap:6px;">
+                            <button onclick="triggerPatrolDispatch('${atm.atm_id}', '${atm.bank_name}', ${atm.latitude}, ${atm.longitude})" class="primary-btn" style="height:30px; font-size:11px; padding:0 10px;">Dispatch</button>
+                            <a href="${atm.navigation_url}" target="_blank" class="outline-btn" style="height:30px; font-size:11px; padding:0 8px; text-decoration:none;">GPS</a>
+                        </div>
+                    </div>
+                `;
+            });
+
+            if (container) container.innerHTML = html;
+        }
+
+        // Initial Load
+        runRadarScan();
+
+        async function triggerPatrolDispatch(atmId, atmName, lat, lon) {
+            const amount = parseFloat(document.getElementById('radar-amount-input')?.value) || 250000;
+            const targetName = atmName || document.getElementById('top-atm-title')?.innerText || 'SBI ATM Sector 29 Market';
+            const targetLat = lat || 28.4595;
+            const targetLon = lon || 77.0266;
+
+            // Dynamically update UI Active Intercept Docket
+            const titleEl = document.getElementById('top-atm-title');
+            if (titleEl) titleEl.innerText = targetName;
+            const navLinkEl = document.getElementById('main-nav-link');
+            if (navLinkEl) navLinkEl.href = `https://www.google.com/maps/dir/?api=1&destination=${targetLat},${targetLon}&travelmode=driving`;
+
+            try {
+                const res = await fetch('/api/v1/police/dispatch-telegram-navigation', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        pcr_callsign: 'PCR Falcon 1',
+                        case_id: 'NCRP-1930-DL-98214',
+                        target_atm: targetName,
+                        target_lat: targetLat,
+                        target_lon: targetLon,
+                        stolen_amount: amount,
+                        officer_name: 'SI Rajesh Hooda'
+                    })
+                });
+                const data = await res.json();
+                
+                if (navLinkEl && data.navigation_url) {
+                    navLinkEl.href = data.navigation_url;
+                }
+                
+                const falconEl = document.getElementById('falcon-status');
+                if (falconEl) {
+                    falconEl.innerText = "EN-ROUTE (3m)";
+                    falconEl.className = "badge-danger";
+                }
+
+                alert(`🚨 CAD DISPATCH TRANSMITTED:\n\n• Unit: PCR Falcon 1 (HR-26-014)\n• Target ATM: ${data.target_atm || targetName}\n• Turn-by-Turn GPS: ${data.navigation_url}\n• Telegram Delivery: Sent directly to field unit.`);
+            } catch (err) {
+                alert(`🚨 Dispatch Alert Transmitted: PCR Falcon 1 en-route to ${targetName}. GPS route broadcasted.`);
+            }
+        }
+
+        function openCeirModal() {
+            document.getElementById('ceirModal').style.display = 'flex';
+        }
+        function openBnssNoticeModal() {
+            document.getElementById('bnssModal').style.display = 'flex';
+        }
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        function broadcastCeirFreeze() {
+            const imei = document.getElementById('ceir-imei').value;
+            const mobile = document.getElementById('ceir-mobile').value;
+            closeModal('ceirModal');
+            alert(`✅ Sanchar Saathi CEIR Broadcast Active!\n\n• Blacklisted IMEI: ${imei}\n• Frozen MSISDN: ${mobile}\n• Gateway: DoT Sanchar Saathi Central Registry`);
+        }
+
+        function generateBnssOrder() {
+            const bank = document.getElementById('bnss-bank').value;
+            const acc = document.getElementById('bnss-acc').value;
+            closeModal('bnssModal');
+            alert(`📜 Section 94 BNSS Order Issued!\n\n• Entity: ${bank}\n• Account: ${acc}\n• Mandate: Produce KYC, IP access logs, and CCTV footage within 2 hours.`);
+        }
+    </script>
+</body>
+</html>

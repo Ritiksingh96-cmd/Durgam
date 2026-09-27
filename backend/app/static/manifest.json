@@ -1,0 +1,21 @@
+{
+  "name": "DURGAM National Cyber Defense Matrix",
+  "short_name": "DURGAM 1930",
+  "description": "National Cyber Financial Fraud Multi-Agency Defense & Golden Hour Interception Platform",
+  "start_url": "/static/index.html",
+  "display": "standalone",
+  "background_color": "#0A1128",
+  "theme_color": "#0A1128",
+  "icons": [
+    {
+      "src": "/static/images/ashok_stambh.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "/static/images/ashok_stambh.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}
