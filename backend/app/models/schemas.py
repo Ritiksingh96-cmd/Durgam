@@ -27,15 +27,15 @@ class CrimeCategory(str, Enum):
     COURIER_PARCEL_SCAM = "COURIER_PARCEL_SCAM"     # FedEx / DHL fake courier extortion
 
 class ComplaintCreate(BaseModel):
-    victim_name: str = Field(..., example="Amit Kumar")
-    victim_phone: str = Field(..., example="9876543210")
-    victim_city: str = Field(default="Delhi", example="Delhi")
-    victim_state: str = Field(default="Delhi", example="Delhi")
-    utr_number: str = Field(default="", example="UTR482910482910")
+    victim_name: str = Field(..., json_schema_extra={"example": "Amit Kumar"})
+    victim_phone: str = Field(..., json_schema_extra={"example": "9876543210"})
+    victim_city: str = Field(default="Delhi", json_schema_extra={"example": "Delhi"})
+    victim_state: str = Field(default="Delhi", json_schema_extra={"example": "Delhi"})
+    utr_number: str = Field(default="", json_schema_extra={"example": "UTR482910482910"})
     disputed_utr: Optional[str] = None
-    source_bank: str = Field(default="State Bank of India", example="State Bank of India")
-    source_account: str = Field(default="XXXX-XXXX-2948", example="40291048291")
-    loss_amount: float = Field(..., example=250000.0)
+    source_bank: str = Field(default="State Bank of India", json_schema_extra={"example": "State Bank of India"})
+    source_account: str = Field(default="XXXX-XXXX-2948", json_schema_extra={"example": "40291048291"})
+    loss_amount: float = Field(..., json_schema_extra={"example": 250000.0})
     incident_date: Optional[str] = None
     crime_category: Optional[CrimeCategory] = CrimeCategory.DIGITAL_ARREST
     narrative: Optional[str] = None

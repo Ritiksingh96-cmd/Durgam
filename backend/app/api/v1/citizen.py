@@ -119,7 +119,7 @@ def report_cybercrime_incident(payload: ComplaintCreate):
         "terminal_node": terminal_node,
         "candidate_atms": candidate_atms,
         "dispatch_details": dispatch_record,
-        "evidence_certificate": cert.dict(),
+        "evidence_certificate": cert.model_dump(),
         "mule_detection_matrix": {
             "dormant_spike_detected": True,
             "flow_through_retention_rate": "0.18%",

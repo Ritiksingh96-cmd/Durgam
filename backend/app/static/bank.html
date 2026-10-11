@@ -36,10 +36,10 @@
 
         <!-- BANK SERVICE SUBNAV TABS -->
         <div class="portal-subnav-bar">
-            <button class="subnav-pill active" onclick="showBankTab('alerts')" id="bankSubTab_alerts"><i data-lucide="lock"></i> Instant Account Freezes (Sec 106 BNSS)</button>
-            <button class="subnav-pill" onclick="showBankTab('chains')" id="bankSubTab_chains"><i data-lucide="git-branch"></i> Multi-Layer Fund Trails</button>
-            <button class="subnav-pill" onclick="showBankTab('upload')" id="bankSubTab_upload"><i data-lucide="upload"></i> Upload Bank Statement</button>
-            <button class="subnav-pill" onclick="showBankTab('accounts')" id="bankSubTab_accounts"><i data-lucide="database"></i> Sovereign Audit Records</button>
+            <button type="button" class="subnav-pill active" onclick="showBankTab('alerts')" id="bankSubTab_alerts"><i data-lucide="lock"></i> Instant Account Freezes (Sec 106 BNSS)</button>
+            <button type="button" class="subnav-pill" onclick="showBankTab('chains')" id="bankSubTab_chains"><i data-lucide="git-branch"></i> Multi-Layer Fund Trails</button>
+            <button type="button" class="subnav-pill" onclick="showBankTab('upload')" id="bankSubTab_upload"><i data-lucide="upload"></i> Upload Bank Statement</button>
+            <button type="button" class="subnav-pill" onclick="showBankTab('accounts')" id="bankSubTab_accounts"><i data-lucide="database"></i> Sovereign Audit Records</button>
         </div>
 
         <!-- ================= TAB: MULE ALERTS ================= -->
@@ -53,7 +53,7 @@
 
                 <div style="display: flex; gap: 10px; max-width: 600px;">
                     <input type="text" id="zk-search-input" value="902148102941" class="gov-input" style="flex: 1; padding: 12px 16px; border-radius: 12px; border: 1.5px solid #deddd7; background: #ffffff; color: #111820; outline: none;" placeholder="Enter Account Number to verify" />
-                    <button onclick="executeZkSearch()" class="primary-btn" style="height: 46px;">
+                    <button type="button" onclick="executeZkSearch()" class="primary-btn" style="height: 46px;">
                         <i data-lucide="search"></i> Verify Account
                     </button>
                 </div>
@@ -95,7 +95,7 @@
                             <option value="4">Layer 4 (ATM Cashout Card)</option>
                         </select>
                     </div>
-                    <button onclick="testGnnModel()" class="primary-btn" style="grid-column: span 2; height: 42px; width: 100%; justify-content: center;">
+                    <button type="button" onclick="testGnnModel()" class="primary-btn" style="grid-column: span 2; height: 42px; width: 100%; justify-content: center;">
                         <i data-lucide="network"></i> Scan Mule Syndicate Network
                     </button>
                 </div>
@@ -111,7 +111,7 @@
                         <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 24px;">Active Bank Freezes & Liens (Section 106 BNSS)</h2>
                     </div>
                     <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                        <button onclick="exportBankHoldsCsv()" class="outline-btn" style="height: 34px; font-size: 11.5px; padding: 0 12px; gap: 6px;">
+                        <button type="button" onclick="exportBankHoldsCsv()" class="outline-btn" style="height: 34px; font-size: 11.5px; padding: 0 12px; gap: 6px;">
                             <i data-lucide="download" style="width: 14px; height: 14px;"></i> Export RBI Audit CSV
                         </button>
                         <span class="badge-sealed"><i data-lucide="zap" class="icon-lucide"></i> Average Switch Response: 89 ms</span>
@@ -142,7 +142,7 @@
                                 <td><span class="badge-danger">High-Speed Layering</span></td>
                                 <td><span class="badge-sealed">🔒 Active Sec 106 Freeze</span></td>
                                 <td>
-                                    <button class="primary-btn" style="height: 32px; padding: 0 12px; font-size: 11px;" onclick="confirmBankHoldAction('MULE_90214810', 'APPROVE')">
+                                    <button type="button" class="primary-btn" style="height: 32px; padding: 0 12px; font-size: 11px;" onclick="confirmBankHoldAction('MULE_90214810', 'APPROVE')">
                                         Confirm Freeze
                                     </button>
                                 </td>
@@ -242,7 +242,7 @@
                         <option value="HDFC Bank">HDFC Bank</option>
                         <option value="Jammu & Kashmir Bank">Jammu & Kashmir Bank</option>
                     </select>
-                    <button class="primary-btn" onclick="measureCustomTransferChain()" style="height: 42px; padding: 0 18px; font-size: 13px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px;">
+                    <button type="button" class="primary-btn" onclick="measureCustomTransferChain()" style="height: 42px; padding: 0 18px; font-size: 13px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px;">
                         <i data-lucide="gauge" style="width: 16px; height: 16px;"></i> Measure Chain
                     </button>
                 </div>
@@ -268,7 +268,7 @@
                             <option value="HDFC Bank">HDFC Bank</option>
                             <option value="Jammu & Kashmir Bank">Jammu & Kashmir Bank</option>
                         </select>
-                        <button class="outline-btn" onclick="loadDynamicBankChains()" style="height:34px; padding:0 12px; font-size:12px;">
+                        <button type="button" class="outline-btn" onclick="loadDynamicBankChains()" style="height:34px; padding:0 12px; font-size:12px;">
                             <i data-lucide="refresh-cw" style="width:14px; height:14px;"></i> Refresh
                         </button>
                     </div>
@@ -347,10 +347,10 @@
                         <td>${holdBadge}</td>
                         <td>
                             <div style="display:flex; gap:6px; flex-wrap:nowrap;">
-                                <button class="primary-btn" style="height: 30px; padding: 0 10px; font-size: 11px;" onclick="confirmBankHoldAction('${mule}', '${ack}')" ${isConfirmed ? 'disabled style="opacity:0.6;"' : ''}>
+                                <button type="button" class="primary-btn" style="height: 30px; padding: 0 10px; font-size: 11px;" onclick="confirmBankHoldAction('${mule}', '${ack}')" ${isConfirmed ? 'disabled style="opacity:0.6;"' : ''}>
                                     ${isConfirmed ? '✓ Confirmed' : (isDecreed ? 'Hold Released' : 'Confirm Hold')}
                                 </button>
-                                <button class="outline-btn" style="height: 30px; padding: 0 8px; font-size: 11px; color:#92400e; border-color:rgba(217,119,6,0.4); background: rgba(217,119,6,0.06);" onclick="triggerCamt056Reversal('${mule}', '${ack}', ${amt})">
+                                <button type="button" class="outline-btn" style="height: 30px; padding: 0 8px; font-size: 11px; color:#92400e; border-color:rgba(217,119,6,0.4); background: rgba(217,119,6,0.06);" onclick="triggerCamt056Reversal('${mule}', '${ack}', ${amt})">
                                     CAMT.056
                                 </button>
                             </div>
@@ -565,11 +565,11 @@
 
                         <!-- Action Bar & Forensic Breakdown Toggle -->
                         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; border-top:1px solid #deddd7; padding-top:12px;">
-                            <button class="outline-btn" style="height:32px; font-size:11.5px; display:inline-flex; align-items:center; gap:6px;" onclick="toggleChainDetails('${c.chain_id || `CHAIN-${idx}`}')">
+                            <button type="button" class="outline-btn" style="height:32px; font-size:11.5px; display:inline-flex; align-items:center; gap:6px;" onclick="toggleChainDetails('${c.chain_id || `CHAIN-${idx}`}')">
                                 <i data-lucide="bar-chart-2" style="width:14px; height:14px;"></i> View Hop-by-Hop Forensic Audit
                             </button>
                             <div style="display:flex; gap:8px;">
-                                <button class="primary-btn" style="height:32px; font-size:11.5px; padding:0 14px; display:inline-flex; align-items:center; gap:6px; background:#050708; color:#fff;" onclick="executeCascadeChainFreeze('${c.chain_id}', '${c.case_id || c.root_complaint}')" ${isFrozen ? 'disabled style="opacity:0.6; cursor:not-allowed;"' : ''}>
+                                <button type="button" class="primary-btn" style="height:32px; font-size:11.5px; padding:0 14px; display:inline-flex; align-items:center; gap:6px; background:#050708; color:#fff;" onclick="executeCascadeChainFreeze('${c.chain_id}', '${c.case_id || c.root_complaint}')" ${isFrozen ? 'disabled style="opacity:0.6; cursor:not-allowed;"' : ''}>
                                     <i data-lucide="shield" style="width:14px; height:14px;"></i> ${isFrozen ? '✓ Chain Quarantined' : 'Cascade Multi-Hop Account Freeze (Sec 106 BNSS)'}
                                 </button>
                             </div>
@@ -739,7 +739,7 @@
                         <span style="font-size:12.5px; color:#0b6b32; font-weight:700;">
                             <i data-lucide="info" style="width:15px; height:15px; display:inline; vertical-align:middle;"></i> Recommended: ${m.recommended_action || 'Section 106 BNSS Cascade Freeze'}
                         </span>
-                        <button class="primary-btn" style="height:36px; font-size:12px; padding:0 18px; background:#050708; border-color:#050708; color:#fff;" onclick="executeCascadeChainFreeze('${data.case_id}', '${data.case_id}')">
+                        <button type="button" class="primary-btn" style="height:36px; font-size:12px; padding:0 18px; background:#050708; border-color:#050708; color:#fff;" onclick="executeCascadeChainFreeze('${data.case_id}', '${data.case_id}')">
                             <i data-lucide="lock" style="width:15px; height:15px; display:inline; vertical-align:middle;"></i> Freeze Entire Measured Chain Now
                         </button>
                     </div>

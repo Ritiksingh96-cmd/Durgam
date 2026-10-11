@@ -16,16 +16,16 @@ print("=" * 60)
 passed = 0
 failed = 0
 
-def test_func(name, fn):
+def run_feature_check(check_name, fn):
     global passed, failed
     try:
         res = fn()
-        print(f"✅ PASS: {name}")
+        print(f"✅ PASS: {check_name}")
         if res:
             print(f"   ↳ {res}")
         passed += 1
     except Exception as e:
-        print(f"❌ FAIL: {name} -> {e}")
+        print(f"❌ FAIL: {check_name} -> {e}")
         failed += 1
 
 # 1. Health Check
@@ -34,9 +34,7 @@ def check_health():
     assert r.status_code == 200
     assert r.json().get("status") == "healthy"
     return "API Health Status: 200 OK"
-test_func("1. Platform Health Check", check_health)
 
-# 2. Police Radar & 300+ Geocoded ATM Dataset Inference
 def check_police_radar_delhi():
     r = client.post("/api/v1/police/radar-scan", json={"city": "Delhi NCR", "amount": 250000.0, "limit": 3})
     assert r.status_code == 200
@@ -47,7 +45,6 @@ def check_police_radar_delhi():
     assert "navigation_url" in top
     assert "https://www.google.com/maps/dir/?api=1" in top["navigation_url"]
     return f"Evaluated {data['total_atms_evaluated']} ATMs | Top Hotspot: {top['bank_name']} (Risk: {(top['base_kde_density']*100):.1f}%)"
-test_func("2. Spatiotemporal Radar Scan (Delhi NCR - ST-KDE + XGBoost)", check_police_radar_delhi)
 
 def check_police_radar_jammu():
     r = client.post("/api/v1/police/radar-scan", json={"city": "Jammu", "amount": 250000.0, "limit": 3})
@@ -56,9 +53,7 @@ def check_police_radar_jammu():
     assert len(data["hotspots"]) > 0
     top = data["hotspots"][0]
     return f"Jammu Sector: {top['bank_name']} @ [{top['latitude']}, {top['longitude']}] | ETA: {top['eta_minutes']}m"
-test_func("3. Spatiotemporal Radar Scan (Jammu Corridor)", check_police_radar_jammu)
 
-# 3. Police CAD Turn-by-Turn Navigation & Telegram Dispatch
 def check_police_telegram_dispatch():
     r = client.post("/api/v1/police/dispatch-telegram-navigation", json={
         "pcr_callsign": "PCR Falcon 1",
@@ -75,9 +70,7 @@ def check_police_telegram_dispatch():
     assert "navigation_url" in data
     assert "google.com/maps" in data["navigation_url"]
     return f"CAD Transmitted | Status: {data.get('status')} | GPS Link: {data['navigation_url']}"
-test_func("4. CAD Turn-by-Turn GPS Dispatch & Telegram Alert", check_police_telegram_dispatch)
 
-# 4. PyTorch GraphSAGE GNN Mule Classifier
 def check_gnn_mule():
     r = client.post("/api/v1/ai/infer-gnn-mule", json={
         "inflow_amount": 250000.0,
@@ -93,9 +86,7 @@ def check_gnn_mule():
     data = r.json()
     assert "mule_probability" in data
     return f"Classification: {data.get('risk_tier')} | P(Mule): {(data['mule_probability']*100):.2f}% | Action: {data.get('recommended_authority_action')}"
-test_func("5. PyTorch GraphSAGE GNN Mule Classifier", check_gnn_mule)
 
-# 5. LightGBM Time-to-Cashout Regressor
 def check_time_regressor():
     r = client.post("/api/v1/ai/predict-time-to-cashout", json={
         "hop_level": 2,
@@ -109,9 +100,7 @@ def check_time_regressor():
     pred = data.get("time_prediction", {})
     assert "estimated_minutes_remaining" in pred
     return f"T_remain Window: {pred['estimated_minutes_remaining']:.1f} Mins | Urgency: {pred.get('golden_hour_urgency')} | Golden-Hour Prob: {data.get('golden_hour_recovery_probability')}%"
-test_func("6. LightGBM Time-to-Cashout Regressor", check_time_regressor)
 
-# 6. Multilingual 1930 NLP Parser
 def check_nlp_parser():
     r = client.post("/api/v1/ai/classify-complaint", json={
         "narrative": "Scammer called posing as Mumbai Police officer regarding digital arrest warrant and forced 2.5 lakh transfer to UTR 482910482910."
@@ -120,9 +109,7 @@ def check_nlp_parser():
     data = r.json()
     nlp = data.get("nlp_analysis", {})
     return f"Parsed Category: {nlp.get('category')} | UTR: {nlp.get('extracted_utr')} | Amount: ₹{nlp.get('loss_amount_inr', 250000):,}"
-test_func("7. Multilingual 1930 NLP Modus Operandi & Entity Parser", check_nlp_parser)
 
-# 7. Judiciary Section 63 BSA Evidence Certificate
 def check_judiciary_certificate():
     r = client.get("/api/v1/judiciary/certificate/NCRP-1930-48291048")
     assert r.status_code == 200
@@ -130,9 +117,7 @@ def check_judiciary_certificate():
     assert "cryptographic_proofs" in data
     assert "evidence_sha256_hash" in data["cryptographic_proofs"]
     return f"Certificate ID: {data['certificate_id']} | SHA-256: {data['cryptographic_proofs']['evidence_sha256_hash'][:20]}... | Block: #{data['cryptographic_proofs']['polygon_amoy_block']}"
-test_func("8. Section 63 BSA 2023 Cryptographic Evidence Certificate", check_judiciary_certificate)
 
-# 8. Judiciary On-Chain Merkle Validator
 def check_merkle_validator():
     r = client.post("/api/v1/judiciary/verify-merkle", json={
         "case_id": "NCRP-1930-48291048",
@@ -143,9 +128,7 @@ def check_merkle_validator():
     assert data["valid"] is True
     assert data["on_chain_status"] == "SEALED_AND_VERIFIED"
     return f"On-Chain Proof: {data['on_chain_status']} on {data['blockchain_network']} (Block #{data['block_number']})"
-test_func("9. Section 63 BSA Merkle Proof Validator", check_merkle_validator)
 
-# 9. Judiciary Section 106 BNSS Restitution Decree
 def check_restitution_decree():
     r = client.post("/api/v1/judiciary/issue-decree", json={
         "case_id": "NCRP-1930-48291048",
@@ -159,18 +142,14 @@ def check_restitution_decree():
     assert data["success"] is True
     assert "DECREE-BNSS106" in data["decree_id"]
     return f"Decree ID: {data['decree_id']} | Status: {data['order_status']} -> {data['bank_reversal_status']}"
-test_func("10. Section 106 BNSS 2023 Judicial Restitution Decree", check_restitution_decree)
 
-# 10. Judiciary Disputes Bench (Section 107 BNSS)
 def check_judiciary_disputes():
     r = client.get("/api/v1/judiciary/disputes")
     assert r.status_code == 200
     data = r.json()
     assert data["total_disputes"] > 0
     return f"Active Disputed Claims: {data['total_disputes']} cases loaded with Aadhaar KYC challenge telemetry"
-test_func("11. Section 107 BNSS 2023 Interlocutory Dispute Claims", check_judiciary_disputes)
 
-# 11. Bank Nodal & ZK-Consortium Search
 def check_bank_zk():
     r = client.post("/api/v1/bank/zk-search", json={
         "account_number": "902148102941",
@@ -180,9 +159,7 @@ def check_bank_zk():
     data = r.json()
     assert data["status"] == "SUCCESS"
     return f"ZK Salt Hash: {data['account_salt_hash'][:24]}... | Mule Confidence: {(data['mule_confidence_score']*100):.1f}%"
-test_func("12. Bank Nodal Zero-Knowledge Consortium Search", check_bank_zk)
 
-# 12. Citizen Incident Reporting (< 89ms Golden-Hour Hold)
 def check_citizen_report():
     r = client.post("/api/v1/citizen/report-incident", json={
         "victim_name": "Col. Surendra Mohan (Retd.)",
@@ -198,24 +175,39 @@ def check_citizen_report():
     data = r.json()
     assert data.get("status") == "FUNDS_QUARANTINED"
     return f"Status: {data['status']} | Ack: {data.get('ack_number')} | Mean Intercept: {data.get('mean_intercept_speed_ms')}ms"
-test_func("13. Citizen 1930 Rapid Incident Reporting (< 89ms Hold)", check_citizen_report)
 
-# 13. Citizen 1-Tap Unblock OTP Challenge
 def check_citizen_unblock():
     r = client.post("/api/v1/citizen/unblock-otp?account=902148102941&otp=193026")
     assert r.status_code == 200
     data = r.json()
     assert "dissolved" in data.get("message", "").lower() or data.get("status") == "SUCCESS" or "verified" in data.get("message", "").lower()
     return f"Unblock Verification: {data.get('message')}"
-test_func("14. Citizen 1-Tap Aadhaar OTP Unblock Challenge", check_citizen_unblock)
 
-# 14. Telegram Bot Gateway Status
 def check_telegram():
     r = client.get("/api/v1/telegram/status")
     assert r.status_code == 200
     data = r.json()
     return f"Bot Configured: {data['configured']} | Message: {data['message']}"
-test_func("15. Telegram Bot Gateway Status", check_telegram)
+
+def run_all_verification_checks():
+    run_feature_check("1. Platform Health Check", check_health)
+    run_feature_check("2. Spatiotemporal Radar Scan (Delhi NCR - ST-KDE + XGBoost)", check_police_radar_delhi)
+    run_feature_check("3. Spatiotemporal Radar Scan (Jammu Corridor)", check_police_radar_jammu)
+    run_feature_check("4. CAD Turn-by-Turn GPS Dispatch & Telegram Alert", check_police_telegram_dispatch)
+    run_feature_check("5. PyTorch GraphSAGE GNN Mule Classifier", check_gnn_mule)
+    run_feature_check("6. LightGBM Time-to-Cashout Regressor", check_time_regressor)
+    run_feature_check("7. Multilingual 1930 NLP Modus Operandi & Entity Parser", check_nlp_parser)
+    run_feature_check("8. Section 63 BSA 2023 Cryptographic Evidence Certificate", check_judiciary_certificate)
+    run_feature_check("9. Section 63 BSA Merkle Proof Validator", check_merkle_validator)
+    run_feature_check("10. Section 106 BNSS 2023 Judicial Restitution Decree", check_restitution_decree)
+    run_feature_check("11. Section 107 BNSS 2023 Interlocutory Dispute Claims", check_judiciary_disputes)
+    run_feature_check("12. Bank Nodal Zero-Knowledge Consortium Search", check_bank_zk)
+    run_feature_check("13. Citizen 1930 Rapid Incident Reporting (< 89ms Hold)", check_citizen_report)
+    run_feature_check("14. Citizen 1-Tap Aadhaar OTP Unblock Challenge", check_citizen_unblock)
+    run_feature_check("15. Telegram Bot Gateway Status", check_telegram)
+
+if __name__ == "__main__":
+    run_all_verification_checks()
 
 print("=" * 60)
 print(f"📊 SUMMARY: {passed}/{passed+failed} FUNCTIONS FULLY VERIFIED & OPERATIONAL (100% SUCCESS)")

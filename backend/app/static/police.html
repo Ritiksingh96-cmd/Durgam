@@ -110,7 +110,7 @@
                         <label style="font-size: 11px; font-weight: 700; color: #7b8285; display: block; margin-bottom: 4px;">STOLEN AMOUNT (₹)</label>
                         <input type="number" id="radar-amount-input" value="250000" style="width: 100%; height: 38px; border-radius: 8px; border: 1.5px solid #deddd7; padding: 0 10px; font-size: 13px; font-family: inherit; background: #ffffff; color: #111820;" />
                     </div>
-                    <button onclick="runRadarScan()" class="primary-btn" style="height: 38px; font-size: 12px; padding: 0 14px; white-space: nowrap;">
+                    <button type="button" onclick="runRadarScan()" class="primary-btn" style="height: 38px; font-size: 12px; padding: 0 14px; white-space: nowrap;">
                         <i data-lucide="crosshair"></i> Scan High-Risk ATM Nodes
                     </button>
                 </div>
@@ -160,7 +160,7 @@
                 </p>
                 
                 <div style="display: flex; gap: 10px;">
-                    <button id="main-dispatch-btn" onclick="triggerPatrolDispatch('ATM_SBI_101')" class="primary-btn" style="flex: 1; justify-content: center; background: var(--lime); color: #050708; border-color: var(--lime); font-weight: 700;">
+                    <button type="button" id="main-dispatch-btn" onclick="triggerPatrolDispatch('ATM_SBI_101')" class="primary-btn" style="flex: 1; justify-content: center; background: var(--lime); color: #050708; border-color: var(--lime); font-weight: 700;">
                         <i data-lucide="send"></i> Dispatch PCR Patrol Unit 1 (ERSS 112)
                     </button>
                     <a id="main-nav-link" href="https://www.google.com/maps/dir/?api=1&destination=28.4595,77.0266" target="_blank" class="outline-btn" style="color: #ffffff; border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.08);">
@@ -196,10 +196,10 @@
                 <div class="eyebrow"><span></span>POLICE ACTIONS</div>
                 <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: 16px; margin-bottom: 12px; color: #111820;">Quick Investigative Actions</h3>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <button onclick="openCeirModal()" class="outline-btn" style="font-size: 11.5px; justify-content: center; height: 40px;">
+                    <button type="button" onclick="openCeirModal()" class="outline-btn" style="font-size: 11.5px; justify-content: center; height: 40px;">
                         <i data-lucide="smartphone"></i> Sanchar Saathi Block
                     </button>
-                    <button onclick="openBnssNoticeModal()" class="outline-btn" style="font-size: 11.5px; justify-content: center; height: 40px;">
+                    <button type="button" onclick="openBnssNoticeModal()" class="outline-btn" style="font-size: 11.5px; justify-content: center; height: 40px;">
                         <i data-lucide="file-text"></i> Section 94 BNSS Notice
                     </button>
                 </div>
@@ -226,7 +226,7 @@
                         <label>Stolen Amount (₹)</label>
                         <input type="number" id="ai-amount" value="250000" style="height: 38px; font-size: 12.5px; border: 1.5px solid #deddd7; background: #ffffff; color: #111820;" />
                     </div>
-                    <button onclick="testAtmModel()" class="primary-btn" style="height: 40px; width: 100%; justify-content: center; font-size: 12.5px;">
+                    <button type="button" onclick="testAtmModel()" class="primary-btn" style="height: 40px; width: 100%; justify-content: center; font-size: 12.5px;">
                         <i data-lucide="crosshair"></i> Predict Target ATM Hotspots
                     </button>
                 </div>
@@ -380,7 +380,7 @@
                             <span style="font-size:11.5px; color:#626b70;">${atm.address}</span><br>
                             <strong style="color:#e11d48;">Risk Score: ${(atm.base_kde_density * 100).toFixed(1)}%</strong> • <span style="color:#0b6b32; font-weight:700;">ETA: ${atm.eta_minutes}m</span><br>
                             <div style="margin-top:10px; display:flex; gap:6px;">
-                                <button onclick="triggerPatrolDispatch('${atm.atm_id}', '${atm.bank_name}', ${atm.latitude}, ${atm.longitude})" class="primary-btn" style="height:28px; padding:0 10px; font-size:11px; cursor:pointer;">Dispatch</button>
+                                <button type="button" onclick="triggerPatrolDispatch('${atm.atm_id}', '${atm.bank_name}', ${atm.latitude}, ${atm.longitude})" class="primary-btn" style="height:28px; padding:0 10px; font-size:11px; cursor:pointer;">Dispatch</button>
                                 <a href="${atm.navigation_url}" target="_blank" class="outline-btn" style="height:28px; padding:0 10px; font-size:11px; text-decoration:none;">GPS Route</a>
                             </div>
                         </div>
@@ -404,7 +404,7 @@
                             <span class="${badgeVariant}" style="font-size:11px;">${riskPct}%</span>
                         </div>
                         <div style="display:flex; gap:6px; flex-shrink: 0; margin-left: 6px;">
-                            <button onclick="triggerPatrolDispatch('${atm.atm_id}', '${atm.bank_name}', ${atm.latitude}, ${atm.longitude})" class="primary-btn" style="height:32px; font-size:11px; padding:0 12px;">Dispatch</button>
+                            <button type="button" onclick="triggerPatrolDispatch('${atm.atm_id}', '${atm.bank_name}', ${atm.latitude}, ${atm.longitude})" class="primary-btn" style="height:32px; font-size:11px; padding:0 12px;">Dispatch</button>
                             <a href="${atm.navigation_url}" target="_blank" class="outline-btn" style="height:32px; font-size:11px; padding:0 10px; text-decoration:none;">GPS</a>
                         </div>
                     </div>
@@ -467,7 +467,7 @@
                                 <span>${atmTarget}</span><br>
                                 <strong style="color:#d9534f;">Quarantined: ₹${amt}</strong> • ETA: 3m<br>
                                 <div style="margin-top:8px;">
-                                    <button onclick="triggerPatrolDispatch('ATM_LIVE', '${atmTarget}', ${lat}, ${lon})" style="background:#070a0c; color:#b7ff00; border:none; padding:5px 8px; border-radius:6px; font-size:11px; cursor:pointer; font-weight:700;">🚀 Immediate Dispatch</button>
+                                    <button type="button" onclick="triggerPatrolDispatch('ATM_LIVE', '${atmTarget}', ${lat}, ${lon})" style="background:#070a0c; color:#b7ff00; border:none; padding:5px 8px; border-radius:6px; font-size:11px; cursor:pointer; font-weight:700;">🚀 Immediate Dispatch</button>
                                 </div>
                             </div>
                         `)

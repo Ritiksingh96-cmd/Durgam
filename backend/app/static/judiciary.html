@@ -146,7 +146,7 @@
 
             <div style="display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center;">
                 <input type="text" id="merkle-input" value="0x7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069" style="width: 100%; height: 42px; border-radius: 8px; border: 1.5px solid #deddd7; padding: 0 12px; font-family: monospace; font-size: 12.5px; background: #ffffff; color: #111820;" />
-                <button onclick="verifyMerkleRoot()" class="primary-btn" style="height: 42px; padding: 0 18px; white-space: nowrap;">
+                <button type="button" onclick="verifyMerkleRoot()" class="primary-btn" style="height: 42px; padding: 0 18px; white-space: nowrap;">
                     <i data-lucide="shield-check"></i> Verify Evidence Record
                 </button>
             </div>
@@ -161,7 +161,7 @@
                     <div class="eyebrow"><span></span>EVIDENCE DOSSIER REPOSITORY</div>
                     <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: 20px;">Active Quarantined Cyber Crime Dockets</h3>
                 </div>
-                    <button onclick="loadCourtRecords()" class="outline-btn" style="height: 34px; font-size: 11.5px;">
+                    <button type="button" onclick="loadCourtRecords()" class="outline-btn" style="height: 34px; font-size: 11.5px;">
                         <i data-lucide="refresh-cw"></i> Refresh Dockets
                     </button>
             </div>
@@ -368,14 +368,14 @@
                                 <td>${statusBadge}</td>
                                 <td style="text-align: right;">
                                     <div style="display: inline-flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end;">
-                                        <button class="outline-btn" style="height:30px; padding:0 8px; font-size:11px;" onclick="openBsaCertificate('${rec.case_id}')">
+                                        <button type="button" class="outline-btn" style="height:30px; padding:0 8px; font-size:11px;" onclick="openBsaCertificate('${rec.case_id}')">
                                             <i data-lucide="file-text" style="width:12px; height:12px;"></i> BSA § 63 Cert
                                         </button>
                                         ${isDecreed ? 
-                                            `<button class="outline-btn" style="height:30px; padding:0 8px; font-size:11px;" onclick="printOfficialDecree('${rec.case_id}', '${(rec.victim_name || 'Complainant').replace(/'/g, "\\'")}', ${rec.loss_amount || 250000})">
+                                            `<button type="button" class="outline-btn" style="height:30px; padding:0 8px; font-size:11px;" onclick="printOfficialDecree('${rec.case_id}', '${(rec.victim_name || 'Complainant').replace(/'/g, "\\'")}', ${rec.loss_amount || 250000})">
                                                 <i data-lucide="printer" style="width:12px; height:12px;"></i> Print Decree
                                             </button>` : 
-                                            `<button class="primary-btn" style="height:30px; padding:0 10px; font-size:11px;" onclick="openDecreeModal('${rec.case_id}', '${(rec.victim_name || '').replace(/'/g, "\\'")}', ${rec.loss_amount || 250000})">
+                                            `<button type="button" class="primary-btn" style="height:30px; padding:0 10px; font-size:11px;" onclick="openDecreeModal('${rec.case_id}', '${(rec.victim_name || '').replace(/'/g, "\\'")}', ${rec.loss_amount || 250000})">
                                                 Issue Decree
                                             </button>`
                                         }
@@ -450,8 +450,8 @@
                                 <strong style="color:#ffffff;">AI Fraud Risk:</strong> <span class="${scoreClass}">${aiScore}%</span>
                             </div>
                             <div style="display:flex; gap:8px; margin-top:12px;">
-                                <button onclick="adjudicateDispute('${d.dispute_id}', 'UPHOLD')" class="primary-btn" style="height:32px; font-size:11.5px; padding:0 12px; flex:1; justify-content:center;">Uphold Hold</button>
-                                <button onclick="adjudicateDispute('${d.dispute_id}', 'RELEASE')" class="outline-btn" style="height:32px; font-size:11.5px; padding:0 12px; flex:1; justify-content:center;">Release Post-Hearing</button>
+                                <button type="button" onclick="adjudicateDispute('${d.dispute_id}', 'UPHOLD')" class="primary-btn" style="height:32px; font-size:11.5px; padding:0 12px; flex:1; justify-content:center;">Uphold Hold</button>
+                                <button type="button" onclick="adjudicateDispute('${d.dispute_id}', 'RELEASE')" class="outline-btn" style="height:32px; font-size:11.5px; padding:0 12px; flex:1; justify-content:center;">Release Post-Hearing</button>
                             </div>
                         </div>
                     `}).join("");
@@ -647,7 +647,7 @@
     </div>
 
     <div style="text-align: center; margin-top: 30px;">
-        <button onclick="window.print()" style="padding: 10px 24px; font-size: 14px; font-weight: bold; cursor: pointer; background: #070a0c; color: #b7ff00; border: none; border-radius: 6px;">🖨️ Print Court Order (Physical Execution)</button>
+        <button type="button" onclick="window.print()" style="padding: 10px 24px; font-size: 14px; font-weight: bold; cursor: pointer; background: #070a0c; color: #b7ff00; border: none; border-radius: 6px;">🖨️ Print Court Order (Physical Execution)</button>
     </div>
 </body>
 </html>`);
