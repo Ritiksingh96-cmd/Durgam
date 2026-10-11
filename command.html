@@ -102,12 +102,12 @@
 
         <!-- COMMAND SUBNAV TABS -->
         <div class="portal-subnav-bar">
-            <button class="subnav-pill active" onclick="showCmdTab('dashboard')" id="cmdSubTab_dashboard"><i data-lucide="layout-dashboard"></i> Overview Dashboard</button>
-            <button class="subnav-pill" onclick="showCmdTab('radar')" id="cmdSubTab_radar"><i data-lucide="radar"></i> ATM Cashout Radar</button>
-            <button class="subnav-pill" onclick="showCmdTab('complaints')" id="cmdSubTab_complaints"><i data-lucide="inbox"></i> Complaints Feed</button>
-            <button class="subnav-pill" onclick="showCmdTab('chains')" id="cmdSubTab_chains"><i data-lucide="share-2"></i> Transfer Chains</button>
-            <button class="subnav-pill" onclick="showCmdTab('bankdata')" id="cmdSubTab_bankdata"><i data-lucide="database"></i> Bank Records</button>
-            <button class="subnav-pill" onclick="showCmdTab('analytics')" id="cmdSubTab_analytics"><i data-lucide="bar-chart-3"></i> Analytics</button>
+            <button type="button" class="subnav-pill active" onclick="showCmdTab('dashboard')" id="cmdSubTab_dashboard"><i data-lucide="layout-dashboard"></i> Overview Dashboard</button>
+            <button type="button" class="subnav-pill" onclick="showCmdTab('radar')" id="cmdSubTab_radar"><i data-lucide="radar"></i> ATM Cashout Radar</button>
+            <button type="button" class="subnav-pill" onclick="showCmdTab('complaints')" id="cmdSubTab_complaints"><i data-lucide="inbox"></i> Complaints Feed</button>
+            <button type="button" class="subnav-pill" onclick="showCmdTab('chains')" id="cmdSubTab_chains"><i data-lucide="share-2"></i> Transfer Chains</button>
+            <button type="button" class="subnav-pill" onclick="showCmdTab('bankdata')" id="cmdSubTab_bankdata"><i data-lucide="database"></i> Bank Records</button>
+            <button type="button" class="subnav-pill" onclick="showCmdTab('analytics')" id="cmdSubTab_analytics"><i data-lucide="bar-chart-3"></i> Analytics</button>
         </div>
         
         <!-- ================= TAB: DASHBOARD ================= -->
@@ -117,7 +117,7 @@
                     <div class="eyebrow"><span></span>REAL-TIME NATIONAL OVERVIEW</div>
                     <h2 style="font-family:'Space Grotesk', sans-serif; font-size:26px; color:#111820;">I4C Command Dashboard</h2>
                 </div>
-                <button onclick="showCmdTab('radar')" class="primary-btn" style="background:var(--lime); color:#050708; border-color:var(--lime); font-size:12px; height:38px;">
+                <button type="button" onclick="showCmdTab('radar')" class="primary-btn" style="background:var(--lime); color:#050708; border-color:var(--lime); font-size:12px; height:38px;">
                     <i data-lucide="radar"></i> Open ATM Cashout Radar
                 </button>
             </div>
@@ -128,7 +128,7 @@
                     <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:var(--lime); box-shadow:0 0 10px var(--lime);"></span>
                     <span style="color:#ffffff; font-size:13px;"><strong><i data-lucide="alert-triangle" style="width:14px; height:14px; vertical-align:middle; color:var(--lime);"></i> Golden-Hour Active Alert:</strong> 3 ATM cashout clusters identified in Delhi NCR & Nuh Corridor.</span>
                 </div>
-                <button onclick="showCmdTab('radar')" class="outline-btn" style="height:32px; font-size:11px; color:#ffffff; border-color:rgba(255,255,255,0.4); background:rgba(255,255,255,0.08);">
+                <button type="button" onclick="showCmdTab('radar')" class="outline-btn" style="height:32px; font-size:11px; color:#ffffff; border-color:rgba(255,255,255,0.4); background:rgba(255,255,255,0.08);">
                     View Threat Radar →
                 </button>
             </div>
@@ -251,7 +251,7 @@
                                 <td>Haryana State Cyber Cell</td>
                                 <td><span class="badge-danger">94.2% Risk</span></td>
                                 <td><strong>4 Mins</strong></td>
-                                <td><button class="primary-btn" style="height:30px; font-size:11px; padding:0 10px;" onclick="triggerCmdDispatch('ATM_SBI_101')">Dispatch CAD</button></td>
+                                <td><button type="button" class="primary-btn" style="height:30px; font-size:11px; padding:0 10px;" onclick="triggerCmdDispatch('ATM_SBI_101')">Dispatch CAD</button></td>
                             </tr>
                             <tr>
                                 <td><code>ATM_HDFC_204</code></td>
@@ -259,7 +259,7 @@
                                 <td>Delhi Police Special Cell</td>
                                 <td><span class="badge-danger">96.5% Risk</span></td>
                                 <td><strong>12 Mins</strong></td>
-                                <td><button class="primary-btn" style="height:30px; font-size:11px; padding:0 10px;" onclick="triggerCmdDispatch('ATM_HDFC_204')">Dispatch CAD</button></td>
+                                <td><button type="button" class="primary-btn" style="height:30px; font-size:11px; padding:0 10px;" onclick="triggerCmdDispatch('ATM_HDFC_204')">Dispatch CAD</button></td>
                             </tr>
                             <tr>
                                 <td><code>ATM_PNB_309</code></td>
@@ -267,7 +267,7 @@
                                 <td>Nuh District Police</td>
                                 <td><span class="badge-danger">89.4% Risk</span></td>
                                 <td><strong>18 Mins</strong></td>
-                                <td><button class="primary-btn" style="height:30px; font-size:11px; padding:0 10px;" onclick="triggerCmdDispatch('ATM_PNB_309')">Dispatch CAD</button></td>
+                                <td><button type="button" class="primary-btn" style="height:30px; font-size:11px; padding:0 10px;" onclick="triggerCmdDispatch('ATM_PNB_309')">Dispatch CAD</button></td>
                             </tr>
                         </tbody>
                     </table>
@@ -386,7 +386,7 @@
             atms.forEach(a => {
                 L.marker([a.lat, a.lon], { icon: redIcon })
                     .addTo(cmdMap)
-                    .bindPopup(`<b>${a.name}</b><br>Risk Score: <span style="color:#d9534f;font-weight:700;">${a.risk}</span><br>ETA: ${a.eta}<br><button onclick="triggerCmdDispatch('${a.id}')" style="margin-top:6px;background:#050708;color:#b7ff00;border:none;padding:5px 10px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:700;">🚀 Dispatch CAD</button>`);
+                    .bindPopup(`<b>${a.name}</b><br>Risk Score: <span style="color:#d9534f;font-weight:700;">${a.risk}</span><br>ETA: ${a.eta}<br><button type="button" onclick="triggerCmdDispatch('${a.id}')" style="margin-top:6px;background:#050708;color:#b7ff00;border:none;padding:5px 10px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:700;">🚀 Dispatch CAD</button>`);
             });
 
             radarInitialized = true;
@@ -533,7 +533,7 @@
                     <td><span class="${cls}">${lbl}</span></td>
                     <td style="font-size:12px; color:#626b70;">${new Date(c.created_at).toLocaleDateString('en-IN')}</td>
                     <td>
-                        <button style="background:#050708; color:#ffffff; border:1.5px solid #050708; border-radius:8px; height:28px; padding:0 12px; font-size:11px; font-weight:700; cursor:pointer; font-family:inherit; transition:all 0.18s ease;" onmouseover="this.style.background='#fff';this.style.color='#050708';" onmouseout="this.style.background='#050708';this.style.color='#fff';" onclick="triggerCmdDispatch('ATM_SBI_101')">Dispatch CAD</button>
+                        <button type="button" style="background:#050708; color:#ffffff; border:1.5px solid #050708; border-radius:8px; height:28px; padding:0 12px; font-size:11px; font-weight:700; cursor:pointer; font-family:inherit; transition:all 0.18s ease;" onmouseover="this.style.background='#fff';this.style.color='#050708';" onmouseout="this.style.background='#050708';this.style.color='#fff';" onclick="triggerCmdDispatch('ATM_SBI_101')">Dispatch CAD</button>
                     </td>
                 </tr>`;
             }).join('');

@@ -153,9 +153,9 @@ class MultiHopGraphEngine:
             "victim_name": victim_name,
             "loss_amount": amount,
             "total_hops": len(nodes) - 1,
-            "terminal_account": terminal_node.dict(),
-            "nodes": [n.dict() for n in nodes],
-            "edges": [e.dict() for e in edges],
+            "terminal_account": terminal_node.model_dump(),
+            "nodes": [n.model_dump() for n in nodes],
+            "edges": [e.model_dump() for e in edges],
             "traversal_latency_ms": 68.4
         }
         self.cases_graph[case_id] = case_data

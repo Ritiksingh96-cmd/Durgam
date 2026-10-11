@@ -131,10 +131,10 @@
 
         <!-- CITIZEN SERVICE SUBNAV TABS -->
         <div class="portal-subnav-bar">
-            <button class="subnav-pill active" onclick="showCitizenTab('report')" id="subTab_report"><i data-lucide="shield-alert"></i> Express Grievance (1930)</button>
-            <button class="subnav-pill" onclick="showCitizenTab('track')" id="subTab_track"><i data-lucide="radar"></i> Live Money Trail Tracker</button>
-            <button class="subnav-pill" onclick="showCitizenTab('complaints')" id="subTab_complaints"><i data-lucide="file-text"></i> My Complaints</button>
-            <button class="subnav-pill" onclick="showCitizenTab('unblock')" id="subTab_unblock"><i data-lucide="unlock"></i> Account Unfreeze Desk</button>
+            <button type="button" class="subnav-pill active" onclick="showCitizenTab('report')" id="subTab_report"><i data-lucide="shield-alert"></i> Express Grievance (1930)</button>
+            <button type="button" class="subnav-pill" onclick="showCitizenTab('track')" id="subTab_track"><i data-lucide="radar"></i> Live Money Trail Tracker</button>
+            <button type="button" class="subnav-pill" onclick="showCitizenTab('complaints')" id="subTab_complaints"><i data-lucide="file-text"></i> My Complaints</button>
+            <button type="button" class="subnav-pill" onclick="showCitizenTab('unblock')" id="subTab_unblock"><i data-lucide="unlock"></i> Account Unfreeze Desk</button>
         </div>
 
         <!-- ================= SECTION 0: MY COMPLAINTS LIST ================= -->
@@ -144,7 +144,7 @@
                     <div class="eyebrow"><span></span>GRIEVANCE DOCKET HISTORY</div>
                     <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 24px;">My Registered Complaints</h2>
                 </div>
-                <button class="primary-btn" onclick="showCitizenTab('report')">
+                <button type="button" class="primary-btn" onclick="showCitizenTab('report')">
                     <i data-lucide="file-warning"></i> File New Complaint
                 </button>
             </div>
@@ -271,13 +271,13 @@
 
                     <!-- Case Actions Toolbar -->
                     <div style="display: flex; gap: 10px; margin-top: 20px; padding-top: 16px; border-top: 1px solid #deddd7; flex-wrap: wrap;">
-                        <button onclick="openEditModal()" class="outline-btn" style="height: 36px; font-size: 11.5px;">
+                        <button type="button" onclick="openEditModal()" class="outline-btn" style="height: 36px; font-size: 11.5px;">
                             <i data-lucide="edit-3"></i> Edit Statement Remarks
                         </button>
-                        <button onclick="openAddUtrModal()" class="outline-btn" style="height: 36px; font-size: 11.5px;">
+                        <button type="button" onclick="openAddUtrModal()" class="outline-btn" style="height: 36px; font-size: 11.5px;">
                             <i data-lucide="plus-circle"></i> Add Additional UTR
                         </button>
-                        <button onclick="handleVoidCase()" class="outline-btn" style="height: 36px; font-size: 11.5px; color: #ff3d3d; border-color: rgba(255, 77, 77, 0.4);">
+                        <button type="button" onclick="handleVoidCase()" class="outline-btn" style="height: 36px; font-size: 11.5px; color: #ff3d3d; border-color: rgba(255, 77, 77, 0.4);">
                             <i data-lucide="trash-2"></i> Cancel / Void Grievance
                         </button>
                     </div>
@@ -311,7 +311,7 @@
                     </div>
 
                     <div style="margin-top: 18px;">
-                        <button onclick="downloadCourtSlip()" class="primary-btn" style="width: 100%; justify-content: center; background: var(--lime); color: #050708; border-color: var(--lime); font-size: 12px; height: 42px;">
+                        <button type="button" onclick="downloadCourtSlip()" class="primary-btn" style="width: 100%; justify-content: center; background: var(--lime); color: #050708; border-color: var(--lime); font-size: 12px; height: 42px;">
                             <i data-lucide="download"></i> Download Section 63 BSA Certificate
                         </button>
                     </div>
@@ -338,7 +338,7 @@
                 </div>
 
                 <div style="margin-top: 10px;">
-                    <button onclick="handleCitizenUnblock()" class="primary-btn" style="width: 100%; justify-content: center;">
+                    <button type="button" onclick="handleCitizenUnblock()" class="primary-btn" style="width: 100%; justify-content: center;">
                         <i data-lucide="unlock"></i> Verify Identity & Release Account Freeze
                     </button>
                 </div>
